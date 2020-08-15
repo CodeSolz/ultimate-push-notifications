@@ -16,14 +16,14 @@ importScripts(
 // };
 
 const firebaseConfig = {
-  apiKey: `${UPN_Notifier.apiKey}`,
-  authDomain: `${UPN_Notifier.authDomain}`,
-  databaseURL: `${UPN_Notifier.databaseURL}`,
-  projectId: `${UPN_Notifier.projectId}`,
-  storageBucket: `${UPN_Notifier.storageBucket}`,
-  messagingSenderId: `${UPN_Notifier.messagingSenderId}`,
-  appId: `${UPN_Notifier.appId}`,
-  measurementId: `${UPN_Notifier.measurementId}`
+  apiKey: UPN_Notifier.apiKey,
+  authDomain: UPN_Notifier.authDomain,
+  databaseURL: UPN_Notifier.databaseURL,
+  projectId: UPN_Notifier.projectId,
+  storageBucket: UPN_Notifier.storageBucket,
+  messagingSenderId: UPN_Notifier.messagingSenderId,
+  appId: UPN_Notifier.appId,
+  measurementId: UPN_Notifier.measurementId
 };
 
 // Initialize Firebase
