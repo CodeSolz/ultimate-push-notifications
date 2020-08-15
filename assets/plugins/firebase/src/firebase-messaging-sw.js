@@ -1,8 +1,10 @@
 /* eslint-disable */
-importScripts('https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js');
-importScripts(
-  'https://www.gstatic.com/firebasejs/7.15.5/firebase-messaging.js'
-);
+if( 'function' === typeof importScripts) {
+  importScripts('https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js');
+  importScripts(
+    'https://www.gstatic.com/firebasejs/7.15.5/firebase-messaging.js'
+  );
+}
 
 // const firebaseConfig = {
 //   apiKey: "AIzaSyBFgjh1LQRreqtI7zzaTRQ6hAUIRBxfJqk",
