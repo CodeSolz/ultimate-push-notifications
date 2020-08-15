@@ -8,7 +8,9 @@ module.exports ={
     entry : {
         './assets/js/upn.app.admin' : './assets/js/src/app.js',
         './assets/js/upn.admin.global' : './assets/js/src/app.global.js',
-        './assets/css/upn-admin-style' : './assets/css/src/app.scss'
+        './assets/css/upn-admin-style' : './assets/css/src/app.scss',
+        './assets/plugins/firebase/js/firebase.init' : './assets/plugins/firebase/src/init_notifications.js',
+        './assets/plugins/firebase/js/firebase.messaging.sw' : './assets/plugins/firebase/src/firebase-messaging-sw.js'
     },
     output : {
         filename : '[name].min.js',

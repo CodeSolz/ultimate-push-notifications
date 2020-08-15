@@ -79,6 +79,56 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 		}
 
 
+		/**
+		 * Save / update token
+		 *
+		 * @param [type] $user_input
+		 * @return void
+		 */
+		public function cs_update_token( $user_input ){
+			global $wpdb;
+
+			$current_user = Util::check_evil_script( $user_input['current_user'] );
+			$token = Util::check_evil_script( $user_input['gen_token'] );
+			$device_id = Util::check_evil_script( $user_input['device_id'] );
+
+			$is_exists = $wpdb->get_var(
+				$wpdb->prepare(
+					"select id from `{$wpdb->prefix}upn_user_devices` where device_id = %s ", $device_id
+				)
+			);
+
+			if( $is_exists ){
+				$wpdb->update(
+					"{$wpdb->prefix}upn_user_devices",
+					array(
+						'token' => $token
+					),
+					array(
+						'id' => $is_exists
+					)
+				);
+			}else{
+				$wpdb->update(
+					"{$wpdb->prefix}upn_user_devices",
+					array(
+						'user_id' => $current_user,
+						'token' => $token,
+						'device_id' => $device_id
+					)
+				);
+			}
+
+			return wp_send_json(
+				array(
+					'status'       => true,
+					'title'        => 'Success!',
+					'text'         => __( "Device token saved successfully", 'ultimate-push-notifications' )
+				)
+			);
+		}
+
+
 	}
 
 }

@@ -101,7 +101,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 				'Register My Device',
 				'manage_options',
 				'cs-upn-register-my-device',
-				array( $this, 'upn_page_replace_in_db' )
+				array( $this, 'upn_page_register_my_device' )
 			);
 
 			// load script
@@ -154,6 +154,28 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 			if ( current_user_can( 'manage_options' ) || current_user_can( 'administrator' ) ) {
 				$SetNotifications = $this->pages->SetNotifications();
 				echo $this->generate_page( $SetNotifications, $page_info, $option );
+			} else {
+				echo $this->page_permission_restricted( $page_info );
+			}
+			
+			return;
+		}
+
+		/**
+		 * Register my device
+		 *
+		 * @return void
+		 */
+		public function upn_page_register_my_device() {
+			$option = '';
+			$page_info = array(
+				'title'     => __( 'Register My Device', 'ultimate-push-notifications' ),
+				'sub_title' => __( 'By visiting this page your device will be automatically registered. ', 'ultimate-push-notifications' ),
+			);
+
+			if ( current_user_can( 'manage_options' ) || current_user_can( 'administrator' ) ) {
+				$RegisterMyDevice = $this->pages->RegisterMyDevice();
+				echo $this->generate_page( $RegisterMyDevice, $page_info, $option );
 			} else {
 				echo $this->page_permission_restricted( $page_info );
 			}

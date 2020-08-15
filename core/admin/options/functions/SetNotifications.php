@@ -28,7 +28,7 @@ if ( ! \class_exists( 'SetNotifications' ) ) {
 			global $wpdb;
 
 			$user_notifications = Util::check_evil_script( $user_query['cs_set_notifications'] );
-			$get_current_user_id = get_current_user_id();
+			$get_current_user_id = Util::cs_current_user_id();
 			$is_row_exists = $wpdb->get_var( $wpdb->prepare(
 				"select id from `{$wpdb->prefix}upn_notifications` where user_id = %d ", $get_current_user_id
 			));
@@ -83,7 +83,7 @@ if ( ! \class_exists( 'SetNotifications' ) ) {
 		 */
 		public static function get_notification_type( $user_id = false ){
 			global $wpdb;
-			$get_current_user_id = false === $user_id ? get_current_user_id() : $user_id;
+			$get_current_user_id = false === $user_id ? Util::cs_current_user_id() : $user_id;
 			$get_row = $wpdb->get_row(
 				$wpdb->prepare(
 					"select * from `{$wpdb->prefix}upn_notifications` where user_id = %d ", $get_current_user_id

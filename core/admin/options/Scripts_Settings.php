@@ -13,6 +13,7 @@ if ( ! defined( 'CS_UPN_VERSION' ) ) {
 }
 
 use UltimatePushNotifications\lib\Util;
+use UltimatePushNotifications\admin\options\functions\AppConfig;
 
 if ( ! \class_exists( 'Scripts_Settings' ) ) {
 
@@ -21,9 +22,34 @@ if ( ! \class_exists( 'Scripts_Settings' ) ) {
 		/**
 		 * load admin settings scripts
 		 */
-		public static function load_admin_settings_scripts( $page_id, $rtafr_menus ) {
+		public static function load_admin_settings_scripts( $page_id, $upn_menus ) {
 			wp_enqueue_style( 'sweetalert', CS_UPN_PLUGIN_ASSET_URI . 'plugins/sweetalert/dist/sweetalert.css', false );
 			wp_enqueue_script( 'sweetalert', CS_UPN_PLUGIN_ASSET_URI . 'plugins/sweetalert/dist/sweetalert.min.js', false );
+			
+			
+			if( $upn_menus[ 'menu_add_my_device' ] == $page_id ){
+				$AppConfig = AppConfig::get_config();
+				
+				if( ! empty( $AppConfig ) ) {
+					
+					global $current_user;
+					wp_get_current_user();
+
+					wp_enqueue_script( 'firebase-app', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase-app.js', false );
+					wp_enqueue_script( 'firebase-messaging', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase-messaging.js', false );
+					wp_enqueue_script( 'firebase.messaging.sw', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase.messaging.sw.min.js', false );
+					wp_enqueue_script( 'init_firebase_app', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase.init.min.js', false );
+	
+					//localize scripts
+					wp_localize_script( 'init_firebase_app', 'UPN_Notifier', array(
+						'asset_url' => CS_UPN_PLUGIN_ASSET_URI,
+						'ajax_url' => esc_url( wp_nonce_url( admin_url('admin-ajax.php'), SECURE_AUTH_SALT, 'cs_token' )  ),
+						'current_user' => array('user_id' => $current_user->ID, 'user_name' => $current_user->user_login )
+					) + (array) $AppConfig );
+
+				}
+
+			}
 
 			wp_enqueue_style( 'wapg', CS_UPN_PLUGIN_ASSET_URI . 'css/upn-admin-style.min.css', false );
 

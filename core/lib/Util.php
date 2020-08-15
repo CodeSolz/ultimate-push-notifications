@@ -111,6 +111,19 @@ if ( ! \class_exists( 'Util' ) ) {
 			$back_url = self::cs_generate_admin_url( $back_to );
 			return "<a href='{$back_url}' class='{$class}'>" . __( '<< Back', 'ultimate-push-notifications' ) . '</a>';
 		}
+
+
+		/**
+		 * Get current user id
+		 *
+		 * @return void
+		 */
+		public static function cs_current_user_id(){
+			global $current_user;
+			wp_get_current_user();
+			return $current_user->ID;
+		}
+
 	}
 
 }
