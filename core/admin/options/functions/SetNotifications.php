@@ -29,15 +29,25 @@ if ( ! \class_exists( 'SetNotifications' ) ) {
 
 			$user_notifications = Util::check_evil_script( $user_query['cs_set_notifications'] );
 			$get_current_user_id = get_current_user_id();
-			$is_row_exists = $wpdb->get_var( $wpdb->parepare(
+			$is_row_exists = $wpdb->get_var( $wpdb->prepare(
 				"select id from `{$wpdb->prefix}upn_notifications` where user_id = %d ", $get_current_user_id
 			));
 
+			
+			//set checkbox val
+			if( $user_notifications ){
+				foreach( $user_notifications as $key => $val ){
+					if( false !== \strpos( $key, 'Check') ){
+						$user_notifications[ $key ] = 1;
+					}
+				}
+			}
+			
 			if( $is_row_exists ) {
 				$wpdb->update(
-					`{$wpdb->prefix}upn_notifications`,
+					"{$wpdb->prefix}upn_notifications",
 					array(
-						'notification_type' => $user_notifications
+						'notification_type' => maybe_serialize( $user_notifications )
 					),
 					array(
 						'id' => $is_row_exists,
@@ -47,9 +57,10 @@ if ( ! \class_exists( 'SetNotifications' ) ) {
 				$resMsg = 'updated';
 			}else{
 				$wpdb->insert(
-					`{$wpdb->prefix}upn_notifications`,
+					"{$wpdb->prefix}upn_notifications",
 					array(
-						'notification_type' => $user_notifications
+						'user_id' => $get_current_user_id,
+						'notification_type' => maybe_serialize( $user_notifications )
 					)
 				);
 				$resMsg = 'saved';
@@ -59,7 +70,7 @@ if ( ! \class_exists( 'SetNotifications' ) ) {
 				array(
 					'status'       => true,
 					'title'        => 'Success!',
-					'text'         => __( "Thank you! notification settings {$resMsg} successfully.", 'ultimate-push-notifications' )
+					'text'         => __( "Thank you! Notification settings {$resMsg} successfully.", 'ultimate-push-notifications' )
 				)
 			);
 
@@ -70,8 +81,16 @@ if ( ! \class_exists( 'SetNotifications' ) ) {
 		 *
 		 * @return void
 		 */
-		public static function get_config(){
-			return get_option( self::$app_config_key );
+		public static function get_notification_type( $user_id = false ){
+			global $wpdb;
+			$get_current_user_id = false === $user_id ? get_current_user_id() : $user_id;
+			$get_row = $wpdb->get_row(
+				$wpdb->prepare(
+					"select * from `{$wpdb->prefix}upn_notifications` where user_id = %d ", $get_current_user_id
+				)
+			);
+
+			return maybe_unserialize( $get_row->notification_type );
 		}
 
 

@@ -17,15 +17,15 @@ if ( ! \class_exists( 'Upn_CustomAjax' ) ) {
 	class Upn_CustomAjax {
 
 		function __construct() {
-			add_action( 'wp_ajax_rtafar_ajax', array( $this, 'rtafar_ajax' ) );
-			add_action( 'wp_ajax_nopriv_rtafar_ajax', array( $this, 'rtafar_ajax' ) );
+			add_action( 'wp_ajax_upn_ajax', array( $this, 'upn_ajax' ) );
+			add_action( 'wp_ajax_nopriv_upn_ajax', array( $this, 'upn_ajax' ) );
 		}
 
 
 		/**
 		 * custom ajax call
 		 */
-		public function rtafar_ajax() {
+		public function upn_ajax() {
 
 			if ( ! isset( $_REQUEST['cs_token'] ) || false === check_ajax_referer( SECURE_AUTH_SALT, 'cs_token', false ) ) {
 				wp_send_json(

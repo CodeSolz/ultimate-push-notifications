@@ -63,7 +63,7 @@ if ( ! \class_exists( 'Scripts_Settings' ) ) {
 						e.preventDefault();
 						var $this = $(this);
 						var formData = new FormData( $this[0] );
-						formData.append( "action", "rtafar_ajax" );
+						formData.append( "action", "upn_ajax" );
 						formData.append( "method", $this.find('#cs_field_method').val() );
 						swal({ title: $this.find('#cs_field_swal_title').val(), text: 'Please wait a while...', timer: 200000, imageUrl: '<?php echo CS_UPN_PLUGIN_ASSET_URI . 'img/loading-timer.gif'; ?>', showConfirmButton: false, html :true });
 						$.ajax({

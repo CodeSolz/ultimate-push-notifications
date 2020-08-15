@@ -63,10 +63,12 @@ if ( ! \class_exists( 'NoticeBuilder' ) ) {
 		 */
 		public function action_admin_notices() {
 
-			global $my_admin_page, $rtafr_menu;
+			global $my_admin_page, $upn_menus;
 			$screen = get_current_screen();
 
-			if ( \in_array( $screen->id, $rtafr_menu ) ) {
+			// pre_print( $screen );
+
+			if ( false !== \stripos( $screen->id, 'push-notifications_page_cs-upn' ) ) {
 				return;
 			}
 

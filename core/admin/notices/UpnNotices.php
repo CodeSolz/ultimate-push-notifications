@@ -26,8 +26,8 @@ if ( ! \class_exists( 'UpnNotices' ) ) {
 		 */
 		public static function activated() {
 			$notice        = NoticeBuilder::get_instance();
-			$message       = __( 'Thank you for choosing us. Let\'s %1$s set some find & replace rules. %2$s', 'ultimate-push-notifications' );
-			$register_link = admin_url( 'admin.php?page=cs-add-replacement-rule' );
+			$message       = __( 'Thank you for choosing us. Let\'s %1$s set the application configuration %2$s to get started.', 'ultimate-push-notifications' );
+			$register_link = admin_url( 'admin.php?page=cs-upn-app-configuration' );
 			$default_link  = site_url( '' );
 			$message       = sprintf(
 				$message,

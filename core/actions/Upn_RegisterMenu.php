@@ -15,6 +15,7 @@ if ( ! defined( 'CS_UPN_VERSION' ) ) {
 use UltimatePushNotifications\admin\options\Scripts_Settings;
 use UltimatePushNotifications\admin\builders\AdminPageBuilder;
 use UltimatePushNotifications\admin\options\functions\AppConfig;
+use UltimatePushNotifications\admin\options\functions\SetNotifications;
 
 if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 
@@ -94,19 +95,19 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 				array( $this, 'upn_set_notifications' )
 			);
 
-			$this->upn_menus['add_my_device'] = add_submenu_page(
+			$this->upn_menus['menu_add_my_device'] = add_submenu_page(
 				CS_UPN_PLUGIN_IDENTIFIER,
-				__( 'Replace in DB', 'ultimate-push-notifications' ),
-				'Replace in Database',
+				__( 'Register my device', 'ultimate-push-notifications' ),
+				'Register My Device',
 				'manage_options',
-				'cs-replace-in-database',
+				'cs-upn-register-my-device',
 				array( $this, 'upn_page_replace_in_db' )
 			);
 
 			// load script
 			add_action( "load-{$this->upn_menus['menu_app_config']}", array( $this, 'upn_register_admin_settings_scripts' ) );
 			add_action( "load-{$this->upn_menus['menu_set_notifications']}", array( $this, 'upn_register_admin_settings_scripts' ) );
-			add_action( "load-{$this->upn_menus['replace_in_db']}", array( $this, 'upn_register_admin_settings_scripts' ) );
+			add_action( "load-{$this->upn_menus['menu_add_my_device']}", array( $this, 'upn_register_admin_settings_scripts' ) );
 
 			remove_submenu_page( CS_UPN_PLUGIN_IDENTIFIER, CS_UPN_PLUGIN_IDENTIFIER );
 
@@ -144,7 +145,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 		 * @return void
 		 */
 		public function upn_set_notifications() {
-			$option = '';
+			$option = SetNotifications::get_notification_type();
 			$page_info = array(
 				'title'     => __( 'Set Notification', 'ultimate-push-notifications' ),
 				'sub_title' => __( 'Please set the following settings to get notifications', 'ultimate-push-notifications' ),
