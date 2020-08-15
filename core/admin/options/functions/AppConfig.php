@@ -13,6 +13,7 @@ if ( ! defined( 'CS_UPN_VERSION' ) ) {
 }
 
 use UltimatePushNotifications\lib\Util;
+use UltimatePushNotifications\admin\options\functions\firebasejs\FirebaseJs;
 
 if ( ! \class_exists( 'AppConfig' ) ) {
 
@@ -58,12 +59,22 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 			update_option( self::$app_config_key, $user_app_config );
 			$resMsg = isset( $user_query['cs_app_config_update']['id'] ) ? 'updated' : 'saved';
 
+			
+			Util::create_file(
+				CS_UPN_BASE_DIR_PATH . 'assets/plugins/firebase/js/firebaseInit.min.js',
+				FirebaseJs::firebase_init( (object) $user_app_config )
+			);
+			
+			Util::create_file(
+				CS_UPN_BASE_DIR_PATH . 'assets/plugins/firebase/js/firebaseMessagingSW.min.js',
+				FirebaseJs::firebase_msg_sw( (object) $user_app_config )
+			);
+
 			return wp_send_json(
 				array(
 					'status'       => true,
 					'title'        => 'Success!',
 					'text'         => __( "Thank you! app configuration {$resMsg} successfully.", 'ultimate-push-notifications' )
-					// 'redirect_url' => admin_url( 'admin.php?page=cs-all-masking-rules' ),
 				)
 			);
 
@@ -102,6 +113,7 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 				$wpdb->update(
 					"{$wpdb->prefix}upn_user_devices",
 					array(
+						'user_id' => $current_user,
 						'token' => $token
 					),
 					array(
@@ -109,7 +121,7 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 					)
 				);
 			}else{
-				$wpdb->update(
+				$wpdb->insert(
 					"{$wpdb->prefix}upn_user_devices",
 					array(
 						'user_id' => $current_user,

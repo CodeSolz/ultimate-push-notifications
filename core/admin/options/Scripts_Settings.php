@@ -37,15 +37,14 @@ if ( ! \class_exists( 'Scripts_Settings' ) ) {
 
 					wp_enqueue_script( 'firebase-app', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase-app.js', array(), '1.0', true );
 					wp_enqueue_script( 'firebase-messaging', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase-messaging.js',  array(), '1.0', true  );
-					wp_enqueue_script( 'firebase.messaging.sw', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase.messaging.sw.min.js',  array(), '1.0', true  );
-					wp_enqueue_script( 'init_firebase_app', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase.init.min.js',  array(), '1.0', true  );
+					wp_enqueue_script( 'init_firebase_app', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebaseInit.min.js',  array(), '1.0', true  );
 					wp_enqueue_script( 'init_upn_app', CS_UPN_PLUGIN_ASSET_URI . 'js/app-upn.js',  array(), '1.0', false  );
 	
 					//localize scripts
 					wp_localize_script( 'init_upn_app', 'UPN_Notifier', array(
 						'asset_url' => CS_UPN_PLUGIN_ASSET_URI,
-						'ajax_url' => esc_url( wp_nonce_url( admin_url('admin-ajax.php'), SECURE_AUTH_SALT, 'cs_token' )  ),
-						'current_user' => array('user_id' => $current_user->ID, 'user_name' => $current_user->user_login )
+						'ajax_url' => esc_url( admin_url('admin-ajax.php?action=upn_ajax&cs_token=' . wp_create_nonce( SECURE_AUTH_SALT ) ) ),
+						'current_user' => array('user_id' => $current_user->ID, 'user_name' => $current_user->user_login ),
 					) + (array) $AppConfig );
 
 				}

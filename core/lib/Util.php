@@ -124,6 +124,22 @@ if ( ! \class_exists( 'Util' ) ) {
 			return $current_user->ID;
 		}
 
+		/**
+		 * Create file
+		 *
+		 * @param [type] $path
+		 * @param [type] $content
+		 * @return void
+		 */
+		public static function create_file( $path, $content ){
+			if( \file_exists( $path ) ){
+				\unlink( $path );
+			}
+			\file_put_contents( $path, $content);
+
+			return true;
+		}
+
 	}
 
 }
