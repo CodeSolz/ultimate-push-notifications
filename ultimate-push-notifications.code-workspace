@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "..\\woocomerce-notifications"
+		},
+		{
+			"path": "..\\..\\..\\..\\framework_and_script\\firebasePushNotification"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}
