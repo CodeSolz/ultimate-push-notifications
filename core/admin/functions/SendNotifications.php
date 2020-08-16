@@ -144,11 +144,42 @@ class SendNotifications {
             return __( 'Something went wrong! Please check your configuration correctly.', 'ultimate-push-notifications' );
         }
 
-        return array(
+        $finalRes = array(
             'success' => $response->success,
             'failure' => $response->failure
         );
 
+        $this->update_message_sent_count( $finalRes, $payload->to);
+
+        return $finalRes;
+    }
+
+    /**
+     * Update message sent count
+     *
+     * @return void
+     */
+    private function update_message_sent_count( $res, $token ){
+        global $wpdb;
+
+        $is_exists = $wpdb->get_row(
+            $wpdb->prepare(
+                "select * from `{$wpdb->prefix}upn_user_devices` where token = %s ", $token
+            )
+        );
+        if( $is_exists ){
+            $wpdb->update(
+                "{$wpdb->prefix}upn_user_devices",
+                array(
+                    'total_sent_success_notifications' => $is_exists->total_sent_success_notifications + $res['success'],
+                    'total_sent_fail_notifications' => $is_exists->total_sent_fail_notifications + $res['failure']
+                ),
+                array(
+                    'id' => $is_exists
+                )
+            );
+        }
+        return true;
     }
 
 

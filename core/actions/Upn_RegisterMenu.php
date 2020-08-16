@@ -69,7 +69,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 			global $upn_menu;
 			add_menu_page(
 				__( 'Ultimate Push Notifications', 'ultimate-push-notifications' ),
-				'UPush Notifications',
+				'UPush Notifier',
 				'manage_options',
 				CS_UPN_PLUGIN_IDENTIFIER,
 				'cs-woo-altcoin-gateway',

@@ -68,7 +68,7 @@ if ( ! \class_exists( 'NoticeBuilder' ) ) {
 
 			// pre_print( $screen );
 
-			if ( false !== \stripos( $screen->id, 'push-notifications_page_cs-upn' ) ) {
+			if ( false !== \stripos( $screen->id, 'upush-notifier_page_cs-upn' ) ) {
 				return;
 			}
 
