@@ -75,7 +75,9 @@ if ( ! \class_exists( 'Scripts_Settings' ) ) {
 
 			
 			// send test notifications
-			if ( $page_id == $rtafr_menu['menu_add_my_device'] ) {
+			if ( $page_id == $rtafr_menu['menu_add_my_device'] ||
+				$page_id == $rtafr_menu['menu_all_registered_devices']
+			) {
 				self::send_test_notifications();
 			}
 

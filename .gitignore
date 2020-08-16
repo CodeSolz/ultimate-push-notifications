@@ -8,10 +8,10 @@ composer.phar
 /node_modules/
 
 ### Webpack Pre-Bundles ###
-assets/js/src
-assets/css/src
-build
-assets/plugins/firebase/js/src
+/assets/js/src
+/assets/css/src
+/build/
+/assets/plugins/firebase/js/src
 
 ### build ###
 

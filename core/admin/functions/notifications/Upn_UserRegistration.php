@@ -23,7 +23,7 @@ class Upn_UserRegistration{
      * @param [type] $user_id
      * @return void
      */
-    public function on_user_registration( $user_id ){
+    public static function on_user_registration( $user_id ){
         $user_meta = \get_userdata( $user_id );
         
         if( empty( $user_meta ) ) {

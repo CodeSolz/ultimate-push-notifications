@@ -176,13 +176,16 @@ if ( ! \class_exists( 'AppConfig' ) ) {
             <li> <b>Basic Hints</b>
                 <ol>
                     <li>
-                        Please register here - <a href='https://myportal.coinmarketstats.online/register' target=\"_blank\">https://myportal.coinmarketstats.online</a> for your API Key.
+                        Please register on - <a href='https://console.firebase.google.com/' target=\"_blank\">https://console.firebase.google.com/</a> and create a project
                     </li>
                     <li>
-                        After login to your dashboard, go to 'API Keys' menu. From bottom of the page you can generate your API key. 
+                        After creating project on firebase, create a APP by clicking on 'Add app' button
                     </li>
                     <li>
-                        You can purchase pro package for unlimited automatic order confirmation from your dashboard. Free package included 5 automatic order confirmation.
+                        When app platform appear, click the 'web' to create your app. Then follow the steps.
+                    </li>
+                    <li>
+                        After registered your app, you will see the following configuration field's value. Get these and setup the following configuration.
                     </li>
                 </ol>
             </li>

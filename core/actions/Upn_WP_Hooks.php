@@ -21,7 +21,6 @@ if ( ! \class_exists( 'Upn_WP_Hooks' ) ) {
 
 		function __construct() {
 			add_action('user_register', array( $this, 'upn_on_user_registrations') );
-			add_action('init', array( $this, 'upn_on_user_registrations') );
 		}
 
 		/**
