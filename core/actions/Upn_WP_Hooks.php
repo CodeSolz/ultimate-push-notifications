@@ -20,7 +20,7 @@ if ( ! \class_exists( 'Upn_WP_Hooks' ) ) {
 	class Upn_WP_Hooks {
 
 		function __construct() {
-			add_action('user_register', array( $this, 'upn_on_user_registrations') );
+			add_action( 'user_register', array( $this, 'upn_on_user_registrations' ) );
 		}
 
 		/**
@@ -29,11 +29,11 @@ if ( ! \class_exists( 'Upn_WP_Hooks' ) ) {
 		 * @param [type] $user_id
 		 * @return void
 		 */
-		public function upn_on_user_registrations( $user_id ){
+		public function upn_on_user_registrations( $user_id ) {
 			return Upn_UserRegistration::on_user_registration( $user_id );
 		}
 
-		
+
 	}
 
 }

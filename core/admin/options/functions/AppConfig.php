@@ -31,40 +31,39 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 		 *
 		 * @return void
 		 */
-		public function save( $user_query ){
+		public function save( $user_query ) {
 
 			$user_app_config = Util::check_evil_script( $user_query['cs_app_config'] );
-			
-			//check empty
+
+			// check empty
 			$is_empty = false;
-			if( $user_app_config ){
-				foreach( $user_app_config as  $key => $val ){
-					if( empty( $val ) ){
+			if ( $user_app_config ) {
+				foreach ( $user_app_config as  $key => $val ) {
+					if ( empty( $val ) ) {
 						$is_empty = true;
 						break;
 					}
 				}
 			}
-			
-			if( true === $is_empty ){
+
+			if ( true === $is_empty ) {
 				return wp_send_json(
 					array(
-						'status'       => false,
-						'title'        => 'Error!',
-						'text'         => __( "One or more field is empty. All fields are required.", 'ultimate-push-notifications' )
-						)
-				);	
+						'status' => false,
+						'title'  => 'Error!',
+						'text'   => __( 'One or more field is empty. All fields are required.', 'ultimate-push-notifications' ),
+					)
+				);
 			}
-				
+
 			update_option( self::$app_config_key, $user_app_config );
 			$resMsg = isset( $user_query['cs_app_config_update']['id'] ) ? 'updated' : 'saved';
 
-			
 			Util::create_file(
 				CS_UPN_BASE_DIR_PATH . 'assets/plugins/firebase/js/firebaseInit.min.js',
 				FirebaseJs::firebase_init( (object) $user_app_config )
 			);
-			
+
 			Util::create_file(
 				CS_UPN_BASE_DIR_PATH . 'assets/plugins/firebase/js/firebaseMessagingSW.min.js',
 				FirebaseJs::firebase_msg_sw( (object) $user_app_config )
@@ -72,9 +71,9 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 
 			return wp_send_json(
 				array(
-					'status'       => true,
-					'title'        => 'Success!',
-					'text'         => __( "Thank you! app configuration {$resMsg} successfully.", 'ultimate-push-notifications' )
+					'status' => true,
+					'title'  => 'Success!',
+					'text'   => __( "Thank you! app configuration {$resMsg} successfully.", 'ultimate-push-notifications' ),
 				)
 			);
 
@@ -85,58 +84,59 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 		 *
 		 * @return void
 		 */
-		public static function get_config(){
+		public static function get_config() {
 			return get_option( self::$app_config_key );
 		}
 
-		
+
 		/**
 		 * Save / update token
 		 *
 		 * @param [type] $user_input
 		 * @return void
 		 */
-		public function cs_update_token( $user_input ){
+		public function cs_update_token( $user_input ) {
 			global $wpdb;
 
 			$current_user = Util::check_evil_script( $user_input['current_user'] );
-			$token = Util::check_evil_script( $user_input['gen_token'] );
-			$device_id = Util::check_evil_script( $user_input['device_id'] );
+			$token        = Util::check_evil_script( $user_input['gen_token'] );
+			$device_id    = Util::check_evil_script( $user_input['device_id'] );
 
 			$is_exists = $wpdb->get_var(
 				$wpdb->prepare(
-					"select id from `{$wpdb->prefix}upn_user_devices` where device_id = %s ", $device_id
+					"select id from `{$wpdb->prefix}upn_user_devices` where device_id = %s ",
+					$device_id
 				)
 			);
 
-			if( $is_exists ){
+			if ( $is_exists ) {
 				$wpdb->update(
 					"{$wpdb->prefix}upn_user_devices",
 					array(
 						'user_id' => $current_user,
-						'token' => $token
+						'token'   => $token,
 					),
 					array(
-						'id' => $is_exists
+						'id' => $is_exists,
 					)
 				);
-			}else{
+			} else {
 				$wpdb->insert(
 					"{$wpdb->prefix}upn_user_devices",
 					array(
-						'user_id' => $current_user,
-						'token' => $token,
-						'device_id' => $device_id,
-						'registered_on' => date('Y-m-d H:i:s')
+						'user_id'       => $current_user,
+						'token'         => $token,
+						'device_id'     => $device_id,
+						'registered_on' => date( 'Y-m-d H:i:s' ),
 					)
 				);
 			}
 
 			return wp_send_json(
 				array(
-					'status'       => true,
-					'title'        => 'Success!',
-					'text'         => __( "Device token saved successfully", 'ultimate-push-notifications' )
+					'status' => true,
+					'title'  => 'Success!',
+					'text'   => __( 'Device token saved successfully', 'ultimate-push-notifications' ),
 				)
 			);
 		}

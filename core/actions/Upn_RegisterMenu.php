@@ -123,7 +123,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 
 			// init pages
 			$this->pages = new AdminPageBuilder();
-			$upn_menu  = $this->upn_menus;
+			$upn_menu    = $this->upn_menus;
 		}
 
 		/**
@@ -132,9 +132,9 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 		 * @return void
 		 */
 		public function upn_app_config() {
-			$option = AppConfig::get_config();
+			$option    = AppConfig::get_config();
 			$page_info = array(
-				'title'     => sprintf( __( 'APP Configuration %s visible to administrator only %s', 'ultimate-push-notifications' ), '<span class="visibility" >(', ')</span>'),
+				'title'     => sprintf( __( 'APP Configuration %1$s visible to administrator only %2$s', 'ultimate-push-notifications' ), '<span class="visibility" >(', ')</span>' ),
 				'sub_title' => __( 'Please set the following application configuration correctly. You\'ll be able to find the following configuration data in your firebase application.', 'ultimate-push-notifications' ),
 			);
 
@@ -155,7 +155,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 		 * @return void
 		 */
 		public function upn_set_notifications() {
-			$option = SetNotifications::get_notification_type();
+			$option    = SetNotifications::get_notification_type();
 			$page_info = array(
 				'title'     => __( 'Set Notification', 'ultimate-push-notifications' ),
 				'sub_title' => __( 'Please set the following settings to get notifications', 'ultimate-push-notifications' ),
@@ -167,7 +167,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 			} else {
 				echo $this->page_permission_restricted( $page_info );
 			}
-			
+
 			return;
 		}
 
@@ -177,7 +177,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 		 * @return void
 		 */
 		public function upn_page_register_my_device() {
-			$option = '';
+			$option    = '';
 			$page_info = array(
 				'title'     => __( 'My Registered Devices', 'ultimate-push-notifications' ),
 				'sub_title' => __( 'By visiting this page your device will be automatically registered. Please read the hints to understand more.', 'ultimate-push-notifications' ),
@@ -189,7 +189,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 			} else {
 				echo $this->page_permission_restricted( $page_info );
 			}
-			
+
 			return;
 		}
 
@@ -199,9 +199,9 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 		 * @return void
 		 */
 		public function upn_page_all_registered_devices() {
-			$option = '';
+			$option    = '';
 			$page_info = array(
-				'title'     => sprintf( __( 'All Registered Devices %s visible to administrator only %s', 'ultimate-push-notifications' ), '<span class="visibility" >(', ')</span>'),
+				'title'     => sprintf( __( 'All Registered Devices %1$s visible to administrator only %2$s', 'ultimate-push-notifications' ), '<span class="visibility" >(', ')</span>' ),
 				'sub_title' => __( 'List of all the registered devices in the website', 'ultimate-push-notifications' ),
 			);
 
@@ -211,7 +211,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 			} else {
 				echo $this->page_permission_restricted( $page_info );
 			}
-			
+
 			return;
 		}
 
@@ -223,7 +223,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 		 * @param [type] $option
 		 * @return void
 		 */
-		private function generate_page( $Page_Obj, $page_info, $option ){
+		private function generate_page( $Page_Obj, $page_info, $option ) {
 			if ( is_object( $Page_Obj ) ) {
 				return $Page_Obj->generate_page( array_merge_recursive( $page_info, array( 'gateway_settings' => array() ) ), $option );
 			} else {
@@ -237,7 +237,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 		 * @param [type] $page_info
 		 * @return void
 		 */
-		private function page_permission_restricted( $page_info ){
+		private function page_permission_restricted( $page_info ) {
 			$AccessDenied = $this->pages->AccessDenied();
 			if ( is_object( $AccessDenied ) ) {
 				return $AccessDenied->generate_access_denided( array_merge_recursive( $page_info, array( 'gateway_settings' => array() ) ) );

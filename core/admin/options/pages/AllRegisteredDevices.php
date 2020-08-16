@@ -70,7 +70,7 @@ if ( ! \class_exists( 'RegisterMyDevice' ) ) {
 			$html = ob_get_clean();
 
 			$args['content'] = $html;
-			$swal_title           = '....';
+			$swal_title      = '....';
 			// $btn_txt              = '...';
 			$update_hidden_fields = array();
 
@@ -79,7 +79,7 @@ if ( ! \class_exists( 'RegisterMyDevice' ) ) {
 					'method'     => array(
 						'id'    => 'method',
 						'type'  => 'hidden',
-						'value' => "....",
+						'value' => '....',
 					),
 					'swal_title' => array(
 						'id'    => 'swal_title',

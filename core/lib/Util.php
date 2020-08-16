@@ -118,7 +118,7 @@ if ( ! \class_exists( 'Util' ) ) {
 		 *
 		 * @return void
 		 */
-		public static function cs_current_user_id(){
+		public static function cs_current_user_id() {
 			global $current_user;
 			wp_get_current_user();
 			return $current_user->ID;
@@ -131,11 +131,11 @@ if ( ! \class_exists( 'Util' ) ) {
 		 * @param [type] $content
 		 * @return void
 		 */
-		public static function create_file( $path, $content ){
-			if( \file_exists( $path ) ){
+		public static function create_file( $path, $content ) {
+			if ( \file_exists( $path ) ) {
 				\unlink( $path );
 			}
-			\file_put_contents( $path, $content);
+			\file_put_contents( $path, $content );
 
 			return true;
 		}

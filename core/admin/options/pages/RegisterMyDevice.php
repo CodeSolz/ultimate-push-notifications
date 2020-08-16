@@ -58,14 +58,14 @@ if ( ! \class_exists( 'RegisterMyDevice' ) ) {
 				$args['well'] = "<p class='search-keyword'>Search results for : '<b>" . $_GET['s'] . "</b>' </p> <a href='{$back_url}' class='button'><< Back to all</a> ";
 			}
 
-			//check app file exists
+			// check app file exists
 			$is_app_file_exists = false;
-			if( ! file_exists( CS_UPN_BASE_DIR_PATH . 'assets/plugins/firebase/js/firebaseInit.min.js' ) ){
-				$is_app_file_exists = sprintf( 
-							__( 'You need to update your app configuration. Please %sgo to app config%s and update your configuration.', 'real-time-auto-find-and-replace' ),
-							'<a href="'.admin_url( 'admin.php?page=cs-upn-app-configuration' ).'">' ,
-							'</a>'
-						);
+			if ( ! file_exists( CS_UPN_BASE_DIR_PATH . 'assets/plugins/firebase/js/firebaseInit.min.js' ) ) {
+				$is_app_file_exists = sprintf(
+					__( 'You need to update your app configuration. Please %1$sgo to app config%2$s and update your configuration.', 'real-time-auto-find-and-replace' ),
+					'<a href="' . admin_url( 'admin.php?page=cs-upn-app-configuration' ) . '">',
+					'</a>'
+				);
 			}
 
 			ob_start();
@@ -79,8 +79,8 @@ if ( ! \class_exists( 'RegisterMyDevice' ) ) {
 			$html = ob_get_clean();
 
 			$args['content'] = false === $is_app_file_exists ? $html : $is_app_file_exists;
-			
-			$swal_title           = '....';
+
+			$swal_title = '....';
 			// $btn_txt              = '...';
 			$update_hidden_fields = array();
 
@@ -89,7 +89,7 @@ if ( ! \class_exists( 'RegisterMyDevice' ) ) {
 					'method'     => array(
 						'id'    => 'method',
 						'type'  => 'hidden',
-						'value' => "....",
+						'value' => '....',
 					),
 					'swal_title' => array(
 						'id'    => 'swal_title',
@@ -104,7 +104,8 @@ if ( ! \class_exists( 'RegisterMyDevice' ) ) {
 
 			$args['body_class'] = 'no-bottom-margin';
 
-			$args['well'] = sprintf( "<ul>
+			$args['well'] = sprintf(
+				"<ul>
             <li> <b>Basic Hints</b>
                 <ol>
                     <li>
@@ -119,7 +120,10 @@ if ( ! \class_exists( 'RegisterMyDevice' ) ) {
 					</li>
                 </ol>
             </li>
-        </ul>", '<a href="'.admin_url('admin.php?page=cs-upn-register-my-device').'">', '</a>' );
+        </ul>",
+				'<a href="' . admin_url( 'admin.php?page=cs-upn-register-my-device' ) . '">',
+				'</a>'
+			);
 
 			return $this->Admin_Page_Generator->generate_page( $args );
 		}

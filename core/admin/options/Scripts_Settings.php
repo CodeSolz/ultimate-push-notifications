@@ -25,30 +25,35 @@ if ( ! \class_exists( 'Scripts_Settings' ) ) {
 		public static function load_admin_settings_scripts( $page_id, $upn_menus ) {
 			wp_enqueue_style( 'sweetalert', CS_UPN_PLUGIN_ASSET_URI . 'plugins/sweetalert/dist/sweetalert.css', false );
 			wp_enqueue_script( 'sweetalert', CS_UPN_PLUGIN_ASSET_URI . 'plugins/sweetalert/dist/sweetalert.min.js', false );
-			
-			
-			if( $upn_menus[ 'menu_add_my_device' ] == $page_id ){
+
+			if ( $upn_menus['menu_add_my_device'] == $page_id ) {
 				$AppConfig = AppConfig::get_config();
-				
-				if( ! empty( $AppConfig ) ) {
-					
+
+				if ( ! empty( $AppConfig ) ) {
+
 					global $current_user;
 					wp_get_current_user();
 
 					wp_enqueue_script( 'firebase-app', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase-app.js', array(), '1.0', true );
-					wp_enqueue_script( 'firebase-messaging', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase-messaging.js',  array(), '1.0', true  );
-					wp_enqueue_script( 'init_firebase_app', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebaseInit.min.js',  array(), '1.0', true  );
-					wp_enqueue_script( 'init_upn_app', CS_UPN_PLUGIN_ASSET_URI . 'js/app-upn.js',  array(), '1.0', false  );
-	
-					//localize scripts
-					wp_localize_script( 'init_upn_app', 'UPN_Notifier', array(
-						'asset_url' => CS_UPN_PLUGIN_ASSET_URI,
-						'ajax_url' => esc_url( admin_url('admin-ajax.php?action=upn_ajax&cs_token=' . wp_create_nonce( SECURE_AUTH_SALT ) ) ),
-						'current_user' => array('user_id' => $current_user->ID, 'user_name' => $current_user->user_login ),
-					) + (array) $AppConfig );
+					wp_enqueue_script( 'firebase-messaging', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase-messaging.js', array(), '1.0', true );
+					wp_enqueue_script( 'init_firebase_app', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebaseInit.min.js', array(), '1.0', true );
+					wp_enqueue_script( 'init_upn_app', CS_UPN_PLUGIN_ASSET_URI . 'js/app-upn.js', array(), '1.0', false );
+
+					// localize scripts
+					wp_localize_script(
+						'init_upn_app',
+						'UPN_Notifier',
+						array(
+							'asset_url'    => CS_UPN_PLUGIN_ASSET_URI,
+							'ajax_url'     => esc_url( admin_url( 'admin-ajax.php?action=upn_ajax&cs_token=' . wp_create_nonce( SECURE_AUTH_SALT ) ) ),
+							'current_user' => array(
+								'user_id'   => $current_user->ID,
+								'user_name' => $current_user->user_login,
+							),
+						) + (array) $AppConfig
+					);
 
 				}
-
 			}
 
 			wp_enqueue_style( 'wapg', CS_UPN_PLUGIN_ASSET_URI . 'css/upn-admin-style.min.css', false );
@@ -73,14 +78,12 @@ if ( ! \class_exists( 'Scripts_Settings' ) ) {
 				self::form_submitter();
 			}
 
-			
 			// send test notifications
 			if ( $page_id == $rtafr_menu['menu_add_my_device'] ||
 				$page_id == $rtafr_menu['menu_all_registered_devices']
 			) {
 				self::send_test_notifications();
 			}
-
 
 			Util::markup_tag( __( 'admin footer script end', 'ultimate-push-notifications' ) );
 
@@ -100,7 +103,7 @@ if ( ! \class_exists( 'Scripts_Settings' ) ) {
 						var formData = new FormData( $this[0] );
 						formData.append( "action", "upn_ajax" );
 						formData.append( "method", $this.find('#cs_field_method').val() );
-						swal({ title: $this.find('#cs_field_swal_title').val(), text: '<?php _e( "Please wait a while...", 'ultimate-push-notifications' ); ?>', timer: 200000, imageUrl: '<?php echo CS_UPN_PLUGIN_ASSET_URI . 'img/loading-timer.gif'; ?>', showConfirmButton: false, html :true });
+						swal({ title: $this.find('#cs_field_swal_title').val(), text: '<?php _e( 'Please wait a while...', 'ultimate-push-notifications' ); ?>', timer: 200000, imageUrl: '<?php echo CS_UPN_PLUGIN_ASSET_URI . 'img/loading-timer.gif'; ?>', showConfirmButton: false, html :true });
 						$.ajax({
 							url: ajaxurl,
 							type: 'POST',
@@ -119,12 +122,12 @@ if ( ! \class_exists( 'Scripts_Settings' ) ) {
 							}else if( false === data.status ){
 								swal({ title: data.title, text: data.text, type : "error", html: true, timer: 5000 });
 							}else{
-								swal( { title: 'OOPS!', text: '<?php _e( "Something went wrong! Please try again by refreshing the page.", 'ultimate-push-notifications' ); ?>', type : "error", html: true, timer: 5000 });
+								swal( { title: 'OOPS!', text: '<?php _e( 'Something went wrong! Please try again by refreshing the page.', 'ultimate-push-notifications' ); ?>', type : "error", html: true, timer: 5000 });
 							}
 						})
 						.fail(function( errorThrown ) {
 							console.log( 'Error: ' + errorThrown.responseText );
-							swal( '<?php _e( "Response Error", 'ultimate-push-notifications' ); ?>', errorThrown.responseText + '('+errorThrown.statusText +') ' , "error" );
+							swal( '<?php _e( 'Response Error', 'ultimate-push-notifications' ); ?>', errorThrown.responseText + '('+errorThrown.statusText +') ' , "error" );
 						});
 						return false;
 					});
@@ -139,7 +142,7 @@ if ( ! \class_exists( 'Scripts_Settings' ) ) {
 		 *
 		 * @return void
 		 */
-		private static function send_test_notifications(){
+		private static function send_test_notifications() {
 			?>
 			<script type="text/javascript">
 				jQuery(document).ready(function( $ ){
@@ -151,7 +154,7 @@ if ( ! \class_exists( 'Scripts_Settings' ) ) {
 						formData.append( "method", "admin\\functions\\SendNotifications@send_test_notifications" );
 						formData.append( "device_token", getToken );
 						formData.append( "cs_token", '<?php echo wp_create_nonce( SECURE_AUTH_SALT ); ?>' );
-						swal({ title: '<?php _e( "Sending", 'ultimate-push-notifications' ); ?>', text: '<?php _e( "Please wait a while...", 'ultimate-push-notifications' ); ?>', timer: 200000, imageUrl: '<?php echo CS_UPN_PLUGIN_ASSET_URI . 'img/loading-timer.gif'; ?>', showConfirmButton: false, html :true });
+						swal({ title: '<?php _e( 'Sending', 'ultimate-push-notifications' ); ?>', text: '<?php _e( 'Please wait a while...', 'ultimate-push-notifications' ); ?>', timer: 200000, imageUrl: '<?php echo CS_UPN_PLUGIN_ASSET_URI . 'img/loading-timer.gif'; ?>', showConfirmButton: false, html :true });
 						$.ajax({
 							url: ajaxurl,
 							type: 'POST',
@@ -170,12 +173,12 @@ if ( ! \class_exists( 'Scripts_Settings' ) ) {
 							}else if( false === data.status ){
 								swal({ title: data.title, text: data.text, type : "error", html: true, timer: 5000 });
 							}else{
-								swal( { title: 'OOPS!', text: '<?php _e( "Something went wrong! Please try again by refreshing the page.", 'ultimate-push-notifications' ); ?>', type : "error", html: true, timer: 5000 });
+								swal( { title: 'OOPS!', text: '<?php _e( 'Something went wrong! Please try again by refreshing the page.', 'ultimate-push-notifications' ); ?>', type : "error", html: true, timer: 5000 });
 							}
 						})
 						.fail(function( errorThrown ) {
 							console.log( 'Error: ' + errorThrown.responseText );
-							swal( '<?php _e( "Response Error", 'ultimate-push-notifications' ); ?>', errorThrown.responseText + '('+errorThrown.statusText +') ' , "error" );
+							swal( '<?php _e( 'Response Error', 'ultimate-push-notifications' ); ?>', errorThrown.responseText + '('+errorThrown.statusText +') ' , "error" );
 						});
 						return false;
 					});

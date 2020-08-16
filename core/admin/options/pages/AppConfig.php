@@ -52,12 +52,12 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 		public function generate_page( $args, $option ) {
 
 			$fields = array(
-				'st1'                                        => array(
+				'st1'                              => array(
 					'type'     => 'section_title',
 					'title'    => __( 'Web / Desktop push notifications setup', 'ultimate-push-notifications' ),
 					'desc_tip' => __( 'Please get the following configuration data from your firebase application.', 'ultimate-push-notifications' ),
 				),
-				'cs_app_config[apiKey]'             => array(
+				'cs_app_config[apiKey]'            => array(
 					'title'       => __( 'API Key', 'ultimate-push-notifications' ),
 					'type'        => 'text',
 					'class'       => 'form-control',
@@ -65,7 +65,7 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 					'placeholder' => __( 'Please enter api key', 'ultimate-push-notifications' ),
 					'desc_tip'    => __( 'Enter api key from your firebase app configuration. e.g: AIzaSyBFgjh1LQRreqtI7..', 'ultimate-push-notifications' ),
 				),
-				'cs_app_config[authDomain]'             => array(
+				'cs_app_config[authDomain]'        => array(
 					'title'       => __( 'Auth Domain', 'ultimate-push-notifications' ),
 					'type'        => 'text',
 					'class'       => 'form-control',
@@ -73,7 +73,7 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 					'placeholder' => __( 'Please enter auth domain', 'ultimate-push-notifications' ),
 					'desc_tip'    => __( 'Enter auth domain from your firebase app configuration. e.g: test-web-push-c2s99.firebaseapp.com', 'ultimate-push-notifications' ),
 				),
-				'cs_app_config[databaseURL]'             => array(
+				'cs_app_config[databaseURL]'       => array(
 					'title'       => __( 'Database URL', 'ultimate-push-notifications' ),
 					'type'        => 'text',
 					'class'       => 'form-control',
@@ -81,7 +81,7 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 					'placeholder' => __( 'Please enter database url', 'ultimate-push-notifications' ),
 					'desc_tip'    => __( 'Enter database url from your firebase app configuration. e.g: https://test-web-push-c2s99.firebaseio.com', 'ultimate-push-notifications' ),
 				),
-				'cs_app_config[projectId]'             => array(
+				'cs_app_config[projectId]'         => array(
 					'title'       => __( 'Project ID', 'ultimate-push-notifications' ),
 					'type'        => 'text',
 					'class'       => 'form-control',
@@ -89,7 +89,7 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 					'placeholder' => __( 'Please enter project id', 'ultimate-push-notifications' ),
 					'desc_tip'    => __( 'Enter project id from your firebase app configuration. e.g: test-web-push-c2s99', 'ultimate-push-notifications' ),
 				),
-				'cs_app_config[storageBucket]'             => array(
+				'cs_app_config[storageBucket]'     => array(
 					'title'       => __( 'Storage Bucket', 'ultimate-push-notifications' ),
 					'type'        => 'text',
 					'class'       => 'form-control',
@@ -97,7 +97,7 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 					'placeholder' => __( 'Please enter storage bucket', 'ultimate-push-notifications' ),
 					'desc_tip'    => __( 'Enter storage bucket from your firebase app configuration. e.g: test-web-push-c2s99.appspot.com', 'ultimate-push-notifications' ),
 				),
-				'cs_app_config[messagingSenderId]'             => array(
+				'cs_app_config[messagingSenderId]' => array(
 					'title'       => __( 'Messaging Sender ID', 'ultimate-push-notifications' ),
 					'type'        => 'text',
 					'class'       => 'form-control',
@@ -113,7 +113,7 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 					'placeholder' => __( 'Please enter app id', 'ultimate-push-notifications' ),
 					'desc_tip'    => __( 'Enter app id from your firebase app configuration. e.g: 1:460254094425:web:7a894f44e90d3e209042ac', 'ultimate-push-notifications' ),
 				),
-				'cs_app_config[measurementId]'             => array(
+				'cs_app_config[measurementId]'     => array(
 					'title'       => __( 'Measurement ID', 'ultimate-push-notifications' ),
 					'type'        => 'text',
 					'class'       => 'form-control',
@@ -121,14 +121,14 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 					'placeholder' => __( 'please enter measurement id', 'ultimate-push-notifications' ),
 					'desc_tip'    => __( 'Enter measurement id from your firebase app configuration. e.g: G-RH8F&MSE5R', 'ultimate-push-notifications' ),
 				),
-				'cs_app_config[key]'             => array(
+				'cs_app_config[key]'               => array(
 					'title'       => __( 'Server Key', 'ultimate-push-notifications' ),
 					'type'        => 'textarea',
 					'class'       => 'form-control',
 					'value'       => FormBuilder::get_value( 'key', $option, '' ),
 					'placeholder' => __( 'please enter server key', 'ultimate-push-notifications' ),
 					'desc_tip'    => __( 'Enter server key from your firebase app configuration. e.g: AAAAayUMFs.. You\'ll be able to get it from firebase app: settings -> Cloud Messaging section.', 'ultimate-push-notifications' ),
-				)
+				),
 			);
 
 			$args['content'] = $this->Form_Generator->generate_html_fields( $fields );

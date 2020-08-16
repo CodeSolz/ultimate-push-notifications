@@ -37,7 +37,7 @@ class RegisteredDevicesList extends \WP_List_Table {
 			)
 		);
 
-		$this->all_count_link = $all_count_link;
+		$this->all_count_link      = $all_count_link;
 		$this->get_only_my_devices = $get_only_my_devices;
 	}
 
@@ -47,11 +47,11 @@ class RegisteredDevicesList extends \WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'               => '<input type="checkbox" />',
-			'token'          => __( 'Token', 'ultimate-push-notifications' ),
-			'registered_by'          => __( 'Registered By', 'ultimate-push-notifications' ),
+			'cb'                       => '<input type="checkbox" />',
+			'token'                    => __( 'Token', 'ultimate-push-notifications' ),
+			'registered_by'            => __( 'Registered By', 'ultimate-push-notifications' ),
 			'total_notifications_sent' => __( 'Total Notifications Sent', 'ultimate-push-notifications' ),
-			'registered_on'             => __( 'Registered On', 'ultimate-push-notifications' ),
+			'registered_on'            => __( 'Registered On', 'ultimate-push-notifications' ),
 		);
 	}
 
@@ -77,37 +77,37 @@ class RegisteredDevicesList extends \WP_List_Table {
 		return sprintf( '<input type="checkbox" name="id[]" value="%1$s" />', $item->id );
 	}
 
-	
+
 	public function column_token( $item ) {
-		$content = \substr( $item->token, 0, 30 );
+		$content  = \substr( $item->token, 0, 30 );
 		$content .= '<div class="row-actions"><span class="edit">';
-		$content .= '<a class="send-test-notifications" data-token = "'.$item->token.'" >Send Test Notification</a>';
+		$content .= '<a class="send-test-notifications" data-token = "' . $item->token . '" >Send Test Notification</a>';
 		$content .= '</span></div>';
 		return $content;
 	}
 
 	public function column_registered_by( $item ) {
-		if( isset( $item->user_id ) ){
-			$user = get_user_by('id',  $item->user_id);
-			return $user->user_login .' ( <i>' . $user->user_email .'</i> )';
+		if ( isset( $item->user_id ) ) {
+			$user = get_user_by( 'id', $item->user_id );
+			return $user->user_login . ' ( <i>' . $user->user_email . '</i> )';
 		}
 		return;
 	}
 
 	public function column_registered_on( $item ) {
-		$dt = date('d M Y', strtotime($item->registered_on));
-		$dt .= ' at '. date(' h:i A', strtotime($item->registered_on));
+		$dt  = date( 'd M Y', strtotime( $item->registered_on ) );
+		$dt .= ' at ' . date( ' h:i A', strtotime( $item->registered_on ) );
 		return $dt;
 	}
 
 	public function column_total_notifications_sent( $item ) {
-		$content =  'Success : ';
+		$content  = 'Success : ';
 		$content .= empty( $item->total_sent_success_notifications ) ? 0 : $item->total_sent_success_notifications;
 		$content .= '<br>Fail : ';
 		$content .= empty( $item->total_sent_fail_notifications ) ? 0 : $item->total_sent_fail_notifications;
 		return $content;
 	}
-	
+
 	public function no_items() {
 		return _e( 'Sorry! You haven\'t Registered Any Device Yet!', 'ultimate-push-notifications' );
 	}
@@ -151,16 +151,15 @@ class RegisteredDevicesList extends \WP_List_Table {
 				$offset = 0;
 		}
 
-		//check all list or my devices
-		if( true === $this->get_only_my_devices ){
+		// check all list or my devices
+		if ( true === $this->get_only_my_devices ) {
 			$current_user_id = Util::cs_current_user_id();
-			if( empty( $search ) ){
+			if ( empty( $search ) ) {
 				$search = " where user_id = {$current_user_id}";
-			}else{
+			} else {
 				$search .= " and user_id = {$current_user_id}";
 			}
 		}
-		
 
 		$data   = array();
 		$result = $wpdb->get_results(

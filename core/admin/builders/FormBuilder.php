@@ -126,7 +126,7 @@ if ( ! \class_exists( 'FormBuilder' ) ) {
 					} elseif ( $item_assets['type'] == 'textarea' ) {
 						$input .= $this->generate_textarea_field( $item_name, $item_assets, 'mis_' . $field_id );
 					}
-						
+
 					if ( isset( $item_assets['after_text'] ) ) {
 						$input .= $item_assets['after_text'];
 					}
