@@ -73,6 +73,38 @@ class SendNotifications {
     }
 
     /**
+     * Prepare Send Notificaitons
+     *
+     * @param [type] $dataObj
+     * @return void
+     */
+    public static function prepare_send_notifications( $dataObj ){
+        $dataObj = \is_object( $dataObj ) ? $dataObj : (object) $dataObj;
+
+        $title = str_replace( $dataObj->find, $dataObj->replace, $dataObj->title );
+        $description = str_replace( $dataObj->find, $dataObj->replace, $dataObj->body );
+        $response = [];
+        if( !empty( $dataObj->tokens ) ){
+            foreach( $dataObj->tokens as $item ){
+                //send notifications
+                $payload = array( 
+                            'to' => $item->token,
+                            'data' => array(
+                                'title' => $title,
+                                'body' => $description,
+                                'icon' => $dataObj->icon,
+                                'click_action' => $dataObj->click_action
+                            )
+                        );
+
+                $response[] = self::send_notification( $payload );
+            }
+        }
+
+        return $response;
+    }
+
+    /**
      * Send notfication
      *
      * @return void

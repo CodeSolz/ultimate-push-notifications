@@ -32,7 +32,7 @@ if ( ! \class_exists( 'Upn_Woo_Hooks' ) ) {
 			add_action( 'woocommerce_order_status_changed', array( $this, 'upn_update_order_status' ), 10, 4 );
 
 			//test
-			// add_action( 'init', array( $this, 'upn_woocommerce_payment_complete' ) );
+			add_action( 'init', array( $this, 'upn_woocommerce_payment_complete' ) );
 		}
 
 		/**

@@ -69,29 +69,12 @@ class Upn_WooNotifications{
             foreach($authors as $author ){
                 $hasUserAsked = SetNotifications::has_user_asked_for_notification( $author['author_id'], 'productSold' );
                 if( $hasUserAsked ){
-
-                    $title = str_replace( $find, array( $first_name, $last_name, $full_name, $currency_symbol.$author['total_sold'] ), $hasUserAsked->title );
-                    $description = str_replace( $find, array( $first_name, $last_name, $full_name, $currency_symbol.$author['total_sold'] ), $hasUserAsked->body );
-                    $response = [];
-                    if( !empty( $hasUserAsked->tokens ) ){
-                        foreach( $hasUserAsked->tokens as $item ){
-                            //send notifications
-                            $payload = array( 
-                                        'to' => $item->token,
-                                        'data' => array(
-                                            'title' => $title,
-                                            'body' => $description,
-                                            'icon' => $icon,
-                                            'click_action' =>$order->get_view_order_url()
-                                        )
-                                    );
-
-                                    // pre_print( $payload );
-
-                            $response[] = SendNotifications::send_notification( $payload );
-
-                        }
-                    }
+                    $response[] = SendNotifications::prepare_send_notifications( (array) $hasUserAsked + array(
+                        'find' => $find,
+                        'replace' => array( $first_name, $last_name, $full_name, $currency_symbol.$author['total_sold'] ),
+                        'icon' => $icon,
+                        'click_action' =>$order->get_view_order_url()
+                    ) );
 
                 }
 
@@ -122,14 +105,25 @@ class Upn_WooNotifications{
         $hasUserAsked = SetNotifications::has_user_asked_for_notification( $post->post_author, 'addToCart' );        
         if( $hasUserAsked ){
             $find = array(
-                '{product_title}'
+                '{product_title}', '{price}'
+            );
+            $replace = array(
+                $product->get_title(), $price
             );
             $icon = CS_UPN_PLUGIN_ASSET_URI . '/img/icon-product-added-to-cart.png';
+            $response = SendNotifications::prepare_send_notifications( (array) $hasUserAsked + array(
+                'find' => $find,
+                'replace' => $replace,
+                'icon' => $icon,
+                'click_action' => get_permalink( $product_id )
+            ) );
 
+            return $response;
         }
 
-
+        return false;
     }
+    
     
     public function build_notific_on_order_status(){
 
