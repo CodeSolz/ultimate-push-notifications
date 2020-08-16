@@ -34,8 +34,8 @@ class SendNotifications {
         $args = (object) array(
             'to' => Util::check_evil_script($user_input['device_token']),
             'data' => array(
-                'title' => __( 'Test Notification', 'ultimate-push-notifications' ),
-				'body' => sprintf( __( "Hi %s, I'm test notifications. Hope you will enjoy it!", 'ultimate-push-notifications' ), $current_user->user_login ),
+                'title' => __( 'Ultimate Push Notification', 'ultimate-push-notifications' ),
+				'body' => sprintf( __( "Hi %s, I'm Ultimate Push Notifications. Hope you will enjoy it!", 'ultimate-push-notifications' ), $current_user->user_login ),
 				'icon' => CS_UPN_PLUGIN_ASSET_URI .'img/icon-push.png',
 				'click_action' => site_url(),
             )

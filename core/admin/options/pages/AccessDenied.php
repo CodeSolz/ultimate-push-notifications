@@ -1,11 +1,11 @@
 <?php namespace UltimatePushNotifications\admin\options\pages;
 
 /**
- * Class: Add New Coin
+ * Class: Access Denied
  *
  * @package Admin
- * @since 1.2.4
- * @author CodeSolz <customer-support@codesolz.net>
+ * @since 1.0.0
+ * @author M.Tuhin <info@codesolz.net>
  */
 
 if ( ! defined( 'CS_UPN_VERSION' ) ) {

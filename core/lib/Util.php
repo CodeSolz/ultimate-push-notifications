@@ -5,7 +5,7 @@
  *
  * @package Library
  * @since 1.0.0
- * @author CodeSolz <customer-service@codesolz.com>
+ * @author M.Tuhin <info@codesolz.com>
  */
 
 if ( ! defined( 'CS_UPN_VERSION' ) ) {
