@@ -169,8 +169,8 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 		public function upn_page_register_my_device() {
 			$option = '';
 			$page_info = array(
-				'title'     => __( 'Register My Device', 'ultimate-push-notifications' ),
-				'sub_title' => __( 'By visiting this page your device will be automatically registered. ', 'ultimate-push-notifications' ),
+				'title'     => __( 'My Registered Devices', 'ultimate-push-notifications' ),
+				'sub_title' => __( 'By visiting this page your device will be automatically registered. Please read the hints to understand more.', 'ultimate-push-notifications' ),
 			);
 
 			if ( current_user_can( 'manage_options' ) || current_user_can( 'administrator' ) ) {

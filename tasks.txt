@@ -1,0 +1,6 @@
+show device token in - registered device area
+--- show a test message area
+show all registered device in all list - new page
+add function to send notifications - 
+ --- user registered 
+ ---- woocommerce 

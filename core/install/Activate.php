@@ -34,6 +34,9 @@ if ( ! \class_exists( 'Activate' ) ) {
 				`user_id` bigint,
 				`token` mediumtext,
 				`device_id` mediumtext,
+				`registered_on` datetime,
+				`total_sent_success_notifications` bigint(20),
+				`total_sent_fail_notifications` bigint(20),
 				PRIMARY KEY ( `id`)
 				) $charset_collate",
 				"CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}upn_notifications`(

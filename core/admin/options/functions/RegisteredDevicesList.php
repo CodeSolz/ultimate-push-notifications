@@ -21,18 +21,24 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 
 
 
-class AllMaskingRulesList extends \WP_List_Table {
+class RegisteredDevicesList extends \WP_List_Table {
 	var $item_per_page = 10;
 	var $total_post;
 
-	public function __construct() {
+	private $all_count_link;
+	private $get_only_my_devices;
+
+	public function __construct( $all_count_link, $get_only_my_devices = false ) {
 		parent::__construct(
 			array(
-				'singular' => __( 'find_replace', 'ultimate-push-notifications' ),
-				'plural'   => __( 'finds_replaces', 'ultimate-push-notifications' ),
+				'singular' => __( 'Registered Device', 'ultimate-push-notifications' ),
+				'plural'   => __( 'Registered Devices', 'ultimate-push-notifications' ),
 				'ajax'     => false,
 			)
 		);
+
+		$this->all_count_link = $all_count_link;
+		$this->get_only_my_devices = $get_only_my_devices;
 	}
 
 	/**
@@ -42,10 +48,10 @@ class AllMaskingRulesList extends \WP_List_Table {
 	public function get_columns() {
 		return array(
 			'cb'               => '<input type="checkbox" />',
-			'find'             => __( 'Find', 'ultimate-push-notifications' ),
-			'replace'          => __( 'Replace by', 'ultimate-push-notifications' ),
-			'type'             => __( 'Rule Type', 'ultimate-push-notifications' ),
-			'where_to_replace' => __( 'Where to replace', 'ultimate-push-notifications' ),
+			'device_id'             => __( 'Device ID', 'ultimate-push-notifications' ),
+			'token'          => __( 'Token', 'ultimate-push-notifications' ),
+			'total_notifications_sent' => __( 'Total Notifications Sent', 'ultimate-push-notifications' ),
+			'registered_on'             => __( 'Registered On', 'ultimate-push-notifications' ),
 		);
 	}
 
@@ -54,10 +60,10 @@ class AllMaskingRulesList extends \WP_List_Table {
 	 */
 	function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
-			case 'find':
-			case 'replace':
-			case 'type':
-			case 'where_to_replace':
+			case 'device_id':
+			case 'token':
+			case 'registered_on':
+			case 'total_notifications_sent':
 				return $item->{$column_name};
 			default:
 				return '---'; // Show the whole array for troubleshooting purposes
@@ -71,32 +77,34 @@ class AllMaskingRulesList extends \WP_List_Table {
 		return sprintf( '<input type="checkbox" name="id[]" value="%1$s" />', $item->id );
 	}
 
-	public function column_find( $item ) {
-		echo Util::cs_esc_html( $item->find );
-		$edit_link = admin_url( "admin.php?page=cs-add-replacement-rule&action=update&rule_id={$item->id}" );
-		echo '<div class="row-actions"><span class="edit">';
-		echo '<a href="' . $edit_link . '">Edit</a>';
-		echo '</span></div>';
+	public function column_device_id( $item ) {
+		$content = $item->device_id;
+		$content .= '<div class="row-actions"><span class="edit">';
+		$content .= '<a class="send-test-notifications" data-token = "'.$item->token.'" >Send Test Notification</a>';
+		$content .= '</span></div>';
+		return $content;
 	}
 
-	public function column_replace( $item ) {
-		echo Util::cs_esc_html( $item->replace );
+	public function column_token( $item ) {
+		return $item->token;
 	}
 
-	public function column_where_to_replace( $item ) {
-		// pre_print( $item );
-		if ( strtolower( $item->where_to_replace ) == 'all' ) {
-			return 'All over the website';
-		}
+	public function column_registered_on( $item ) {
+		return date('d M Y', strtotime($item->registered_on));
 	}
 
-
+	public function column_total_notifications_sent( $item ) {
+		$content = 'Success : ' . empty( $item->total_sent_success_notifications ) ? 0 : $item->total_sent_success_notifications;
+		$content .= '<br>Fail : ' . empty( $item->total_sent_fail_notifications ) ? 0 : $item->total_sent_fail_notifications;
+		return $content;
+	}
+	
 	public function no_items() {
-		_e( 'Sorry! No Rule Found!', 'ultimate-push-notifications' );
+		return _e( 'Sorry! You haven\'t Registered Any Device Yet!', 'ultimate-push-notifications' );
 	}
 
 	function get_views() {
-		$all_link     = admin_url( 'admin.php?page=cs-all-masking-rules' );
+		$all_link     = admin_url( 'admin.php?page=' . $this->all_count_link );
 		$views['all'] = "<a href='{$all_link}' >All <span class='count'>({$this->total_post})</span></a>";
 		return $views;
 	}
@@ -134,9 +142,20 @@ class AllMaskingRulesList extends \WP_List_Table {
 				$offset = 0;
 		}
 
+		//check all list or my devices
+		if( true === $this->get_only_my_devices ){
+			$current_user_id = Util::cs_current_user_id();
+			if( empty( $search ) ){
+				$search = " where user_id = {$current_user_id}";
+			}else{
+				$search .= " and user_id = {$current_user_id}";
+			}
+		}
+		
+
 		$data   = array();
 		$result = $wpdb->get_results(
-			"SELECT * from {$wpdb->prefix}rtafar_rules as c "
+			"SELECT * from {$wpdb->prefix}upn_user_devices as c "
 				. "$search "
 				. " order by {$order} limit $this->item_per_page offset {$offset}"
 		);
@@ -146,7 +165,7 @@ class AllMaskingRulesList extends \WP_List_Table {
 				$data[] = $item;
 			}
 		}
-		$total         = $wpdb->get_var( "select count(id) as total from {$wpdb->prefix}rtafar_rules as c {$search} " );
+		$total         = $wpdb->get_var( "select count(id) as total from {$wpdb->prefix}upn_user_devices as c {$search} " );
 		$data['count'] = $this->total_post = $total;
 
 		return $data;
@@ -170,7 +189,7 @@ class AllMaskingRulesList extends \WP_List_Table {
 					$log_ids = $_GET['id'];
 					if ( $log_ids ) {
 						foreach ( $log_ids as $log ) {
-							$wpdb->delete( "{$wpdb->prefix}rtafar_rules", array( 'id' => $log ) );
+							$wpdb->delete( "{$wpdb->prefix}upn_user_devices", array( 'id' => $log ) );
 						}
 					}
 					$this->success_admin_notice();
@@ -183,7 +202,7 @@ class AllMaskingRulesList extends \WP_List_Table {
 	public function success_admin_notice() {
 		?>
 		<div class="updated">
-			<p><?php _e( 'Rule has been deleted successfully!', 'ultimate-push-notifications' ); ?></p>
+			<p><?php _e( 'Device has been deleted successfully!', 'ultimate-push-notifications' ); ?></p>
 		</div>
 		<?php
 	}
