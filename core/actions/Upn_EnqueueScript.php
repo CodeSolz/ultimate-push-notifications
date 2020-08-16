@@ -32,6 +32,8 @@ if ( ! \class_exists( 'Upn_EnqueueScript' ) ) {
 			wp_enqueue_script( 'jquery' );
 			wp_enqueue_script( 'admin.app.global', CS_UPN_PLUGIN_ASSET_URI . 'js/upn.admin.global.min.js', false );
 
+			$this->upn_action_enqueue_scripts();
+
 		}
 
 		/**

@@ -179,7 +179,7 @@ if ( ! \class_exists( 'SendNotifications' ) ) {
 						'total_sent_fail_notifications'    => $is_exists->total_sent_fail_notifications + $res['failure'],
 					),
 					array(
-						'id' => $is_exists,
+						'id' => $is_exists->id,
 					)
 				);
 			}
