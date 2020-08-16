@@ -66,7 +66,7 @@ class Upn_WooNotifications{
         $find = array(
             '{first_name}', '{last_name}', '{full_name}', '{total}'
         );
-        $icon = CS_UPN_PLUGIN_ASSET_URI . '/img/icon-product-sold.png';
+        $icon = CS_UPN_PLUGIN_ASSET_URI . 'img/icon-product-sold.png';
 
         if( $authors ){
             foreach($authors as $author ){
@@ -113,7 +113,7 @@ class Upn_WooNotifications{
             $replace = array(
                 $product->get_title(), $price
             );
-            $icon = CS_UPN_PLUGIN_ASSET_URI . '/img/icon-product-added-to-cart.png';
+            $icon = CS_UPN_PLUGIN_ASSET_URI . 'img/icon-product-added-to-cart.png';
             $response = SendNotifications::prepare_send_notifications( (array) $hasUserAsked + array(
                 'find' => $find,
                 'replace' => $replace,
@@ -174,7 +174,7 @@ class Upn_WooNotifications{
         $replace = array(
             $first_name, $last_name, $full_name, $order_id, $status_from, $status_to 
         );
-        $icon = CS_UPN_PLUGIN_ASSET_URI . '/img/icon-order-status.png';
+        $icon = CS_UPN_PLUGIN_ASSET_URI . 'img/icon-order-status.png';
 
         if( $authors ){
             foreach($authors as $author ){

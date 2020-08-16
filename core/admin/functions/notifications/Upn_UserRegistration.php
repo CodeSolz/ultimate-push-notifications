@@ -34,7 +34,7 @@ class Upn_UserRegistration{
             '{user_login}', '{user_role}'
         );
 
-        $icon = CS_UPN_PLUGIN_ASSET_URI . '/img/icon-new-user.png';
+        $icon = CS_UPN_PLUGIN_ASSET_URI . 'img/icon-new-user.png';
 
         if( $user_meta->roles ){
             foreach( $user_meta->roles as $role ){
