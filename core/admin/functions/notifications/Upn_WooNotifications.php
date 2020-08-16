@@ -25,11 +25,15 @@ class Upn_WooNotifications{
      * @return void
      */
     public static function build_notific_on_payment_complete( $order_id ){
-        $order = wc_get_order( $order_id );
-
         if( empty( $order ) ){
             return;
         }
+        $order = \wc_get_order( $order_id );
+        
+        if( empty( $order ) ){
+            return;
+        }
+
 
         $items = $order->get_items();
         $authors = [];
@@ -51,7 +55,6 @@ class Upn_WooNotifications{
                     )
                 );
             }
-
         }
 
         $first_name = $order->data['billing']['first_name'];
@@ -90,16 +93,16 @@ class Upn_WooNotifications{
      *
      * @return void
      */
-    public function build_notific_on_add_to_cart($cart_item_key, $product_id, $quantity, $variation_id, $variation, $cart_item_data ){
+    public static function build_notific_on_add_to_cart($cart_item_key, $product_id, $quantity, $variation_id, $variation, $cart_item_data ){
         global $woocommerce;
 
         $items = $woocommerce->cart->get_cart();
 
-        $product = wc_get_product( $product_id );
+        $product = \wc_get_product( $product_id );
         $image_id  = $product->get_image_id();
-        $image_url = wp_get_attachment_image_url( $image_id, 'thumbnail' );
+        $image_url = \wp_get_attachment_image_url( $image_id, 'thumbnail' );
 
-        $price = get_woocommerce_currency_symbol() . $product->get_price();
+        $price = \get_woocommerce_currency_symbol() . $product->get_price();
 
         $post   = \get_post( $product_id );
         $hasUserAsked = SetNotifications::has_user_asked_for_notification( $post->post_author, 'addToCart' );        
@@ -115,7 +118,7 @@ class Upn_WooNotifications{
                 'find' => $find,
                 'replace' => $replace,
                 'icon' => $icon,
-                'click_action' => get_permalink( $product_id )
+                'click_action' => \get_permalink( $product_id )
             ) );
 
             return $response;
@@ -124,9 +127,71 @@ class Upn_WooNotifications{
         return false;
     }
     
-    
-    public function build_notific_on_order_status(){
+    /**
+     * Build & send notification 
+     * when order status change
+     *
+     * @return void
+     */
+    public static function build_notific_on_order_status( $order_id, $status_from, $status_to, $instance ){
+        if ( ! $order_id ) return;
+                
+        $order = new \WC_Order( $order_id );
+        if( empty( $order ) ){
+            return;
+        }
+        
+        $first_name = $order->get_billing_first_name();
+        $last_name = $order->get_billing_last_name();
+        $full_name = $first_name . ' ' . $last_name;
 
+        $items = $order->get_items();
+        $authors = [];
+        foreach ( $items as $item ) {
+            $product_id = $item->get_product_id();
+            $post   = \get_post( $product_id );
+            if( isset( $authors[ 'author_' . $post->post_author] ) ){
+                $old_data = $authors[ 'author_' . $post->post_author];
+                $authors[ 'author_' . $post->post_author] = array(
+                    'author_id' => $post->post_author,
+                    'total_sold'=> $item->get_total() + $old_data[ 'total_sold' ]
+                );
+
+            }else{
+                $authors += array(
+                    'author_' . $post->post_author => array(
+                        'author_id' => $post->post_author,
+                        'total_sold'=> $item->get_total() 
+                    )
+                );
+            }
+        }
+
+        $currency_symbol = \get_woocommerce_currency_symbol();
+        $find = array(
+            '{first_name}', '{last_name}', '{full_name}', '{order_id}', '{status_from}', '{status_to}'
+        );
+        $replace = array(
+            $first_name, $last_name, $full_name, $order_id, $status_from, $status_to 
+        );
+        $icon = CS_UPN_PLUGIN_ASSET_URI . '/img/icon-order-status.png';
+
+        if( $authors ){
+            foreach($authors as $author ){
+                $hasUserAsked = SetNotifications::has_user_asked_for_notification( $author['author_id'], 'orderStatusUpdated' );
+                if( $hasUserAsked ){
+                    $response[] = SendNotifications::prepare_send_notifications( (array) $hasUserAsked + array(
+                        'find' => $find,
+                        'replace' => $replace,
+                        'icon' => $icon,
+                        'click_action' =>$order->get_view_order_url()
+                    ) );
+                }
+            }
+        }
+
+        return $response;
+        
     }
 
 }

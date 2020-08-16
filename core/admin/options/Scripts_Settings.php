@@ -35,9 +35,6 @@ if ( ! \class_exists( 'Scripts_Settings' ) ) {
 					global $current_user;
 					wp_get_current_user();
 
-					wp_enqueue_script( 'firebase-app', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase-app.js', array(), '1.0', true );
-					wp_enqueue_script( 'firebase-messaging', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase-messaging.js',  array(), '1.0', true  );
-					wp_enqueue_script( 'init_firebase_app', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebaseInit.min.js',  array(), '1.0', true  );
 					wp_enqueue_script( 'init_upn_app', CS_UPN_PLUGIN_ASSET_URI . 'js/app-upn.js',  array(), '1.0', false  );
 	
 					//localize scripts

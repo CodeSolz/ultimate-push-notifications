@@ -87,7 +87,7 @@ class SendNotifications {
         if( !empty( $dataObj->tokens ) ){
             foreach( $dataObj->tokens as $item ){
                 //send notifications
-                $payload = array( 
+                $payload = (object) array( 
                             'to' => $item->token,
                             'data' => array(
                                 'title' => $title,
@@ -97,7 +97,7 @@ class SendNotifications {
                             )
                         );
 
-                $response[] = self::send_notification( $payload );
+                $response[] =  (new self)->send_notification( $payload );
             }
         }
 

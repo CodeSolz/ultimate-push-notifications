@@ -19,8 +19,6 @@ if ( ! \class_exists( 'Upn_Woo_Hooks' ) ) {
 
 	class Upn_Woo_Hooks {
 
-
-
 		function __construct() {
 			/**Send notification when product purchase complete */
 			add_action( 'woocommerce_payment_complete', array( $this, 'upn_woocommerce_payment_complete' ) );
@@ -31,8 +29,6 @@ if ( ! \class_exists( 'Upn_Woo_Hooks' ) ) {
 			/**Send notification when order change */
 			add_action( 'woocommerce_order_status_changed', array( $this, 'upn_update_order_status' ), 10, 4 );
 
-			//test
-			add_action( 'init', array( $this, 'upn_woocommerce_payment_complete' ) );
 		}
 
 		/**
@@ -54,9 +50,15 @@ if ( ! \class_exists( 'Upn_Woo_Hooks' ) ) {
 		public function upn_woocommerce_add_to_cart($cart_item_key, $product_id, $quantity, $variation_id, $variation, $cart_item_data ){
 			return Upn_WooNotifications::build_notific_on_add_to_cart( $cart_item_key, $product_id, $quantity, $variation_id, $variation, $cart_item_data  );
 		}
-
-		public function upn_update_order_status(){
-
+		
+		/**
+		 * Send notification when 
+		 * order status change
+		 *
+		 * @return void
+		 */
+		public function upn_update_order_status($order_id, $status_from, $status_to, $instance ){
+			return Upn_WooNotifications::build_notific_on_order_status( $order_id, $status_from, $status_to, $instance   );
 		}
 
 		
