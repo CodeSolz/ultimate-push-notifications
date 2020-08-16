@@ -89,7 +89,7 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 			return get_option( self::$app_config_key );
 		}
 
-
+		
 		/**
 		 * Save / update token
 		 *
@@ -126,7 +126,8 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 					array(
 						'user_id' => $current_user,
 						'token' => $token,
-						'device_id' => $device_id
+						'device_id' => $device_id,
+						'registered_on' => date('Y-m-d H:i:s')
 					)
 				);
 			}

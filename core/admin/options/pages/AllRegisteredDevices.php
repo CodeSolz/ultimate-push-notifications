@@ -19,7 +19,7 @@ use UltimatePushNotifications\admin\options\functions\RegisteredDevicesList;
 
 if ( ! \class_exists( 'RegisterMyDevice' ) ) {
 
-	class RegisterMyDevice {
+	class AllRegisteredDevices {
 
 		/**
 		 * Hold page generator class
@@ -58,28 +58,18 @@ if ( ! \class_exists( 'RegisterMyDevice' ) ) {
 				$args['well'] = "<p class='search-keyword'>Search results for : '<b>" . $_GET['s'] . "</b>' </p> <a href='{$back_url}' class='button'><< Back to all</a> ";
 			}
 
-			//check app file exists
-			$is_app_file_exists = false;
-			if( ! file_exists( CS_UPN_BASE_DIR_PATH . 'assets/plugins/firebase/js/firebaseInit.min.js' ) ){
-				$is_app_file_exists = sprintf( 
-							__( 'You need to update your app configuration. Please %sgo to app config%s and update your configuration.', 'real-time-auto-find-and-replace' ),
-							'<a href="'.admin_url( 'admin.php?page=cs-upn-app-configuration' ).'">' ,
-							'</a>'
-						);
-			}
-
 			ob_start();
-			$adCodeList = new RegisteredDevicesList( 'cs-upn-register-my-device', true );
+			$adCodeList = new RegisteredDevicesList( 'cs-upn-all-registered-devices' );
 			$adCodeList->prepare_items();
 			echo '<form id="plugins-filter" method="get"><input type="hidden" name="page" value="' . $page . '" />';
 			$adCodeList->views();
 			$adCodeList->search_box( __( 'Search Coin', 'real-time-auto-find-and-replace' ), '' );
 			$adCodeList->display();
 			echo '</form>';
+
 			$html = ob_get_clean();
 
-			$args['content'] = false === $is_app_file_exists ? $html : $is_app_file_exists;
-			
+			$args['content'] = $html;
 			$swal_title           = '....';
 			// $btn_txt              = '...';
 			$update_hidden_fields = array();
@@ -103,23 +93,6 @@ if ( ! \class_exists( 'RegisterMyDevice' ) ) {
 			$args['hidden_fields'] = $this->Form_Generator->generate_hidden_fields( $hidden_fields );
 
 			$args['body_class'] = 'no-bottom-margin';
-
-			$args['well'] = sprintf( "<ul>
-            <li> <b>Basic Hints</b>
-                <ol>
-                    <li>
-                        When the page loaded and notification permission appeared, you must click 'allow' to allow notification. 
-                    </li>
-                    <li>
-                        If somehow you close the permission prompt window, %sClick here to see the notification permission%s prompt again.
-                    </li>
-                    <li>
-						If you don't see the prompt, click the lock icon located in-front of the URL in the browser. You will be able to see the site information. 
-						From there, select 'Ask(default)' value for the Notifications.                    
-					</li>
-                </ol>
-            </li>
-        </ul>", '<a href="'.admin_url('admin.php?page=cs-upn-register-my-device').'">', '</a>' );
 
 			return $this->Admin_Page_Generator->generate_page( $args );
 		}

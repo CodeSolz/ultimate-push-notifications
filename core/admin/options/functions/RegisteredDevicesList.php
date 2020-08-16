@@ -48,8 +48,8 @@ class RegisteredDevicesList extends \WP_List_Table {
 	public function get_columns() {
 		return array(
 			'cb'               => '<input type="checkbox" />',
-			'device_id'             => __( 'Device ID', 'ultimate-push-notifications' ),
 			'token'          => __( 'Token', 'ultimate-push-notifications' ),
+			'registered_by'          => __( 'Registered By', 'ultimate-push-notifications' ),
 			'total_notifications_sent' => __( 'Total Notifications Sent', 'ultimate-push-notifications' ),
 			'registered_on'             => __( 'Registered On', 'ultimate-push-notifications' ),
 		);
@@ -60,8 +60,8 @@ class RegisteredDevicesList extends \WP_List_Table {
 	 */
 	function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
-			case 'device_id':
 			case 'token':
+			case 'registered_by':
 			case 'registered_on':
 			case 'total_notifications_sent':
 				return $item->{$column_name};
@@ -77,25 +77,34 @@ class RegisteredDevicesList extends \WP_List_Table {
 		return sprintf( '<input type="checkbox" name="id[]" value="%1$s" />', $item->id );
 	}
 
-	public function column_device_id( $item ) {
-		$content = $item->device_id;
+	
+	public function column_token( $item ) {
+		$content = \substr( $item->token, 0, 30 );
 		$content .= '<div class="row-actions"><span class="edit">';
 		$content .= '<a class="send-test-notifications" data-token = "'.$item->token.'" >Send Test Notification</a>';
 		$content .= '</span></div>';
 		return $content;
 	}
 
-	public function column_token( $item ) {
-		return $item->token;
+	public function column_registered_by( $item ) {
+		if( isset( $item->user_id ) ){
+			$user = get_user_by('id',  $item->user_id);
+			return $user->user_login .' ( <i>' . $user->user_email .'</i> )';
+		}
+		return;
 	}
 
 	public function column_registered_on( $item ) {
-		return date('d M Y', strtotime($item->registered_on));
+		$dt = date('d M Y', strtotime($item->registered_on));
+		$dt .= ' at '. date(' h:i A', strtotime($item->registered_on));
+		return $dt;
 	}
 
 	public function column_total_notifications_sent( $item ) {
-		$content = 'Success : ' . empty( $item->total_sent_success_notifications ) ? 0 : $item->total_sent_success_notifications;
-		$content .= '<br>Fail : ' . empty( $item->total_sent_fail_notifications ) ? 0 : $item->total_sent_fail_notifications;
+		$content =  'Success : ';
+		$content .= empty( $item->total_sent_success_notifications ) ? 0 : $item->total_sent_success_notifications;
+		$content .= '<br>Fail : ';
+		$content .= empty( $item->total_sent_fail_notifications ) ? 0 : $item->total_sent_fail_notifications;
 		return $content;
 	}
 	

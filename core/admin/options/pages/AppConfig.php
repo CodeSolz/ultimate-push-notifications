@@ -118,8 +118,16 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 					'type'        => 'text',
 					'class'       => 'form-control',
 					'value'       => FormBuilder::get_value( 'measurementId', $option, '' ),
-					'placeholder' => __( 'please measurement id', 'ultimate-push-notifications' ),
+					'placeholder' => __( 'please enter measurement id', 'ultimate-push-notifications' ),
 					'desc_tip'    => __( 'Enter measurement id from your firebase app configuration. e.g: G-RH8F&MSE5R', 'ultimate-push-notifications' ),
+				),
+				'cs_app_config[key]'             => array(
+					'title'       => __( 'Server Key', 'ultimate-push-notifications' ),
+					'type'        => 'textarea',
+					'class'       => 'form-control',
+					'value'       => FormBuilder::get_value( 'key', $option, '' ),
+					'placeholder' => __( 'please enter server key', 'ultimate-push-notifications' ),
+					'desc_tip'    => __( 'Enter server key from your firebase app configuration. e.g: AAAAayUMFs.. You\'ll be able to get it from firebase app: settings -> Cloud Messaging section.', 'ultimate-push-notifications' ),
 				)
 			);
 

@@ -90,7 +90,54 @@ if ( ! \class_exists( 'SetNotifications' ) ) {
 				)
 			);
 
-			return maybe_unserialize( $get_row->notification_type );
+			return isset($get_row->notification_type ) ? maybe_unserialize( $get_row->notification_type ) : '';
+		}
+
+		/**
+		 * Get notification type 
+		 * for multi users
+		 *
+		 * @return void
+		 */
+		public static function has_user_asked_for_notification( $user_id, $notification_type ){
+			if( empty( $user_id ) ) return false;
+
+			$get_user_notification_settings = self::get_notification_type( $user_id );
+			
+			if( empty( $get_user_notification_settings ) ){
+				return false;
+			}
+			$get_user_notification_settings = (object) $get_user_notification_settings;
+
+			$hasAsked = $notification_type .'Check';
+			if( isset( $get_user_notification_settings->{$hasAsked} ) ) {
+
+				//check has custom title & descriptions
+				$titleText = $notification_type . 'Title';
+				$title = isset( $get_user_notification_settings->{$titleText} ) ? $get_user_notification_settings->{$titleText} : '';
+
+				$bodyText = $notification_type . 'Body';
+				$body = isset( $get_user_notification_settings->{$bodyText} ) ? $get_user_notification_settings->{$bodyText} : '';
+
+				//get user tokens
+				global $wpdb;
+				$tokens = $wpdb->get_results(
+					$wpdb->prepare(
+						"SELECT token from {$wpdb->prefix}upn_user_devices where user_id = %d ",
+						$user_id
+					)
+				);
+
+				return (object) array(
+					'title' => $title,
+					'body' => $body,
+					'tokens' => $tokens
+				);
+
+			}
+
+			return false;
+
 		}
 
 

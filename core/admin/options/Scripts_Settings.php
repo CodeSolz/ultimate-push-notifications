@@ -148,6 +148,7 @@ if ( ! \class_exists( 'Scripts_Settings' ) ) {
 						formData.append( "action", "upn_ajax" );
 						formData.append( "method", "admin\\functions\\SendNotifications@send_test_notifications" );
 						formData.append( "device_token", getToken );
+						formData.append( "cs_token", '<?php echo wp_create_nonce( SECURE_AUTH_SALT ); ?>' );
 						swal({ title: '<?php _e( "Sending", 'ultimate-push-notifications' ); ?>', text: '<?php _e( "Please wait a while...", 'ultimate-push-notifications' ); ?>', timer: 200000, imageUrl: '<?php echo CS_UPN_PLUGIN_ASSET_URI . 'img/loading-timer.gif'; ?>', showConfirmButton: false, html :true });
 						$.ajax({
 							url: ajaxurl,

@@ -104,10 +104,20 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 				array( $this, 'upn_page_register_my_device' )
 			);
 
+			$this->upn_menus['menu_all_registered_devices'] = add_submenu_page(
+				CS_UPN_PLUGIN_IDENTIFIER,
+				__( 'All Registered devices', 'ultimate-push-notifications' ),
+				'All Registered Devices',
+				'administrator',
+				'cs-upn-all-registered-devices',
+				array( $this, 'upn_page_all_registered_devices' )
+			);
+
 			// load script
 			add_action( "load-{$this->upn_menus['menu_app_config']}", array( $this, 'upn_register_admin_settings_scripts' ) );
 			add_action( "load-{$this->upn_menus['menu_set_notifications']}", array( $this, 'upn_register_admin_settings_scripts' ) );
 			add_action( "load-{$this->upn_menus['menu_add_my_device']}", array( $this, 'upn_register_admin_settings_scripts' ) );
+			add_action( "load-{$this->upn_menus['menu_all_registered_devices']}", array( $this, 'upn_register_admin_settings_scripts' ) );
 
 			remove_submenu_page( CS_UPN_PLUGIN_IDENTIFIER, CS_UPN_PLUGIN_IDENTIFIER );
 
@@ -176,6 +186,28 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 			if ( current_user_can( 'manage_options' ) || current_user_can( 'administrator' ) ) {
 				$RegisterMyDevice = $this->pages->RegisterMyDevice();
 				echo $this->generate_page( $RegisterMyDevice, $page_info, $option );
+			} else {
+				echo $this->page_permission_restricted( $page_info );
+			}
+			
+			return;
+		}
+
+		/**
+		 * Register my device
+		 *
+		 * @return void
+		 */
+		public function upn_page_all_registered_devices() {
+			$option = '';
+			$page_info = array(
+				'title'     => sprintf( __( 'All Registered Devices %s visible to administrator only %s', 'ultimate-push-notifications' ), '<span class="visibility" >(', ')</span>'),
+				'sub_title' => __( 'List of all the registered devices in the website', 'ultimate-push-notifications' ),
+			);
+
+			if ( current_user_can( 'administrator' ) ) {
+				$AllRegisteredDevices = $this->pages->AllRegisteredDevices();
+				echo $this->generate_page( $AllRegisteredDevices, $page_info, $option );
 			} else {
 				echo $this->page_permission_restricted( $page_info );
 			}
