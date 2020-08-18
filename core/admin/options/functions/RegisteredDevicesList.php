@@ -55,6 +55,8 @@ class RegisteredDevicesList extends \WP_List_Table {
 		);
 	}
 
+
+
 	/**
 	 * Column default info
 	 */
@@ -81,7 +83,7 @@ class RegisteredDevicesList extends \WP_List_Table {
 	public function column_token( $item ) {
 		$content  = \substr( $item->token, 0, 30 );
 		$content .= '<div class="row-actions"><span class="edit">';
-		$content .= '<a class="send-test-notifications" data-token = "' . $item->token . '" >Send Test Notification</a>';
+		$content .= sprintf( __( '%1$sSend Test Notification%2$s', 'ultimate-push-notifications' ), '<a class="send-test-notifications" data-token = "' . $item->token . '" >', '</a>' );
 		$content .= '</span></div>';
 		return $content;
 	}
@@ -101,20 +103,20 @@ class RegisteredDevicesList extends \WP_List_Table {
 	}
 
 	public function column_total_notifications_sent( $item ) {
-		$content  = 'Success : ';
+		$content  = __( 'Success :', 'ultimate-push-notifications' );
 		$content .= empty( $item->total_sent_success_notifications ) ? 0 : $item->total_sent_success_notifications;
-		$content .= '<br>Fail : ';
+		$content .= sprintf( __( '%sFailure :', 'ultimate-push-notifications' ), '<br/>' );
 		$content .= empty( $item->total_sent_fail_notifications ) ? 0 : $item->total_sent_fail_notifications;
 		return $content;
 	}
 
 	public function no_items() {
-		return _e( 'Sorry! You haven\'t Registered Any Device Yet!', 'ultimate-push-notifications' );
+		return _e( 'Sorry! No Registered Device Found!', 'ultimate-push-notifications' );
 	}
 
 	function get_views() {
 		$all_link     = admin_url( 'admin.php?page=' . $this->all_count_link );
-		$views['all'] = "<a href='{$all_link}' >All <span class='count'>({$this->total_post})</span></a>";
+		$views['all'] = sprintf( __( '%1$sAll%2$s', 'ultimate-push-notifications' ), "<a href='{$all_link}' >", "<span class='count'>({$this->total_post})</span></a>" );
 		return $views;
 	}
 
@@ -132,14 +134,14 @@ class RegisteredDevicesList extends \WP_List_Table {
 	 * @return type
 	 */
 	private function poulate_the_data() {
-		global $wpdb, $wapg_tables;
+		global $wpdb;
 		$search = '';
-		if ( isset( $_GET['s'] ) && ! empty( $skey = $_GET['s'] ) ) {
-			$search = " where c.find like '%{$skey}%'";
+		if ( isset( $_GET['s'] ) && ! empty( $skey = Util::check_evil_script( $_GET['s'] ) ) ) {
+			$search = " where c.token like '%{$skey}%' or c.total_sent_success_notifications like '%{$skey}%' or c.total_sent_fail_notifications like '%{$skey}%'";
 		}
 
-		if ( isset( $_GET['order'] ) ) {
-			$order = $_GET['order'];
+		if ( isset( $_GET['order'] ) && ! empty( $order = Util::check_evil_script( $_GET['order'] ) ) ) {
+			$order = $order;
 		} else {
 			$order = 'c.id DESC';
 		}
@@ -155,9 +157,9 @@ class RegisteredDevicesList extends \WP_List_Table {
 		if ( true === $this->get_only_my_devices ) {
 			$current_user_id = Util::cs_current_user_id();
 			if ( empty( $search ) ) {
-				$search = " where user_id = {$current_user_id}";
+				$search = " where c.user_id = {$current_user_id}";
 			} else {
-				$search .= " and user_id = {$current_user_id}";
+				$search .= " and c.user_id = {$current_user_id}";
 			}
 		}
 
@@ -180,21 +182,21 @@ class RegisteredDevicesList extends \WP_List_Table {
 	}
 
 	function process_bulk_action() {
-		global $wpdb, $wapg_tables;
+		global $wpdb;
 		  // security check!
-		if ( isset( $_GET['_wpnonce'] ) && ! empty( $_GET['_wpnonce'] ) ) {
+		if ( isset( $_GET['_wpnonce'] ) && ! empty( $_wpnonce = Util::check_evil_script( $_GET['_wpnonce'] ) ) ) {
 
 			$action = 'bulk-' . $this->_args['plural'];
 
-			if ( ! wp_verify_nonce( $_GET['_wpnonce'], $action ) ) {
-				wp_die( 'Nope! Security check failed!' );
+			if ( ! wp_verify_nonce( $_wpnonce, $action ) ) {
+				wp_die( __( 'Nope! Security check failed!', 'ultimate-push-notifications' ) );
 			}
 
 			$action = $this->current_action();
 
 			switch ( $action ) :
 				case 'delete':
-					$log_ids = $_GET['id'];
+					$log_ids = Util::check_evil_script( $_GET['id'] );
 					if ( $log_ids ) {
 						foreach ( $log_ids as $log ) {
 							$wpdb->delete( "{$wpdb->prefix}upn_user_devices", array( 'id' => $log ) );

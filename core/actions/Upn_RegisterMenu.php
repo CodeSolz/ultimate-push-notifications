@@ -49,7 +49,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 
 		public function __construct() {
 			 // call WordPress admin menu hook
-			add_action( 'admin_menu', array( $this, 'rtafar_register_menu' ) );
+			add_action( 'admin_menu', array( $this, 'upn_register_menu' ) );
 		}
 
 		/**
@@ -65,7 +65,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 		/**
 		 * Create plugins menu
 		 */
-		public function rtafar_register_menu() {
+		public function upn_register_menu() {
 			global $upn_menu;
 			add_menu_page(
 				__( 'Ultimate Push Notifications', 'ultimate-push-notifications' ),
@@ -225,7 +225,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 		 */
 		private function generate_page( $Page_Obj, $page_info, $option ) {
 			if ( is_object( $Page_Obj ) ) {
-				return $Page_Obj->generate_page( array_merge_recursive( $page_info, array( 'gateway_settings' => array() ) ), $option );
+				return $Page_Obj->generate_page( array_merge_recursive( $page_info, array( 'upn_custom_data' => array() ) ), $option );
 			} else {
 				return $Page_Obj;
 			}
@@ -240,96 +240,10 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 		private function page_permission_restricted( $page_info ) {
 			$AccessDenied = $this->pages->AccessDenied();
 			if ( is_object( $AccessDenied ) ) {
-				return $AccessDenied->generate_access_denided( array_merge_recursive( $page_info, array( 'gateway_settings' => array() ) ) );
+				return $AccessDenied->generate_access_denided( array_merge_recursive( $page_info, array( 'upn_custom_data' => array() ) ) );
 			} else {
 				return $AccessDenied;
 			}
-		}
-
-		public function add_rule() {
-
-			$title  = 'Add';
-			$option = array();
-			if ( isset( $_GET['action'] ) && ! empty( $_GET['rule_id'] ) ) {
-				$option = Masking::get_rules( 'all', $_GET['rule_id'] );
-				$option = (array) $option[0];
-				$title  = 'Update';
-			}
-
-			// pre_print( $option );
-
-			$page_info = array(
-				'title'     => sprintf( __( '%s APP Configuration', 'ultimate-push-notifications' ), $title ),
-				'sub_title' => __( 'These will not replace in database. Following find replace rules will take place before website render to browser.', 'ultimate-push-notifications' ),
-			);
-
-			if ( current_user_can( 'manage_options' ) || current_user_can( 'administrator' ) ) {
-				$AddNewRule = $this->pages->AddNewRule();
-				if ( is_object( $AddNewRule ) ) {
-					echo $AddNewRule->generate_page( array_merge_recursive( $page_info, array( 'gateway_settings' => array() ) ), $option );
-				} else {
-					echo $AddNewRule;
-				}
-			} else {
-				$AccessDenied = $this->pages->AccessDenied();
-				if ( is_object( $AccessDenied ) ) {
-					echo $AccessDenied->generate_access_denided( array_merge_recursive( $page_info, array( 'gateway_settings' => array() ) ) );
-				} else {
-					echo $AccessDenied;
-				}
-			}
-		}
-
-		public function upn_page_all_masking_rules() {
-			$page_info = array(
-				'title'     => __( 'All Masking Rule', 'ultimate-push-notifications' ),
-				'sub_title' => __( 'Following find replace rules will take place before website render to browser.', 'ultimate-push-notifications' ),
-			);
-
-			if ( current_user_can( 'manage_options' ) || current_user_can( 'administrator' ) ) {
-				$AllMaskingRules = $this->pages->AllMaskingRules();
-				if ( is_object( $AllMaskingRules ) ) {
-					echo $AllMaskingRules->generate_page( array_merge_recursive( $page_info, array( 'gateway_settings' => array() ) ) );
-				} else {
-					echo $AllMaskingRules;
-				}
-			} else {
-				$AccessDenied = $this->pages->AccessDenied();
-				if ( is_object( $AccessDenied ) ) {
-					echo $AccessDenied->generate_access_denided( array_merge_recursive( $page_info, array( 'gateway_settings' => array() ) ) );
-				} else {
-					echo $AccessDenied;
-				}
-			}
-		}
-
-		/**
-		 * Generate default settings page
-		 *
-		 * @return type
-		 */
-		public function upn_page_replace_in_db() {
-			$page_info = array(
-				'title'     => __( 'Replace In Database', 'ultimate-push-notifications' ),
-				'sub_title' => __( 'Instantly & permanently replace string from database table\'s. It will take effect in WordPress\'s table\'s only.', 'ultimate-push-notifications' ),
-			);
-
-			if ( current_user_can( 'manage_options' ) || current_user_can( 'administrator' ) ) {
-				$Default_Settings = $this->pages->ReplaceInDB();
-				if ( is_object( $Default_Settings ) ) {
-					echo $Default_Settings->generate_default_settings( array_merge_recursive( $page_info, array( 'gateway_settings' => array() ) ) );
-				} else {
-					echo $Default_Settings;
-				}
-			} else {
-				$AccessDenied = $this->pages->AccessDenied();
-				if ( is_object( $AccessDenied ) ) {
-					echo $AccessDenied->generate_access_denided( array_merge_recursive( $page_info, array( 'gateway_settings' => array() ) ) );
-				} else {
-					echo $AccessDenied;
-				}
-			}
-
 		}
 
 		/**
@@ -337,19 +251,19 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 		 */
 		public function upn_register_admin_settings_scripts() {
 			// register scripts
-			add_action( 'admin_enqueue_scripts', array( $this, 'rtafar_load_settings_scripts' ) );
+			add_action( 'admin_enqueue_scripts', array( $this, 'upn_load_settings_scripts' ) );
 
 			// init current screen
 			$this->init_current_screen();
 
 			// load all admin footer script
-			add_action( 'admin_footer', array( $this, 'rtafar_load_admin_footer_script' ) );
+			add_action( 'admin_footer', array( $this, 'upn_load_admin_footer_script' ) );
 		}
 
 		/**
 		 * Load admin scripts
 		 */
-		public function rtafar_load_settings_scripts( $page_id ) {
+		public function upn_load_settings_scripts( $page_id ) {
 			return Scripts_Settings::load_admin_settings_scripts( $page_id, $this->upn_menus );
 
 		}
@@ -357,7 +271,7 @@ if ( ! \class_exists( 'Upn_RegisterMenu' ) ) {
 		/**
 		 * load custom scripts on admin footer
 		 */
-		public function rtafar_load_admin_footer_script() {
+		public function upn_load_admin_footer_script() {
 			return Scripts_Settings::load_admin_footer_script( $this->current_screen->id, $this->upn_menus );
 		}
 

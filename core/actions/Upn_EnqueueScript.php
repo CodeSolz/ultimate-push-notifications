@@ -62,8 +62,8 @@ if ( ! \class_exists( 'Upn_EnqueueScript' ) ) {
 						'asset_url'    => CS_UPN_PLUGIN_ASSET_URI,
 						'ajax_url'     => esc_url( admin_url( 'admin-ajax.php?action=upn_ajax&cs_token=' . wp_create_nonce( SECURE_AUTH_SALT ) ) ),
 						'current_user' => array(
-							'user_id'   => isset($current_user->ID) ? $current_user->ID : '',
-							'user_name' => isset($current_user->user_login) ? $current_user->user_login : '',
+							'user_id'   => isset( $current_user->ID ) ? $current_user->ID : '',
+							'user_name' => isset( $current_user->user_login ) ? $current_user->user_login : '',
 						),
 					) + (array) $AppConfig
 				);

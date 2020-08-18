@@ -1,7 +1,7 @@
 <?php namespace UltimatePushNotifications\admin\options\pages;
 
 /**
- * Class: App Configuration
+ * Class: All Registered Devices List
  *
  * @package Options
  * @since 1.0.0
@@ -53,25 +53,30 @@ if ( ! \class_exists( 'RegisterMyDevice' ) ) {
 		public function generate_page( $args, $option ) {
 
 			$page = isset( $_GET['page'] ) ? Util::check_evil_script( $_GET['page'] ) : '';
-			if ( isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ) {
-				$back_url     = Util::cs_generate_admin_url( $page );
-				$args['well'] = "<p class='search-keyword'>Search results for : '<b>" . $_GET['s'] . "</b>' </p> <a href='{$back_url}' class='button'><< Back to all</a> ";
+			if ( isset( $_GET['s'] ) && ! empty( $sfor = Util::cs_esc_html( $_GET['s'] ) ) ) {
+				$args['well'] = sprintf(
+					__( '%1$s Search results for : %2$s%3$s %4$s << Back to all%5$s', 'ultimate-push-notifications' ),
+					"<p class='search-keyword'>",
+					"<b> {$sfor} </b>",
+					'</p>',
+					'<a href="' . Util::cs_generate_admin_url( $page ) . '" class="button">',
+					'</a>'
+				);
 			}
 
-			ob_start();
+			\ob_start();
 			$adCodeList = new RegisteredDevicesList( 'cs-upn-all-registered-devices' );
 			$adCodeList->prepare_items();
 			echo '<form id="plugins-filter" method="get"><input type="hidden" name="page" value="' . $page . '" />';
 			$adCodeList->views();
-			$adCodeList->search_box( __( 'Search Coin', 'real-time-auto-find-and-replace' ), '' );
+			$adCodeList->search_box( __( 'Search', 'ultimate-push-notifications' ), '' );
 			$adCodeList->display();
 			echo '</form>';
 
-			$html = ob_get_clean();
+			$html = \ob_get_clean();
 
-			$args['content'] = $html;
-			$swal_title      = '....';
-			// $btn_txt              = '...';
+			$args['content']      = $html;
+			$swal_title           = '....';
 			$update_hidden_fields = array();
 
 			$hidden_fields = array_merge_recursive(

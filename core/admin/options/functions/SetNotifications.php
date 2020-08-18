@@ -49,7 +49,7 @@ if ( ! \class_exists( 'SetNotifications' ) ) {
 				$wpdb->update(
 					"{$wpdb->prefix}upn_notifications",
 					array(
-						'notification_type' => maybe_serialize( $user_notifications ),
+						'notification_type' => \maybe_serialize( $user_notifications ),
 					),
 					array(
 						'id'      => $is_row_exists,
@@ -62,7 +62,7 @@ if ( ! \class_exists( 'SetNotifications' ) ) {
 					"{$wpdb->prefix}upn_notifications",
 					array(
 						'user_id'           => $get_current_user_id,
-						'notification_type' => maybe_serialize( $user_notifications ),
+						'notification_type' => \maybe_serialize( $user_notifications ),
 					)
 				);
 				$resMsg = 'saved';
@@ -93,7 +93,7 @@ if ( ! \class_exists( 'SetNotifications' ) ) {
 				)
 			);
 
-			return isset( $get_row->notification_type ) ? maybe_unserialize( $get_row->notification_type ) : '';
+			return isset( $get_row->notification_type ) ? \maybe_unserialize( $get_row->notification_type ) : '';
 		}
 
 		/**

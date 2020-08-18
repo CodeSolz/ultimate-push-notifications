@@ -12,6 +12,8 @@ if ( ! defined( 'CS_UPN_VERSION' ) ) {
 	die();
 }
 
+use UltimatePushNotifications\lib\Util;
+
 if ( ! \class_exists( 'Upn_CustomAjax' ) ) {
 
 	class Upn_CustomAjax {
@@ -38,9 +40,9 @@ if ( ! \class_exists( 'Upn_CustomAjax' ) ) {
 			}
 
 			if ( ! isset( $_REQUEST['data'] ) && isset( $_POST['method'] ) ) {
-				$data = $_POST;
+				$data = Util::check_evil_script( $_POST );
 			} else {
-				$data = $_REQUEST['data'];
+				$data = Util::check_evil_script( $_REQUEST['data'] );
 			}
 
 			if ( empty( $method = $data['method'] ) || strpos( $method, '@' ) === false ) {

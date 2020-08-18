@@ -100,7 +100,7 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 
 			$current_user = Util::check_evil_script( $user_input['current_user'] );
 
-			if( empty($current_user) ){
+			if ( empty( $current_user ) ) {
 				return wp_send_json(
 					array(
 						'status' => false,
@@ -110,8 +110,8 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 				);
 			}
 
-			$token        = Util::check_evil_script( $user_input['gen_token'] );
-			$device_id    = Util::check_evil_script( $user_input['device_id'] );
+			$token     = Util::check_evil_script( $user_input['gen_token'] );
+			$device_id = Util::check_evil_script( $user_input['device_id'] );
 
 			$is_exists = $wpdb->get_var(
 				$wpdb->prepare(

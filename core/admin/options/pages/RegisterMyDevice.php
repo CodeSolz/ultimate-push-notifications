@@ -1,7 +1,7 @@
 <?php namespace UltimatePushNotifications\admin\options\pages;
 
 /**
- * Class: App Configuration
+ * Class: Register Device
  *
  * @package Options
  * @since 1.0.0
@@ -52,17 +52,24 @@ if ( ! \class_exists( 'RegisterMyDevice' ) ) {
 		 */
 		public function generate_page( $args, $option ) {
 
-			$page = isset( $_GET['page'] ) ? Util::check_evil_script( $_GET['page'] ) : '';
-			if ( isset( $_GET['s'] ) && ! empty( $_GET['s'] ) ) {
-				$back_url     = Util::cs_generate_admin_url( $page );
-				$args['well'] = "<p class='search-keyword'>Search results for : '<b>" . $_GET['s'] . "</b>' </p> <a href='{$back_url}' class='button'><< Back to all</a> ";
+			$page                       = isset( $_GET['page'] ) ? Util::check_evil_script( $_GET['page'] ) : '';
+			$args['well_search_result'] = '';
+			if ( isset( $_GET['s'] ) && ! empty( $sfor = Util::cs_esc_html( $_GET['s'] ) ) ) {
+				$args['well_search_result'] = sprintf(
+					__( '%1$s Search results for : %2$s%3$s %4$s << Back to all%5$s', 'ultimate-push-notifications' ),
+					"<p class='search-keyword'>",
+					"<b> {$sfor} </b>",
+					'</p>',
+					'<a href="' . Util::cs_generate_admin_url( $page ) . '" class="button">',
+					'</a>'
+				);
 			}
 
 			// check app file exists
 			$is_app_file_exists = false;
 			if ( ! file_exists( CS_UPN_BASE_DIR_PATH . 'assets/plugins/firebase/js/firebaseInit.min.js' ) ) {
 				$is_app_file_exists = sprintf(
-					__( 'You need to update your app configuration. Please %1$sgo to app config%2$s and update your configuration.', 'real-time-auto-find-and-replace' ),
+					__( 'You need to update your app configuration. Please %1$sgo to app config%2$s and update your configuration.', 'ultimate-push-notifications' ),
 					'<a href="' . admin_url( 'admin.php?page=cs-upn-app-configuration' ) . '">',
 					'</a>'
 				);
@@ -73,7 +80,7 @@ if ( ! \class_exists( 'RegisterMyDevice' ) ) {
 			$adCodeList->prepare_items();
 			echo '<form id="plugins-filter" method="get"><input type="hidden" name="page" value="' . $page . '" />';
 			$adCodeList->views();
-			$adCodeList->search_box( __( 'Search Coin', 'real-time-auto-find-and-replace' ), '' );
+			$adCodeList->search_box( __( 'Search', 'ultimate-push-notifications' ), '' );
 			$adCodeList->display();
 			echo '</form>';
 			$html = ob_get_clean();
@@ -104,26 +111,29 @@ if ( ! \class_exists( 'RegisterMyDevice' ) ) {
 
 			$args['body_class'] = 'no-bottom-margin';
 
-			$args['well'] = sprintf(
-				"<ul>
-            <li> <b>Basic Hints</b>
-                <ol>
-                    <li>
-                        When the page loaded and notification permission appeared, you must click 'allow' to allow notification. 
-                    </li>
-                    <li>
-                        If somehow you close the permission prompt window, %sClick here to see the notification permission%s prompt again.
-                    </li>
-                    <li>
-						If you don't see the prompt, click the lock icon located in-front of the URL in the browser. You will be able to see the site information. 
-						From there, select 'Ask(default)' value for the Notifications.                    
+			$args['well'] = empty( $args['well_search_result'] ) ? sprintf(
+				'<ul>
+					<li> <b> ' . __( 'Basic Hints', 'ultimate-push-notifications' ) . ' </b>
+						<ol>
+							<li>
+								' . __( 'When the page loaded and notification permission appeared, you must click \'allow\' to allow notification. ', 'ultimate-push-notifications' ) . '
+							</li>
+							<li>
+								' . __( 'If somehow you close the permission prompt window, %1$sClick here to see the notification permission%2$s prompt again.', 'ultimate-push-notifications' ) . '
+							</li>
+							<li>
+								' . __(
+									'If you don\'t see the prompt, click the lock icon located in-front of the URL in the browser. You will be able to see the site information. 
+								From there, select \'Ask(default)\' value for the Notifications.',
+									'ultimate-push-notifications'
+								) . '
+							</li>
+						</ol>
 					</li>
-                </ol>
-            </li>
-        </ul>",
+				</ul>',
 				'<a href="' . admin_url( 'admin.php?page=cs-upn-register-my-device' ) . '">',
 				'</a>'
-			);
+			) : $args['well_search_result'];
 
 			return $this->Admin_Page_Generator->generate_page( $args );
 		}

@@ -23,7 +23,7 @@ if ( ! \class_exists( 'Util' ) ) {
 		 * @return type
 		 */
 		public static function encode_html_chars( $str ) {
-			return esc_html( $str );
+			return \esc_html( $str );
 		}
 
 		/**
@@ -43,22 +43,46 @@ if ( ! \class_exists( 'Util' ) ) {
 		 */
 		public static function check_evil_script( $user_input, $textarea = false ) {
 			if ( is_array( $user_input ) ) {
-				if ( $textarea === true ) {
-					$user_input = array_map( 'sanitize_textarea_field', $user_input );
-				} else {
-					$user_input = array_map( 'sanitize_text_field', $user_input );
-				}
-				$user_input = array_map( 'stripslashes_deep', $user_input );
+				$user_input = self::cs_sanitize_recursive( $user_input, $textarea );
 			} else {
-				if ( $textarea === true ) {
-					$user_input = sanitize_textarea_field( $user_input );
-				} else {
-					$user_input = sanitize_text_field( $user_input );
-				}
-				$user_input = stripslashes_deep( $user_input );
-				$user_input = trim( $user_input );
+				$user_input = self::cs_sanitize_field( $user_input, $textarea );
 			}
 			return $user_input;
+		}
+
+		/**
+		 * Sanitize recursive array
+		 *
+		 * @param [type]  $user_input
+		 * @param boolean $textarea
+		 * @return void
+		 */
+		public static function cs_sanitize_recursive( $user_input, $textarea = false ) {
+			foreach ( $user_input as $key => $value ) {
+				if ( is_array( $value ) ) {
+					$value = self::cs_sanitize_recursive( $value, $textarea );
+				} else {
+					$value = self::cs_sanitize_field( $value, $textarea );
+				}
+			}
+
+			return $user_input;
+		}
+
+		/**
+		 * Sanitize field
+		 *
+		 * @param [type] $user_input
+		 * @param [type] $textarea
+		 * @return void
+		 */
+		public static function cs_sanitize_field( $user_input, $textarea = false ) {
+			if ( $textarea === true ) {
+				$user_input = \sanitize_textarea_field( $user_input );
+			} else {
+				$user_input = \sanitize_text_field( $user_input );
+			}
+			return self::cs_stripslashes( $user_input );
 		}
 
 		/**
@@ -68,7 +92,7 @@ if ( ! \class_exists( 'Util' ) ) {
 		 * @return void
 		 */
 		public static function cs_addslashes( $value ) {
-			return wp_slash( stripslashes_deep( trim( $value ) ) );
+			return \wp_slash( \stripslashes_deep( trim( $value ) ) );
 		}
 
 		/**
@@ -78,7 +102,7 @@ if ( ! \class_exists( 'Util' ) ) {
 		 * @return void
 		 */
 		public static function cs_esc_html( $value ) {
-			return esc_html( stripslashes_deep( trim( $value ) ) );
+			return \esc_html( \stripslashes_deep( trim( $value ) ) );
 		}
 
 		/**
@@ -88,7 +112,7 @@ if ( ! \class_exists( 'Util' ) ) {
 		 * @return void
 		 */
 		public static function cs_stripslashes( $value ) {
-			return stripslashes_deep( trim( $value ) );
+			return \stripslashes_deep( trim( $value ) );
 		}
 
 		/**
@@ -120,7 +144,7 @@ if ( ! \class_exists( 'Util' ) ) {
 		 */
 		public static function cs_current_user_id() {
 			global $current_user;
-			wp_get_current_user();
+			\wp_get_current_user();
 			return $current_user->ID;
 		}
 
