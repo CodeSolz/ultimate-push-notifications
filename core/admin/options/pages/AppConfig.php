@@ -181,24 +181,24 @@ if ( ! \class_exists( 'AppConfig' ) ) {
 			$args['show_btn']   = true;
 			$args['body_class'] = 'no-bottom-margin';
 
-			$args['well'] = "<ul>
-            <li> <b>Basic Hints</b>
-                <ol>
-                    <li>
-                        Please register on - <a href='https://console.firebase.google.com/' target=\"_blank\">https://console.firebase.google.com/</a> and create a project
-                    </li>
-                    <li>
-                        After creating project on firebase, create a APP by clicking on 'Add app' button
-                    </li>
-                    <li>
-                        When app platform appear, click the 'web' to create your app. Then follow the steps.
-                    </li>
-                    <li>
-                        After registered your app, you will see the following configuration field's value. Get these and setup the following configuration.
-                    </li>
-                </ol>
-            </li>
-        </ul>";
+			$args['well'] = '<ul>
+				<li> <b>' . __( 'Basic Hints', 'ultimate-push-notifications' ) . '</b>
+					<ol>
+						<li>
+							' . sprintf( __( 'Please register on - %1$s%2$s and create a project', 'ultimate-push-notifications' ), "<a href='https://console.firebase.google.com/' target=\"_blank\">", 'https://console.firebase.google.com/</a>' ) . '
+						</li>
+						<li>
+							' . __( 'After creating project on firebase, create a APP by clicking on \'Add app\' button', 'ultimate-push-notifications' ) . '
+						</li>
+						<li>
+							' . __( 'When app platform appear, click the \'web\' to create your app. Then follow the steps.', 'ultimate-push-notifications' ) . '
+						</li>
+						<li>
+							' . __( 'After registered your app, you will see the following configuration field\'s value. Get these and setup the following configuration.', 'ultimate-push-notifications' ) . '
+						</li>
+					</ol>
+				</li>
+			</ul>';
 
 			return $this->Admin_Page_Generator->generate_page( $args );
 		}

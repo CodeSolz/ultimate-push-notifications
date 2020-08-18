@@ -12,8 +12,6 @@ if ( ! defined( 'CS_UPN_VERSION' ) ) {
 	exit;
 }
 
-use UltimatePushNotifications\admin\functions\Masking;
-
 if ( ! \class_exists( 'Activate' ) ) {
 
 	class Activate {

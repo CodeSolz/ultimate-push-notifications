@@ -33,8 +33,8 @@ if ( ! \class_exists( 'Upn_CustomAjax' ) ) {
 				wp_send_json(
 					array(
 						'status' => false,
-						'title'  => __( 'Invalid token', 'real-time-auto-find-and-replace' ),
-						'text'   => __( 'Sorry! we are unable recognize your auth!', 'real-time-auto-find-and-replace' ),
+						'title'  => __( 'Invalid token', 'ultimate-push-notifications' ),
+						'text'   => __( 'Sorry! we are unable recognize your auth!', 'ultimate-push-notifications' ),
 					)
 				);
 			}
@@ -49,8 +49,8 @@ if ( ! \class_exists( 'Upn_CustomAjax' ) ) {
 				wp_send_json(
 					array(
 						'status' => false,
-						'title'  => __( 'Invalid Request', 'real-time-auto-find-and-replace' ),
-						'text'   => __( 'Method parameter missing / invalid!', 'real-time-auto-find-and-replace' ),
+						'title'  => __( 'Invalid Request', 'ultimate-push-notifications' ),
+						'text'   => __( 'Method parameter missing / invalid!', 'ultimate-push-notifications' ),
 					)
 				);
 			}
@@ -60,8 +60,8 @@ if ( ! \class_exists( 'Upn_CustomAjax' ) ) {
 				wp_send_json(
 					array(
 						'status' => false,
-						'title'  => __( 'Invalid Library', 'real-time-auto-find-and-replace' ),
-						'text'   => sprintf( __( 'Library Class "%s" not found! ', 'real-time-auto-find-and-replace' ), $class_path ),
+						'title'  => __( 'Invalid Library', 'ultimate-push-notifications' ),
+						'text'   => sprintf( __( 'Library Class "%s" not found! ', 'ultimate-push-notifications' ), $class_path ),
 					)
 				);
 			}
@@ -70,8 +70,8 @@ if ( ! \class_exists( 'Upn_CustomAjax' ) ) {
 				wp_send_json(
 					array(
 						'status' => false,
-						'title'  => __( 'Invalid Method', 'real-time-auto-find-and-replace' ),
-						'text'   => sprintf( __( 'Method "%1$s" not found in Class "%2$s"! ', 'real-time-auto-find-and-replace' ), $method[1], $class_path ),
+						'title'  => __( 'Invalid Method', 'ultimate-push-notifications' ),
+						'text'   => sprintf( __( 'Method "%1$s" not found in Class "%2$s"! ', 'ultimate-push-notifications' ), $method[1], $class_path ),
 					)
 				);
 			}
