@@ -25,7 +25,7 @@ By visinting On plugin's device registration page, you will notification prompt.
 You will be able to receive real-time notifications right on your desktop screen when particular actions happens on your website. 
 
 <blockquote>
-=== Easily set when and on which event's you want to recive notifications! ===
+=== Easily set when and on which event's you want to receive notifications! ===
 </blockquote>
 
 

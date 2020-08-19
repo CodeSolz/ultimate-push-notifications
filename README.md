@@ -1,55 +1,75 @@
 <p align="center">
-    <a href="https://wordpress.org/plugins/real-time-auto-find-and-replace">
-        <img src="https://ps.w.org/real-time-auto-find-and-replace/assets/icon-128x128.png" alt="codesolz.net"/>
+    <a href="https://wordpress.org/plugins/ultimate-push-notifications">
+        <img src="https://ps.w.org/ultimate-push-notifications/assets/icon-128x128.png" alt="codesolz.net"/>
     </a>
 </p>
 
 <p align="center">
-    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/CodeSolz/real-time-auto-find-and-replace">
-    <img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/CodeSolz/real-time-auto-find-and-replace"><br>
-    <a href="https://wordpress.org/plugins/real-time-auto-find-and-replace">
-        <img alt="undefined" src="https://img.shields.io/wordpress/plugin/wp-version/real-time-auto-find-and-replace.svg">
+    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/CodeSolz/ultimate-push-notifications">
+    <img alt="GitHub code size in bytes" src="https://img.shields.io/github/languages/code-size/CodeSolz/ultimate-push-notifications"><br>
+    <a href="https://wordpress.org/plugins/ultimate-push-notifications">
+        <img alt="undefined" src="https://img.shields.io/wordpress/plugin/wp-version/ultimate-push-notifications.svg">
     </a>
-    <a href="https://wordpress.org/plugins/real-time-auto-find-and-replace">
-        <img alt="undefined" src="https://img.shields.io/wordpress/plugin/tested/real-time-auto-find-and-replace.svg">
+    <a href="https://wordpress.org/plugins/ultimate-push-notifications">
+        <img alt="undefined" src="https://img.shields.io/wordpress/plugin/tested/ultimate-push-notifications.svg">
     </a>
-    <a href="https://wordpress.org/plugins/real-time-auto-find-and-replace">
-        <img alt="undefined" src="https://img.shields.io/wordpress/plugin/v/real-time-auto-find-and-replace.svg">
+    <a href="https://wordpress.org/plugins/ultimate-push-notifications">
+        <img alt="undefined" src="https://img.shields.io/wordpress/plugin/v/ultimate-push-notifications.svg">
     </a>
-    <a href="https://wordpress.org/plugins/real-time-auto-find-and-replace">
-        <img alt="undefined" src="https://img.shields.io/wordpress/plugin/rating/real-time-auto-find-and-replace.svg">
+    <a href="https://wordpress.org/plugins/ultimate-push-notifications">
+        <img alt="undefined" src="https://img.shields.io/wordpress/plugin/rating/ultimate-push-notifications.svg">
     </a>
     <br>
-    <a href="https://wordpress.org/plugins/real-time-auto-find-and-replace">
-        <img alt="undefined" src="https://img.shields.io/wordpress/plugin/dm/real-time-auto-find-and-replace.svg">
+    <a href="https://wordpress.org/plugins/ultimate-push-notifications">
+        <img alt="undefined" src="https://img.shields.io/wordpress/plugin/dm/ultimate-push-notifications.svg">
     </a>
-    <a href="https://wordpress.org/plugins/real-time-auto-find-and-replace">
-        <img alt="undefined" src="https://img.shields.io/wordpress/plugin/dt/real-time-auto-find-and-replace.svg">
+    <a href="https://wordpress.org/plugins/ultimate-push-notifications">
+        <img alt="undefined" src="https://img.shields.io/wordpress/plugin/dt/ultimate-push-notifications.svg">
     </a>
-    <a href="https://wordpress.org/plugins/real-time-auto-find-and-replace">
-        <img alt="Wordpress Plugin Active Installs" src="https://img.shields.io/wordpress/plugin/installs/real-time-auto-find-and-replace.svg">
+    <a href="https://wordpress.org/plugins/ultimate-push-notifications">
+        <img alt="Wordpress Plugin Active Installs" src="https://img.shields.io/wordpress/plugin/installs/ultimate-push-notifications.svg">
     </a>
-    <a href="https://wordpress.org/plugins/real-time-auto-find-and-replace">
-        <img src="https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2FCodeSolz%2Freal-time-auto-find-and-replace" alt="Hits">
+    <a href="https://wordpress.org/plugins/ultimate-push-notifications">
+        <img src="https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2FCodeSolz%2Fultimate-push-notifications" alt="Hits">
     </a>
     <br><br>
     <a href="https://codesolz.net">
         <img alt="undefined" src="https://img.shields.io/badge/Created%20By-M.Tuhin-brightgreen.svg">
     </a>
 </p>
-<h2 align="center">Real Time Auto Find and Replace - Wordpress plugin</h2>
+<h2 align="center">Ultimate Push Notifications - Wordpress plugin</h2>
 
 ### Description 
 
-This plugin will automatically find a specific word and will replace by your own word. This changes will be automatically done before the the post go to the browser’s. It doesn’t affect to any other files or your other settings.
-To use this plugin just follow the following steps.
+Ultimate push notification allows WooCommerce Store Managers, Multivendors & Administrator to receive real-time push notification right on their desktop screen. They will 
+able to receive notification when a product get sold, added to cart, product order changes and someone register to the website.
+
+
+<blockquote>
+=== Receive real-time Push Notifications right on your desktop screen! ===
+</blockquote>
+
+### How does it work? 
+This plugin works along with the firebase application. Firebase is a free application platform developed by Google to create mobile and web application. After
+creating your firebase web push application, you need to set the application configuration to this plugin's app config section & you are ready to go! 
+By visinting On plugin's device registration page, you will notification prompt. Accept it to 'allow' notification. You are all set! 
+You will be able to receive real-time notifications right on your desktop screen when particular actions happens on your website. 
+
+<blockquote>
+=== Easily set when and on which event's you want to receive notifications! ===
+</blockquote>
+
 
 ### Key Features
 
 * Easy to use and user-friendly options
-* Lighting first find-replacement in Database table's ( posts, postmeta, options )
-* Create word masking with find-replace over the whole website
-* Create find-replace temp rules which doesn't effect database.
+* Ultimate notification solutions for WordPress
+* Various types of notifications
+* Receive push notification when a product get sold 
+* Receive push notification when added to cart 
+* Receive push notification when vendor change the status of the product
+* As a Administrator, you can receive push notification when someone register on your website as a seller or other level
+
 
 ### Forum and Feature Request
 
@@ -57,41 +77,24 @@ To use this plugin just follow the following steps.
 
 *For Quick Support, feature request and bug reporting*
 <ul>
-    <li> Visit our website <a target="_blank" href="https://codesolz.net/?utm_source=wordpress.org&utm_medium=README&utm_campaign=woo-altcoin-payment-gateway">To Get Instant Support</a></li>
+    <li> Visit our website <a target="_blank" href="https://codesolz.net/?utm_source=wordpress.org&utm_medium=README&utm_campaign=ultimate-push-notifications">To Get Instant Support</a></li>
     <li> For more dedicated support or feature request write to us at <a target="_blank" href="mailto:support@codesolz.net">support@codesolz.net</a> or create a ticket <a href="http://support.codesolz.net/public/create-ticket" target="_blank"> Support Center</a></li>
 </ul>
 
 *Visit our forum to share your experience or request features*
 <ul>
-    <li> Visit our <a target="_blank" href="https://forum.codesolz.net/?utm_source=wordpress.org&utm_medium=README&utm_campaign=woo-altcoin-payment-gateway">forum</a></li>
+    <li> Visit our <a target="_blank" href="https://forum.codesolz.net/?utm_source=wordpress.org&utm_medium=README&utm_campaign=ultimate-push-notifications">forum</a></li>
 </ul>
 
 *As it's open source, check our github development Status* 
 <ul>
-    <li> Check development status or issues in <a target="_blank" href="https://github.com/CodeSolz/real-time-auto-find-and-replace" > github.com/CodeSolz/real-time-auto-find-and-replace </a>
+    <li> Check development status or issues in <a target="_blank" href="https://github.com/CodeSolz/ultimate-push-notifications" > github.com/CodeSolz/ultimate-push-notifications </a>
 </ul>
 </blockquote>
 
-**Changelog**
-
-= 1.0.2 =
-* **Fet:** Replace in Database
-* **Improvement:** Find-Replace speed up
-* Brand new user-interface
-
-= 1.0.1 = 
-* Improvement*: Imporved some codings
-Fix a bug.
-
-= 1.0.0 = 
-* Fix a bug.
-
-= 0.5 = 
-* Initial release.
-
 
 ### useful links
-- Free download from WordPress.org plugins directory - [Download Real Time Auto Find and Replace](https://wordpress.org/plugins/real-time-auto-find-and-replace/)
+- Free download from WordPress.org plugins directory - [Download Real Time Auto Find and Replace](https://wordpress.org/plugins/ultimate-push-notifications/)
 
 ### Credentials
 - *Created & Supported by - [M.Tuhin](https://codesolz.net/)  - [CodeSolz.net](https://codesolz.net/)*
