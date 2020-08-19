@@ -7,16 +7,36 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Ultimate push notification allows Store Managers, Multivendors, Administrator to receive real-time push notification right on their desktop screen.
+Ultimate push notification allows WooCommerce Store Managers, Multivendors & Administrator to receive real-time push notification right on their desktop screen.
 
 == Description ==
-Ultimate push notification allows Store Managers, Multivendors, Administrator to receive real-time push notification right on their desktop screen. They will 
+Ultimate push notification allows WooCommerce Store Managers, Multivendors & Administrator to receive real-time push notification right on their desktop screen. They will 
 able to receive notification when a product get sold, added to cart, product order changes and someone register to the website.
+
+
+<blockquote>
+=== Receive real-time Push Notifications right on your desktop screen! ===
+</blockquote>
+
+== How does it work? == 
+This plugin works along with the firebase application. Firebase is a free application platform developed by Google to create mobile and web application. After
+creating your firebase web push application, you need to set the application configuration to this plugin's app config section & you are ready to go! 
+By visinting On plugin's device registration page, you will notification prompt. Accept it to 'allow' notification. You are all set! 
+You will be able to receive real-time notifications right on your desktop screen when particular actions happens on your website. 
+
+<blockquote>
+=== Easily set when and on which event's you want to recive notifications! ===
+</blockquote>
+
 
 == Key Features ==
 
 * Easy to use and user-friendly options
-* Receive push notification when a product get sold, added to cart and vendor change the status of the product status
+* Ultimate notification solutions for WordPress
+* Various types of notifications
+* Receive push notification when a product get sold 
+* Receive push notification when added to cart 
+* Receive push notification when vendor change the status of the product
 * As a Administrator, you can receive push notification when someone register on your website as a seller or other level
 
 
@@ -47,6 +67,11 @@ able to receive notification when a product get sold, added to cart, product ord
 
 == Screenshots ==
 
+1. Back-End - App Configuration
+2. Back-End - Notification Settings
+3. Back-End - Register Device
+4. Back-End - All Registered Devices
+5. Push Notification Example
 
 
 == Changelog ==
