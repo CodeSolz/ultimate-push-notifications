@@ -30,7 +30,7 @@
         <img alt="Wordpress Plugin Active Installs" src="https://img.shields.io/wordpress/plugin/installs/ultimate-push-notifications.svg">
     </a>
     <a href="https://wordpress.org/plugins/ultimate-push-notifications">
-        <img src="https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fgithub.com%2FCodeSolz%2Fultimate-push-notifications" alt="Hits">
+        <img src="https://hitcounter.pythonanywhere.com/count/tag.svg?url=https%3A%2F%2Fwordpress.org%2Fplugins%2Fultimate-push-notifications%2F" alt="Hits">
     </a>
     <br><br>
     <a href="https://codesolz.net">
