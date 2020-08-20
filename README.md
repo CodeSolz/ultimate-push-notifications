@@ -94,7 +94,7 @@ You will be able to receive real-time notifications right on your desktop screen
 
 
 ### useful links
-- Free download from WordPress.org plugins directory - [Download Real Time Auto Find and Replace](https://wordpress.org/plugins/ultimate-push-notifications/)
+- Free download from WordPress.org plugins directory - [Download Ultimate Push Notifications](https://wordpress.org/plugins/ultimate-push-notifications/)
 
 ### Credentials
 - *Created & Supported by - [M.Tuhin](https://codesolz.net/)  - [CodeSolz.net](https://codesolz.net/)*
