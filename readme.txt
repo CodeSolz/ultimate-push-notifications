@@ -1,9 +1,9 @@
 === Ultimate Push Notifications ===
 Contributors: CodeSolz, m.tuhin
-Tags: desktop push notification, woocommerce push notification, cloud push notification, firebase push notification
+Tags: desktop push notification, woocommerce, push notifications, cloud push notification, firebase, push notification
 Requires at least: 4.0
 Tested up to: 5.5
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,7 +15,7 @@ able to receive notification when a product get sold, added to cart, product ord
 
 
 <blockquote>
-=== Receive real-time Push Notifications right on your desktop screen! ===
+=== Receive real-time Push Notifications right on your desktop screen when your product get sold! ===
 </blockquote>
 
 == How does it work? == 
@@ -25,7 +25,7 @@ By visinting On plugin's device registration page, you will notification prompt.
 You will be able to receive real-time notifications right on your desktop screen when particular actions happens on your website. 
 
 <blockquote>
-=== Easily set when and on which event's you want to receive notifications! ===
+=== Easily set when and on which event's you want to recive notifications! ===
 </blockquote>
 
 
@@ -34,11 +34,16 @@ You will be able to receive real-time notifications right on your desktop screen
 * Easy to use and user-friendly options
 * Ultimate notification solutions for WordPress
 * Various types of notifications
+* **Vendor Registration**
+* As a Administrator, you can receive push notification when someone register on your website as a seller or other level
+* **WooCommerce Notifications**
 * Receive push notification when a product get sold 
 * Receive push notification when added to cart 
 * Receive push notification when vendor change the status of the product
-* As a Administrator, you can receive push notification when someone register on your website as a seller or other level
 
+
+== How to install, setup and activate firebase application == 
+[youtube https://www.youtube.com/watch?v=vuSUg7ppE80]
 
 = Forum and Feature Request = 
 
@@ -75,6 +80,9 @@ You will be able to receive real-time notifications right on your desktop screen
 
 
 == Changelog ==
+
+= Version: 1.0.1 =
+* **Improvement:** Improvement of configuration
 
 = Version: 1.0.0 =
 * Initial release.

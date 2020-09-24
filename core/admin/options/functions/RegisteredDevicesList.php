@@ -20,7 +20,6 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 
-
 class RegisteredDevicesList extends \WP_List_Table {
 	var $item_per_page = 10;
 	var $total_post;
