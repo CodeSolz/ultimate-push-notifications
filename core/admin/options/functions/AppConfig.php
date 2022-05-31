@@ -34,6 +34,9 @@ class AppConfig {
 
 		$user_app_config = Util::check_evil_script( $user_query['cs_app_config'] );
 
+		$measurementId = $user_app_config['measurementId'];
+		unset( $user_app_config['measurementId'] );
+
 		// check empty
 		$is_empty = false;
 		if ( $user_app_config ) {
@@ -54,6 +57,12 @@ class AppConfig {
 				)
 			);
 		}
+
+		$user_app_config = array_merge_recursive(
+			$user_app_config, array(
+				'measurementId' => $measurementId
+			)
+		);
 
 		update_option( self::$app_config_key, $user_app_config );
 		$resMsg = isset( $user_query['cs_app_config_update']['id'] ) ? 'updated' : 'saved';
@@ -149,6 +158,7 @@ class AppConfig {
 				'text'   => __( 'Device token saved successfully', 'ultimate-push-notifications' ),
 			)
 		);
+		
 	}
 
 

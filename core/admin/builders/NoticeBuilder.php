@@ -47,7 +47,7 @@ class NoticeBuilder {
 	 * @return void
 	 */
 	public function action_admin_init() {
-		$dismiss_option = filter_input( INPUT_GET, CS_UPN_ACTIVATE_NOTICE_ID, FILTER_SANITIZE_STRING );
+		$dismiss_option = filter_input( INPUT_GET, CS_UPN_ACTIVATE_NOTICE_ID, FILTER_SANITIZE_FULL_SPECIAL_CHARS );
 		echo $dismiss_option;
 		if ( is_string( $dismiss_option ) ) {
 			update_option( CS_UPN_ACTIVATE_NOTICE_ID . 'ed_' . $dismiss_option, true );

@@ -51,6 +51,16 @@ class SetNotifications {
 	public function generate_page( $args, $option ) {
 		global $wp_roles;
 
+		//tabs
+		$section_tabs = \apply_filters( 'upn_set_notification_tabs', array(
+			'tab1' => array(
+				'type'  => 'tab',
+				'title' => __( 'Default', 'ultimate-push-notifications' )
+			)
+		) );
+
+		
+
 		$user_registration_notifications = array();
 		if ( is_super_admin() ) {
 			$user_roles = array();
@@ -181,7 +191,7 @@ class SetNotifications {
 			),
 		);
 
-		$fields          = $user_registration_notifications + $woocommerce_notifications;
+		$fields          = $section_tabs + $user_registration_notifications + $woocommerce_notifications;
 		$args['content'] = $this->Form_Generator->generate_html_fields( $fields );
 
 		$swal_title           = __( 'Saving Settings', 'ultimate-push-notifications' );

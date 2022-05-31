@@ -1,13 +1,16 @@
-=== Ultimate Push Notifications ===
+=== Ultimate Push Notifications ( WooCommerce, WordPress Default Events & Many More) ===
 Contributors: CodeSolz, m.tuhin
 Tags: desktop push notification, woocommerce, push notifications, cloud push notification, firebase, push notification
 Requires at least: 4.0
-Tested up to: 5.5
-Stable tag: 1.0.1
+Tested up to: 5.8
+Stable tag: 1.0.5
+Requires PHP: 7.0
+WC requires at least: 4.0
+WC tested up to: 5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Ultimate push notification allows WooCommerce Store Managers, Multivendors & Administrator to receive real-time push notification right on their desktop screen.
+Receive real-time push notification as a WooCommerce / Multivendors (Dokan, WCFM) Store Manager, Administrator, BuddyPress etc right on your Desktop screen.
 
 == Description ==
 Ultimate push notification allows WooCommerce Store Managers, Multivendors & Administrator to receive real-time push notification right on their desktop screen. They will 
@@ -42,7 +45,21 @@ You will be able to receive real-time notifications right on your desktop screen
 * Receive push notification when vendor change the status of the product
 
 
-== How to install, setup and activate firebase application == 
+== ➡️ Basic Documentation To Get Started == 
+
+👉 HOW TO INSTALL, SETUP AND ACTIVATE FIREBASE APPLICATION
+
+* How to create a Firebase Application for free 
+    * [Live Demo & Documentation](https://docs.codesolz.net/ultimate-push-notifications/how-to-create-firebase-application/create-firebase-application/)
+* Setup - App Config
+    * [Live Demo & Documentation](https://docs.codesolz.net/ultimate-push-notifications/how-to-create-firebase-application/setup-app-config/)
+* Set Notification
+    * [Live Demo & Documentation](https://docs.codesolz.net/ultimate-push-notifications/how-to-create-firebase-application/set-notification/)
+* Register a device to get notification
+    * [Live Demo & Documentation](https://docs.codesolz.net/ultimate-push-notifications/how-to-create-firebase-application/register-a-device-to-get-notification/)
+
+<hr/><hr/>
+* Video guideline to get started
 [youtube https://www.youtube.com/watch?v=vuSUg7ppE80]
 
 = Forum and Feature Request = 
@@ -67,7 +84,7 @@ You will be able to receive real-time notifications right on your desktop screen
 
 
 == Installation ==
-1. Upload the WooCommerce_AltCoin_Payment_Gateway folder to the '/wp-content/plugins/' directory
+1. Upload the *ultimate-push-notifications* folder to the */wp-content/plugins/* directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Screenshots ==
@@ -80,6 +97,25 @@ You will be able to receive real-time notifications right on your desktop screen
 
 
 == Changelog ==
+
+= Version: 1.0.7 =
+* **Improvement:** Script updated for modern browsers
+* **Improvement:** PHP 8.0 compatible 
+* **Improvement:** WordPress 6.0 compatible 
+
+= Version: 1.0.5 =
+* **Improvement:** WordPress 5.8 compatible 
+
+= Version: 1.0.4 =
+* **Improvement:** Improvement of configuration
+* **Update:** MeasurementID field is now optional
+
+= Version: 1.0.3 =
+* **Adjustment:** Updated to latest WordPress release
+
+= Version: 1.0.2 =
+* **Improvement:** Improvement of configuration
+* **Adjustment:** Updated to latest WordPress release
 
 = Version: 1.0.1 =
 * **Improvement:** Improvement of configuration

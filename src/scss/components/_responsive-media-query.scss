@@ -1,0 +1,23 @@
+
+@mixin small-device {
+  @media (max-width: #{$tablet-width - 1px}) {
+    @content;
+  }
+}
+
+@mixin firebaseBackground{
+  background: #ffa611; /* Old browsers */
+  background: -moz-linear-gradient(left, #ffa611 0%, #f5820d 50%, #f5820d 52%, #ffcb2b 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left, #ffa611 0%,#f5820d 50%,#f5820d 52%,#ffcb2b 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right, #ffa611 0%,#f5820d 50%,#f5820d 52%,#ffcb2b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa611', endColorstr='#ffcb2b',GradientType=1 ); /* IE6-9 */
+}
+
+@mixin  firebaseBgVertical {
+  background: #ffa611; /* Old browsers */
+  background: -moz-linear-gradient(top,  #ffa611 0%, #f5820d 50%, #f5820d 52%, #ffcb2b 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top,  #ffa611 0%,#f5820d 50%,#f5820d 52%,#ffcb2b 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom,  #ffa611 0%,#f5820d 50%,#f5820d 52%,#ffcb2b 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffa611', endColorstr='#ffcb2b',GradientType=0 ); /* IE6-9 */
+}
+
