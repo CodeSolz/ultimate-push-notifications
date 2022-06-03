@@ -98,11 +98,6 @@ You will be able to receive real-time notifications right on your desktop screen
 
 == Changelog ==
 
-= Version: 1.0.7 =
-* **Improvement:** Script updated for modern browsers
-* **Improvement:** PHP 8.0 compatible 
-* **Improvement:** WordPress 6.0 compatible 
-
 = Version: 1.0.5 =
 * **Improvement:** WordPress 5.8 compatible 
 

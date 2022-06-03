@@ -51,15 +51,16 @@ class SetNotifications {
 	public function generate_page( $args, $option ) {
 		global $wp_roles;
 
-		//tabs
-		$section_tabs = \apply_filters( 'upn_set_notification_tabs', array(
-			'tab1' => array(
-				'type'  => 'tab',
-				'title' => __( 'Default', 'ultimate-push-notifications' )
+		// tabs
+		$section_tabs = \apply_filters(
+			'upn_set_notification_tabs',
+			array(
+				'tab1' => array(
+					'type'  => 'tab',
+					'title' => __( 'Default', 'ultimate-push-notifications' ),
+				),
 			)
-		) );
-
-		
+		);
 
 		$user_registration_notifications = array();
 		if ( is_super_admin() ) {

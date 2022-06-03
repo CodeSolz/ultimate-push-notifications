@@ -59,8 +59,9 @@ class AppConfig {
 		}
 
 		$user_app_config = array_merge_recursive(
-			$user_app_config, array(
-				'measurementId' => $measurementId
+			$user_app_config,
+			array(
+				'measurementId' => $measurementId,
 			)
 		);
 
@@ -158,7 +159,7 @@ class AppConfig {
 				'text'   => __( 'Device token saved successfully', 'ultimate-push-notifications' ),
 			)
 		);
-		
+
 	}
 
 

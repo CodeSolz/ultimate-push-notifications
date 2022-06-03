@@ -1,14 +1,14 @@
 const path = require('path');
 const TerserPlugin = require("terser-webpack-plugin");
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const OptimizeCSSAssetsPlugin = require("css-minimizer-webpack-plugin");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 
 module.exports ={ 
     entry : {
-        './assets/js/upn.app.admin' : './assets/js/src/app.js',
-        './assets/js/upn.admin.global' : './assets/js/src/app.global.js',
-        './assets/css/upn-admin-style' : './assets/css/src/app.scss'
+        './assets/js/upn.app.admin' : './src/js/app.js',
+        './assets/js/upn.admin.global' : './src/js/app.global.js',
+        './assets/css/upn-admin-style' : './src/scss/app.scss'
     },
     output : {
         filename : '[name].min.js',

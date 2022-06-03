@@ -60,7 +60,7 @@ class Upn_Bp_Hooks {
 		return Upn_BuddyPress::upn_on_friend_rejected( $friendship );
 	}
 
-	
+
 
 
 }

@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/composer-installer.git",
-                "reference": "a1b6e4e5afa0ba70a12d16bbb3cf429841438209"
+                "reference": "8504433809e5144aa98721ea8ceacc970be5c10b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/composer-installer/zipball/a1b6e4e5afa0ba70a12d16bbb3cf429841438209",
-                "reference": "a1b6e4e5afa0ba70a12d16bbb3cf429841438209",
+                "url": "https://api.github.com/repos/PHPCSStandards/composer-installer/zipball/8504433809e5144aa98721ea8ceacc970be5c10b",
+                "reference": "8504433809e5144aa98721ea8ceacc970be5c10b",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "issues": "https://github.com/PHPCSStandards/composer-installer/issues",
                 "source": "https://github.com/PHPCSStandards/composer-installer"
             },
-            "time": "2022-04-18T16:14:00+00:00"
+            "time": "2022-05-28T06:24:56+00:00"
         },
         {
             "name": "phpcompatibility/php-compatibility",
@@ -264,12 +264,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "96b0866e57b00a91efb608d1938d9505c06b3fb9"
+                "reference": "5e2719947a22c3cd9a6545dbb66d44b81bc0a1e6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/96b0866e57b00a91efb608d1938d9505c06b3fb9",
-                "reference": "96b0866e57b00a91efb608d1938d9505c06b3fb9",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/5e2719947a22c3cd9a6545dbb66d44b81bc0a1e6",
+                "reference": "5e2719947a22c3cd9a6545dbb66d44b81bc0a1e6",
                 "shasum": ""
             },
             "require": {
@@ -313,7 +313,7 @@
                 "source": "https://github.com/squizlabs/PHP_CodeSniffer",
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
-            "time": "2022-05-18T05:35:53+00:00"
+            "time": "2022-05-31T22:48:23+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
