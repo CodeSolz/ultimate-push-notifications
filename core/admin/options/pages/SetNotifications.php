@@ -199,7 +199,7 @@ class SetNotifications {
 				'desc_tip' => __( 'Please set the following configuration to get BuddyPress related notifications.', 'ultimate-push-notifications' ),
 			),
 			'cs_set_notifications[on_friend_request]' => array(
-				'title'    => __( 'On Friend Request', 'ultimate-push-notifications' ),
+				'title'    => __( 'New Friend Request', 'ultimate-push-notifications' ),
 				'type'     => 'miscellaneous',
 				'desc_tip' => __( 'Please check the checkbox to get notification when someone send friend request. You can change the notification message with your won words.You can use: {sender_full_name}, {sender_first_name}, {sender_last_name}, {sender_display_name}', 'ultimate-push-notifications' ),
 				'options'  => array(
@@ -212,7 +212,7 @@ class SetNotifications {
 					'cs_set_notifications[onFriendRequestTitle]' => array(
 						'type'              => 'text',
 						'class'             => 'form-control notification-title',
-						'value'             => FormBuilder::get_value( 'onFriendRequestTitle', $option, 'Order status changed' ),
+						'value'             => FormBuilder::get_value( 'onFriendRequestTitle', $option, 'New Friend Request Received!' ),
 						'placeholder'       => __( 'Enter notification title. Maxlength : 38', 'ultimate-push-notifications' ),
 						'custom_attributes' => array(
 							'maxlength' => 38,
@@ -221,7 +221,7 @@ class SetNotifications {
 					'cs_set_notifications[onFriendRequestBody]' => array(
 						'type'              => 'textarea',
 						'class'             => 'form-control mt-10',
-						'value'             => FormBuilder::get_value( 'onFriendRequestBody', $option, 'The status of order: #{order_id} requested by {full_name} was changed from {status_from} to {status_to}.' ),
+						'value'             => FormBuilder::get_value( 'onFriendRequestBody', $option, '{sender_full_name}, sent you friend request on BuddyPress.' ),
 						'placeholder'       => __( 'Enter notification description. Maxlength : 174', 'ultimate-push-notifications' ),
 						'custom_attributes' => array(
 							'maxlength' => 174,
@@ -229,7 +229,71 @@ class SetNotifications {
 					),
 
 				),
-			)
+			),
+			'cs_set_notifications[on_friend_request_accepted]' => array(
+				'title'    => __( 'Friend Request Accepted', 'ultimate-push-notifications' ),
+				'type'     => 'miscellaneous',
+				'desc_tip' => __( 'Please check the checkbox to get notification when accept your friend request. You can change the notification message with your won words.You can use: {sender_full_name}, {sender_first_name}, {sender_last_name}, {sender_display_name}', 'ultimate-push-notifications' ),
+				'options'  => array(
+					'cs_set_notifications[onFriendRequestAcceptedCheck]' => array(
+						'type'        => 'checkbox',
+						'class'       => '',
+						'value'       => FormBuilder::get_value( 'onFriendRequestAcceptedCheck', $option, '' ),
+						'placeholder' => __( 'Enter discount amount', 'ultimate-push-notifications' ),
+					),
+					'cs_set_notifications[onFriendRequestAcceptedTitle]' => array(
+						'type'              => 'text',
+						'class'             => 'form-control notification-title',
+						'value'             => FormBuilder::get_value( 'onFriendRequestAcceptedTitle', $option, 'Friend Request Accepted!' ),
+						'placeholder'       => __( 'Enter notification title. Maxlength : 38', 'ultimate-push-notifications' ),
+						'custom_attributes' => array(
+							'maxlength' => 38,
+						),
+					),
+					'cs_set_notifications[onFriendRequestAcceptedBody]' => array(
+						'type'              => 'textarea',
+						'class'             => 'form-control mt-10',
+						'value'             => FormBuilder::get_value( 'onFriendRequestAcceptedBody', $option, '{sender_full_name}, accepted your friend request on BuddyPress.' ),
+						'placeholder'       => __( 'Enter notification description. Maxlength : 174', 'ultimate-push-notifications' ),
+						'custom_attributes' => array(
+							'maxlength' => 174,
+						),
+					),
+
+				),
+			),
+			'cs_set_notifications[on_friend_request_rejected]' => array(
+				'title'    => __( 'Friend Request Rejected', 'ultimate-push-notifications' ),
+				'type'     => 'miscellaneous',
+				'desc_tip' => __( 'Please check the checkbox to get notification when reject your friend request. You can change the notification message with your won words.You can use: {sender_full_name}, {sender_first_name}, {sender_last_name}, {sender_display_name}', 'ultimate-push-notifications' ),
+				'options'  => array(
+					'cs_set_notifications[onFriendRequestRejectedCheck]' => array(
+						'type'        => 'checkbox',
+						'class'       => '',
+						'value'       => FormBuilder::get_value( 'onFriendRequestRejectedCheck', $option, '' ),
+						'placeholder' => __( 'Enter discount amount', 'ultimate-push-notifications' ),
+					),
+					'cs_set_notifications[onFriendRequestRejectedTitle]' => array(
+						'type'              => 'text',
+						'class'             => 'form-control notification-title',
+						'value'             => FormBuilder::get_value( 'onFriendRequestRejectedTitle', $option, 'Friend Request Rejected!' ),
+						'placeholder'       => __( 'Enter notification title. Maxlength : 38', 'ultimate-push-notifications' ),
+						'custom_attributes' => array(
+							'maxlength' => 38,
+						),
+					),
+					'cs_set_notifications[onFriendRequestRejectedBody]' => array(
+						'type'              => 'textarea',
+						'class'             => 'form-control mt-10',
+						'value'             => FormBuilder::get_value( 'onFriendRequestRejectedBody', $option, '{sender_full_name}, accepted your friend request on BuddyPress.' ),
+						'placeholder'       => __( 'Enter notification description. Maxlength : 174', 'ultimate-push-notifications' ),
+						'custom_attributes' => array(
+							'maxlength' => 174,
+						),
+					),
+
+				),
+			),
 		);
 
 		$fields          = $section_tabs + $user_registration_notifications + $woocommerce_notifications + $buddyPress;

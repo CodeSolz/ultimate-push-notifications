@@ -19,7 +19,6 @@ class Upn_BuddyPress {
 
 
 	/**
-	 * TODO: need to add settings section on user profile area, check user registration working
 	 * https://codex.buddypress.org/developer/action-reference/friends/
 	 * bp-friends\bp-friends-functions.php
 	 */
