@@ -12,6 +12,7 @@ composer.phar
 /assets/css/src
 /build/
 /src
+/idea.txt
 
 ### build ###
 
