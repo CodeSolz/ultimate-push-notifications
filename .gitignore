@@ -13,6 +13,7 @@ composer.phar
 /build/
 /src
 /idea.txt
+/workspace.code-workspace
 
 ### build ###
 
