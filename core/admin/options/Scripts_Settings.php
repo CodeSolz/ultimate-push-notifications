@@ -37,7 +37,6 @@ class Scripts_Settings {
 	 * @param string $page_id
 	 */
 	public static function load_admin_footer_script( $page_id, $rtafr_menu ) {
-
 		Util::markup_tag( __( 'admin footer script start', 'ultimate-push-notifications' ) );
 
 		// load form submit script on footer
@@ -55,7 +54,6 @@ class Scripts_Settings {
 		}
 
 		Util::markup_tag( __( 'admin footer script end', 'ultimate-push-notifications' ) );
-
 		return;
 	}
 
