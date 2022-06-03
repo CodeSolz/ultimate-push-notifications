@@ -192,7 +192,47 @@ class SetNotifications {
 			),
 		);
 
-		$fields          = $section_tabs + $user_registration_notifications + $woocommerce_notifications;
+		$buddyPress = array(
+			'st3'          => array(
+				'type'     => 'section_title',
+				'title'    => __( 'BuddyPress Notifications', 'ultimate-push-notifications' ),
+				'desc_tip' => __( 'Please set the following configuration to get BuddyPress related notifications.', 'ultimate-push-notifications' ),
+			),
+			'cs_set_notifications[on_friend_request]' => array(
+				'title'    => __( 'On Friend Request', 'ultimate-push-notifications' ),
+				'type'     => 'miscellaneous',
+				'desc_tip' => __( 'Please check the checkbox to get notification when someone send friend request. You can change the notification message with your won words.You can use: {sender_full_name}, {sender_first_name}, {sender_last_name}, {sender_display_name}', 'ultimate-push-notifications' ),
+				'options'  => array(
+					'cs_set_notifications[onFriendRequestCheck]' => array(
+						'type'        => 'checkbox',
+						'class'       => '',
+						'value'       => FormBuilder::get_value( 'onFriendRequestCheck', $option, '' ),
+						'placeholder' => __( 'Enter discount amount', 'ultimate-push-notifications' ),
+					),
+					'cs_set_notifications[onFriendRequestTitle]' => array(
+						'type'              => 'text',
+						'class'             => 'form-control notification-title',
+						'value'             => FormBuilder::get_value( 'onFriendRequestTitle', $option, 'Order status changed' ),
+						'placeholder'       => __( 'Enter notification title. Maxlength : 38', 'ultimate-push-notifications' ),
+						'custom_attributes' => array(
+							'maxlength' => 38,
+						),
+					),
+					'cs_set_notifications[onFriendRequestBody]' => array(
+						'type'              => 'textarea',
+						'class'             => 'form-control mt-10',
+						'value'             => FormBuilder::get_value( 'onFriendRequestBody', $option, 'The status of order: #{order_id} requested by {full_name} was changed from {status_from} to {status_to}.' ),
+						'placeholder'       => __( 'Enter notification description. Maxlength : 174', 'ultimate-push-notifications' ),
+						'custom_attributes' => array(
+							'maxlength' => 174,
+						),
+					),
+
+				),
+			)
+		);
+
+		$fields          = $section_tabs + $user_registration_notifications + $woocommerce_notifications + $buddyPress;
 		$args['content'] = $this->Form_Generator->generate_html_fields( $fields );
 
 		$swal_title           = __( 'Saving Settings', 'ultimate-push-notifications' );

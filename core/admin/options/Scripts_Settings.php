@@ -72,7 +72,7 @@ class Scripts_Settings {
 					var formData = new FormData( $this[0] );
 					formData.append( "action", "upn_ajax" );
 					formData.append( "method", $this.find('#cs_field_method').val() );
-					swal({ title: $this.find('#cs_field_swal_title').val(), text: '<?php _e( 'Please wait a while...', 'ultimate-push-notifications' ); ?>', timer: 200000, imageUrl: '<?php echo CS_UPN_PLUGIN_ASSET_URI . 'img/loading-timer.gif'; ?>', showConfirmButton: false, html :true });
+					Swal.fire({ title: $this.find('#cs_field_swal_title').val(), text: '<?php _e( 'Please wait a while...', 'ultimate-push-notifications' ); ?>', timer: 200000, imageUrl: '<?php echo CS_UPN_PLUGIN_ASSET_URI . 'img/loading-timer.gif'; ?>', showConfirmButton: false, });
 					$.ajax({
 						url: ajaxurl,
 						type: 'POST',
@@ -82,21 +82,23 @@ class Scripts_Settings {
 						processData: false
 					})
 					.done(function( data ) {
-						console.log( data );
+						// console.log( data );
 						if( true === data.status ){
-							swal( { title: data.title, text: data.text, type : "success", html: true, timer: 5000 });
+							Swal.fire( { title: data.title, text: data.text, icon : "success", timer: 2500 });
 							if( typeof data.redirect_url !== 'undefined' ){
-								window.location.href = data.redirect_url;
+								setTimeout(() => {
+									window.location.href = data.redirect_url;
+								}, 2500);
 							}
 						}else if( false === data.status ){
-							swal({ title: data.title, text: data.text, type : "error", html: true, timer: 5000 });
+							Swal.fire({ title: data.title, text: data.text, icon : "error", timer: 5000 });
 						}else{
-							swal( { title: 'OOPS!', text: '<?php _e( 'Something went wrong! Please try again by refreshing the page.', 'ultimate-push-notifications' ); ?>', type : "error", html: true, timer: 5000 });
+							Swal.fire( { title: 'OOPS!', text: '<?php _e( 'Something went wrong! Please try again by refreshing the page.', 'ultimate-push-notifications' ); ?>', icon : "error", timer: 5000 });
 						}
 					})
 					.fail(function( errorThrown ) {
 						console.log( 'Error: ' + errorThrown.responseText );
-						swal( '<?php _e( 'Response Error', 'ultimate-push-notifications' ); ?>', errorThrown.responseText + '('+errorThrown.statusText +') ' , "error" );
+						Swal.fire( { title: '<?php _e( 'Response Error', 'ultimate-push-notifications' ); ?>', text: errorThrown.responseText + '('+errorThrown.statusText +') ', icon : "error", timer: 5000 });
 					});
 					return false;
 				});
@@ -123,7 +125,7 @@ class Scripts_Settings {
 					formData.append( "method", "admin\\functions\\SendNotifications@send_test_notifications" );
 					formData.append( "device_token", getToken );
 					formData.append( "cs_token", '<?php echo wp_create_nonce( SECURE_AUTH_SALT ); ?>' );
-					swal({ title: '<?php _e( 'Sending', 'ultimate-push-notifications' ); ?>', text: '<?php _e( 'Please wait a while...', 'ultimate-push-notifications' ); ?>', timer: 200000, imageUrl: '<?php echo CS_UPN_PLUGIN_ASSET_URI . 'img/loading-timer.gif'; ?>', showConfirmButton: false, html :true });
+					Swal.fire({ title: '<?php _e( 'Sending', 'ultimate-push-notifications' ); ?>', text: '<?php _e( 'Please wait a while...', 'ultimate-push-notifications' ); ?>', timer: 200000, imageUrl: '<?php echo CS_UPN_PLUGIN_ASSET_URI . 'img/loading-timer.gif'; ?>', showConfirmButton: false });
 					$.ajax({
 						url: ajaxurl,
 						type: 'POST',
@@ -133,21 +135,21 @@ class Scripts_Settings {
 						processData: false
 					})
 					.done(function( data ) {
-						console.log( data );
+						// console.log( data );
 						if( true === data.status ){
-							swal( { title: data.title, text: data.text, type : "success", html: true, timer: 5000 });
+							Swal.fire( { title: data.title, text: data.text, icon : "success", timer: 5000 });
 							if( typeof data.redirect_url !== 'undefined' ){
 								window.location.href = data.redirect_url;
 							}
 						}else if( false === data.status ){
-							swal({ title: data.title, text: data.text, type : "error", html: true, timer: 5000 });
+							Swal.fire({ title: data.title, text: data.text, icon : "error", timer: 5000 });
 						}else{
-							swal( { title: 'OOPS!', text: '<?php _e( 'Something went wrong! Please try again by refreshing the page.', 'ultimate-push-notifications' ); ?>', type : "error", html: true, timer: 5000 });
+							Swal.fire( { title: 'OOPS!', text: '<?php _e( 'Something went wrong! Please try again by refreshing the page.', 'ultimate-push-notifications' ); ?>', icon : "error", timer: 5000 });
 						}
 					})
 					.fail(function( errorThrown ) {
 						console.log( 'Error: ' + errorThrown.responseText );
-						swal( '<?php _e( 'Response Error', 'ultimate-push-notifications' ); ?>', errorThrown.responseText + '('+errorThrown.statusText +') ' , "error" );
+						Swal.fire({ title: '<?php _e( 'Response Error', 'ultimate-push-notifications' ); ?>', text: errorThrown.responseText + '('+errorThrown.statusText +') ', icon : "error", timer: 5000 });
 					});
 					return false;
 				});

@@ -1,12 +1,12 @@
-=== Ultimate Push Notifications ( WooCommerce, WordPress Default Events & Many More) ===
+=== Ultimate Push Notifications ( WooCommerce, BuddyPress, WordPress Default Events & Many More) ===
 Contributors: CodeSolz, m.tuhin
-Tags: desktop push notification, woocommerce, push notifications, cloud push notification, firebase, push notification
+Tags: desktop push notification, woocommerce, BuddyPress, push notifications, cloud push notification, firebase, push notification
 Requires at least: 4.0
-Tested up to: 5.8
-Stable tag: 1.0.5
+Tested up to: 5.9
+Stable tag: 1.0.6
 Requires PHP: 7.0
 WC requires at least: 4.0
-WC tested up to: 5.0
+WC tested up to: 6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,9 +45,9 @@ You will be able to receive real-time notifications right on your desktop screen
 * Receive push notification when vendor change the status of the product
 
 
-== ➡️ Basic Documentation To Get Started == 
+== âž¡ï¸ Basic Documentation To Get Started == 
 
-👉 HOW TO INSTALL, SETUP AND ACTIVATE FIREBASE APPLICATION
+ðŸ‘‰ HOW TO INSTALL, SETUP AND ACTIVATE FIREBASE APPLICATION
 
 * How to create a Firebase Application for free 
     * [Live Demo & Documentation](https://docs.codesolz.net/ultimate-push-notifications/how-to-create-firebase-application/create-firebase-application/)
@@ -97,6 +97,13 @@ You will be able to receive real-time notifications right on your desktop screen
 
 
 == Changelog ==
+
+= Version: 1.0.7 =
+* **Update:** SweetAlert2 updated to latest version
+* **Improvement:** WordPress 6.0 & PHP 8 compatible 
+
+= Version: 1.0.6 =
+* **Improvement:** WordPress 5.9 
 
 = Version: 1.0.5 =
 * **Improvement:** WordPress 5.8 compatible 

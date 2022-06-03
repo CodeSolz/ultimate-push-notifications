@@ -79,8 +79,8 @@ class SendNotifications {
 	public static function prepare_send_notifications( $dataObj ) {
 		$dataObj = \is_object( $dataObj ) ? $dataObj : (object) $dataObj;
 
-		$title       = str_replace( $dataObj->find, $dataObj->replace, $dataObj->title );
-		$description = str_replace( $dataObj->find, $dataObj->replace, $dataObj->body );
+		$title       = \str_replace( $dataObj->find, $dataObj->replace, $dataObj->title );
+		$description = \str_replace( $dataObj->find, $dataObj->replace, $dataObj->body );
 		$response    = array();
 		if ( ! empty( $dataObj->tokens ) ) {
 			foreach ( $dataObj->tokens as $item ) {

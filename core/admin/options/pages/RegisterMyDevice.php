@@ -115,6 +115,9 @@ class RegisterMyDevice {
 				<li> <b> ' . __( 'Basic Hints', 'ultimate-push-notifications' ) . ' </b>
 					<ol>
 						<li>
+							' . __( 'You should have SSL enabled to make the application work. ', 'ultimate-push-notifications' ) . '
+						</li>
+						<li>
 							' . __( 'When the page loaded and notification permission appeared, you must click \'allow\' to allow notification. ', 'ultimate-push-notifications' ) . '
 						</li>
 						<li>
