@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "25007573f9c7e8e02aa68081cbbea908",
+    "content-hash": "7b342cbfbd8a14ac7063d7c7ee5943fc",
     "packages": [],
     "packages-dev": [
         {
@@ -316,6 +316,48 @@
             "time": "2022-05-31T22:48:23+00:00"
         },
         {
+            "name": "tuhin18003/advance-var-dumper",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tuhin18003/var-dumper-made-easy.git",
+                "reference": "c67e973ea732068e796cf7dc90a81eba9f663cde"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tuhin18003/var-dumper-made-easy/zipball/c67e973ea732068e796cf7dc90a81eba9f663cde",
+                "reference": "c67e973ea732068e796cf7dc90a81eba9f663cde",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/functions/advance-dump.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "M.Tuhin",
+                    "email": "tuhin@codesolz.net"
+                }
+            ],
+            "description": "Advance way of dumping PHP variables",
+            "homepage": "https://github.com/tuhin18003/Advance-Var-Dumper",
+            "support": {
+                "issues": "https://github.com/tuhin18003/var-dumper-made-easy/issues",
+                "source": "https://github.com/tuhin18003/var-dumper-made-easy/tree/v1.0.1"
+            },
+            "time": "2020-11-13T07:05:38+00:00"
+        },
+        {
             "name": "wp-coding-standards/wpcs",
             "version": "dev-master",
             "source": {
@@ -371,7 +413,8 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "wp-coding-standards/wpcs": 20,
-        "dealerdirect/phpcodesniffer-composer-installer": 20
+        "dealerdirect/phpcodesniffer-composer-installer": 20,
+        "tuhin18003/advance-var-dumper": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

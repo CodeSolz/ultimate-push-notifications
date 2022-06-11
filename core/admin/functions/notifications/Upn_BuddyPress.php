@@ -34,6 +34,7 @@ class Upn_BuddyPress {
 	 */
 	public static function upn_on_friend_request( $friendship_id, $friendship_initiator_user_id, $friendship_friend_user_id, $friendship ) {
 
+		
 		$hasUserAsked = SetNotifications::has_user_asked_for_notification( $friendship_friend_user_id, 'bpFriendRequest' );
 
 		if ( $hasUserAsked ) {

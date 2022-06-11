@@ -3,7 +3,7 @@ Contributors: CodeSolz, m.tuhin
 Tags: desktop push notification, woocommerce, BuddyPress, push notifications, cloud push notification, firebase, push notification
 Requires at least: 4.0
 Tested up to: 6.0
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 Requires PHP: 7.0
 WC requires at least: 4.0
 WC tested up to: 6.5
@@ -28,9 +28,14 @@ By visinting On plugin's device registration page, you will notification prompt.
 You will be able to receive real-time notifications right on your desktop screen when particular actions happens on your website. 
 
 <blockquote>
-=== Easily set when and on which event's you want to recive notifications! ===
+=== Easily set when and on which event's you want to receive notifications! ===
 </blockquote>
 
+
+== Requirments ==
+* Should enabled SSL on website. It will not work in localhost
+* For testing purposes, multiple users should be create from different browsers
+* 
 
 == Key Features ==
 
@@ -45,9 +50,9 @@ You will be able to receive real-time notifications right on your desktop screen
 * Receive push notification when vendor change the status of the product
 
 
-== âž¡ï¸ Basic Documentation To Get Started == 
+== Basic Documentation To Get Started == 
 
-ðŸ‘‰ HOW TO INSTALL, SETUP AND ACTIVATE FIREBASE APPLICATION
+ HOW TO INSTALL, SETUP AND ACTIVATE FIREBASE APPLICATION
 
 * How to create a Firebase Application for free 
     * [Live Demo & Documentation](https://docs.codesolz.net/ultimate-push-notifications/how-to-create-firebase-application/create-firebase-application/)
@@ -97,6 +102,9 @@ You will be able to receive real-time notifications right on your desktop screen
 
 
 == Changelog ==
+
+= Version: 1.0.8 =
+* **Improvement:** BuddyPress notification feature updated
 
 = Version: 1.0.7 =
 * **New:** BuddyPress notification added ( new friend request, friend request accepted, friend request rejected )

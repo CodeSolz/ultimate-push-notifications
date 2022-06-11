@@ -30,7 +30,8 @@
         "wp-coding-standards/wpcs": "dev-master",
         "dealerdirect/phpcodesniffer-composer-installer": "dev-master",
         "phpcompatibility/php-compatibility": "^9.3",
-        "phpcompatibility/phpcompatibility-wp": "^2.1"
+        "phpcompatibility/phpcompatibility-wp": "^2.1",
+        "tuhin18003/advance-var-dumper": "dev-master"
     },
     "config": {
         "allow-plugins": {
