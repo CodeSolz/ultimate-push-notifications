@@ -58,6 +58,7 @@ class UpnNotices {
 		$notice->info( $message, 'Activated' );
 	}
 
+	
 
 }
 
