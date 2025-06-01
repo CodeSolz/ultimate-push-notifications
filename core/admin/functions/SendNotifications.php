@@ -55,7 +55,7 @@ class SendNotifications {
 				array(
 					'status' => false,
 					'title'  => __( 'Failure!', 'ultimate-push-notifications' ),
-					'text'   => __( 'Something went wrong. Please check your application configuration properly.', 'ultimate-push-notifications' ),
+					'text'   => sprintf( __( 'Error : %s. Please check your application configuration properly.', 'ultimate-push-notifications' ), $response['errorText'] ),
 				)
 			);
 		} else {
@@ -147,8 +147,9 @@ class SendNotifications {
 		}
 
 		$finalRes = array(
-			'success' => $response->success,
-			'failure' => $response->failure,
+			'success' =>  \is_null( $response->success ) ? 0 : $response->success,
+			'failure' => \is_null($response->success) ? 1 : $response->failure,
+			'errorText' => isset($response->results[0]->error) ? $response->results[0]->error : 'Something went wrong!'
 		);
 
 		$this->update_message_sent_count( $finalRes, $payload->to );
@@ -164,12 +165,18 @@ class SendNotifications {
 	private function update_message_sent_count( $res, $token ) {
 		global $wpdb;
 
+		$token_short_arr 	= \explode( ':', $token );
+		if ( isset( $token_short_arr[0] ) && empty( $token_short = $token_short_arr[0] ) ) {
+			return false;
+		}
+
 		$is_exists = $wpdb->get_row(
 			$wpdb->prepare(
-				"select * from `{$wpdb->prefix}upn_user_devices` where token = %s ",
-				$token
+				"select * from `{$wpdb->prefix}upn_user_devices` where token like %s ",
+				'%' . $wpdb->esc_like( $token_short ) . '%'
 			)
 		);
+
 		if ( $is_exists ) {
 			$wpdb->update(
 				"{$wpdb->prefix}upn_user_devices",

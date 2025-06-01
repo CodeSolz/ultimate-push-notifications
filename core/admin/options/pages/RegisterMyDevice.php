@@ -51,6 +51,8 @@ class RegisterMyDevice {
 	 */
 	public function generate_page( $args, $option ) {
 
+		// pre_print( $option );
+
 		$page                       = isset( $_GET['page'] ) ? Util::check_evil_script( $_GET['page'] ) : '';
 		$args['well_search_result'] = '';
 		if ( isset( $_GET['s'] ) && ! empty( $sfor = Util::cs_esc_html( $_GET['s'] ) ) ) {
@@ -110,7 +112,9 @@ class RegisterMyDevice {
 
 		$args['body_class'] = 'no-bottom-margin';
 
+
 		$args['well'] = empty( $args['well_search_result'] ) ? sprintf(
+			Util::upn_no_app_config_notification( $option ) .  
 			'<ul>
 				<li> <b> ' . __( 'Basic Hints', 'ultimate-push-notifications' ) . ' </b>
 					<ol>

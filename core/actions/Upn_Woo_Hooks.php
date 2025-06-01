@@ -1,7 +1,7 @@
 <?php namespace UltimatePushNotifications\actions;
 
 /**
- * Class: Register custom menu
+ * Class: WooCommerce Hooks
  *
  * @package Action
  * @since 1.0.0

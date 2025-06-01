@@ -51,7 +51,13 @@ class FormBuilder {
 					$input = $field['section'];
 				}
 
-				$input .= '<div class="form-group ' . $no_border . ' ' . $wrapper_class . '">';
+				// check if pro
+				$is_pro = '';
+				if ( isset( $field['is_pro'] ) && true === $field['is_pro'] ) {
+					$is_pro = 'pro-version';
+				}
+
+				$input .= '<div class="form-group ' . $no_border . ' ' . $wrapper_class . ' ' . $is_pro . '">';
 				$input .= $this->generate_field( $field_name, $field, $i );
 				$input .= '</div>';
 

@@ -1,10 +1,10 @@
 <?php namespace UltimatePushNotifications\admin\functions\notifications;
 
 /**
- * BuddyPress Notifications
+ * The Events Calendar Notifications
  *
  * @package Notifications
- * @since 1.0.6
+ * @since 1.1.3
  * @author M.Tuhin <info@codesolz.net>
  */
 
@@ -16,7 +16,53 @@ use UltimatePushNotifications\lib\Util;
 use UltimatePushNotifications\admin\functions\SendNotifications;
 use UltimatePushNotifications\admin\options\functions\SetNotifications;
 
-class Upn_BuddyPress {
+class Upn_TheEventsCalendar {
+
+	public static function upn_on_event(){
+		
+		$hasUserAsked = SetNotifications::has_user_asked_for_notification( $friendship_friend_user_id, 'bpFriendRequest' );
+
+		if ( $hasUserAsked ) {
+
+			$find = array(
+				'{user_full_name}',
+				'{user_first_name}',
+				'{user_last_name}',
+				'{user_display_name}',
+			);
+
+			$user = \get_user_by( 'id', $friendship_initiator_user_id );
+
+			$replace = array(
+				empty( $user->first_name ) ? $user->display_name : $user->first_name . ' ' . $user->last_name,
+				empty( $user->first_name ) ? $user->display_name : $user->first_name,
+				empty( $user->last_name ) ? $user->display_name : $user->last_name,
+				empty( $user_display_name = \bp_core_get_user_displayname( $friendship_initiator_user_id ) ) ? $user->display_name : $user_display_name,
+			);
+
+			// get sender avatar
+			$user_avatar = \bp_core_fetch_avatar(
+				array(
+					'html'    => false,
+					'item_id' => $friendship_initiator_user_id,
+				)
+			);
+
+			return SendNotifications::prepare_send_notifications(
+				(array) $hasUserAsked + array(
+					'find'         => $find,
+					'replace'      => $replace,
+					'icon'         => $user_avatar,
+					'click_action' => \bp_core_get_user_domain( $friendship_friend_user_id ),
+				)
+			);
+
+		}
+
+		return;
+
+	}
+
 
 
 	/**
@@ -758,26 +804,6 @@ class Upn_BuddyPress {
 		}
 
 		return;
-	}
-
-
-	/**
-	 * Send to all registered users
-	 *
-	 * @param [type] $notification_type
-	 * @return void
-	 */
-	private function send_notification_to_all_registered_users( $notification_type, $callback_function ){
-		$users = UpnDeviceManager::get_registered_users();
-		if( $users ){
-			foreach ( $users as $user ) {
-				$hasUserAsked = SetNotifications::has_user_asked_for_notification( $user->user_id, $notification_type );
-				if( $hasUserAsked ){
-					
-				}
-				
-			}
-		}
 	}
 
 }

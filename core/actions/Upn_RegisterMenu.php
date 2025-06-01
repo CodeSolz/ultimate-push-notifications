@@ -68,7 +68,7 @@ class Upn_RegisterMenu {
 		add_menu_page(
 			__( 'Ultimate Push Notifications', 'ultimate-push-notifications' ),
 			'UPush Notifier',
-			'manage_options',
+			'read',
 			CS_UPN_PLUGIN_IDENTIFIER,
 			'cs-woo-altcoin-gateway',
 			CS_UPN_PLUGIN_ASSET_URI . 'img/icon-24x24.png',
@@ -88,7 +88,7 @@ class Upn_RegisterMenu {
 			CS_UPN_PLUGIN_IDENTIFIER,
 			__( 'Set notifications', 'ultimate-push-notifications' ),
 			'Set Notifications',
-			'manage_options',
+			'read',
 			'cs-upn-set-notifications',
 			array( $this, 'upn_set_notifications' )
 		);
@@ -97,7 +97,7 @@ class Upn_RegisterMenu {
 			CS_UPN_PLUGIN_IDENTIFIER,
 			__( 'Register my device', 'ultimate-push-notifications' ),
 			'Register My Device',
-			'manage_options',
+			'read',
 			'cs-upn-register-my-device',
 			array( $this, 'upn_page_register_my_device' )
 		);
@@ -154,12 +154,13 @@ class Upn_RegisterMenu {
 	 */
 	public function upn_set_notifications() {
 		$option    = SetNotifications::get_notification_type();
+		$option = $this->upn_has_config( $option );
 		$page_info = array(
 			'title'     => __( 'Set Notification', 'ultimate-push-notifications' ),
 			'sub_title' => __( 'Please set the following settings to get notifications', 'ultimate-push-notifications' ),
 		);
 
-		if ( current_user_can( 'manage_options' ) || current_user_can( 'administrator' ) ) {
+		if ( current_user_can( 'read' ) || current_user_can( 'read' ) ) {
 			$SetNotifications = $this->pages->SetNotifications();
 			echo $this->generate_page( $SetNotifications, $page_info, $option );
 		} else {
@@ -175,13 +176,14 @@ class Upn_RegisterMenu {
 	 * @return void
 	 */
 	public function upn_page_register_my_device() {
-		$option    = '';
+		$option    = array();
+		$option = $this->upn_has_config( $option );
 		$page_info = array(
 			'title'     => __( 'My Registered Devices', 'ultimate-push-notifications' ),
 			'sub_title' => __( 'By visiting this page your device will be automatically registered. Please read the hints to understand more.', 'ultimate-push-notifications' ),
 		);
 
-		if ( current_user_can( 'manage_options' ) || current_user_can( 'administrator' ) ) {
+		if ( current_user_can( 'read' ) || current_user_can( 'read' ) ) {
 			$RegisterMyDevice = $this->pages->RegisterMyDevice();
 			echo $this->generate_page( $RegisterMyDevice, $page_info, $option );
 		} else {
@@ -197,7 +199,8 @@ class Upn_RegisterMenu {
 	 * @return void
 	 */
 	public function upn_page_all_registered_devices() {
-		$option    = '';
+		$option    = array();
+		$option = $this->upn_has_config( $option );
 		$page_info = array(
 			'title'     => sprintf( __( 'All Registered Devices %1$s visible to administrator only %2$s', 'ultimate-push-notifications' ), '<span class="visibility" >(', ')</span>' ),
 			'sub_title' => __( 'List of all the registered devices in the website', 'ultimate-push-notifications' ),
@@ -273,5 +276,20 @@ class Upn_RegisterMenu {
 		return Scripts_Settings::load_admin_footer_script( $this->current_screen->id, $this->upn_menus );
 	}
 
+	/**
+	 * has config setup
+	 *
+	 * @param array $option
+	 * @return void
+	 */
+	private function upn_has_config( $option = array() ){
+		$app_config    = AppConfig::get_config();
+		$hasConfig = empty( $app_config ) ? false : true;
+		$option = array_merge( (array) $option, array(
+			'hasConfigSetup' => $hasConfig
+		));
+
+		return $option;
+	}
 
 }

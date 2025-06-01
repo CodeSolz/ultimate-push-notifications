@@ -54,6 +54,8 @@ class AllRegisteredDevices {
 		$page = isset( $_GET['page'] ) ? Util::check_evil_script( $_GET['page'] ) : '';
 		if ( isset( $_GET['s'] ) && ! empty( $sfor = Util::cs_esc_html( $_GET['s'] ) ) ) {
 			$args['well'] = sprintf(
+				
+
 				__( '%1$s Search results for : %2$s%3$s %4$s << Back to all%5$s', 'ultimate-push-notifications' ),
 				"<p class='search-keyword'>",
 				"<b> {$sfor} </b>",
@@ -62,6 +64,9 @@ class AllRegisteredDevices {
 				'</a>'
 			);
 		}
+
+		$args['well'] = Util::upn_no_app_config_notification( $option ) .  $args['well'];
+
 
 		\ob_start();
 		$adCodeList = new RegisteredDevicesList( 'cs-upn-all-registered-devices' );

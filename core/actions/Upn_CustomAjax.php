@@ -26,7 +26,6 @@ class Upn_CustomAjax {
 	 * custom ajax call
 	 */
 	public function upn_ajax() {
-
 		if ( ! isset( $_REQUEST['cs_token'] ) || false === check_ajax_referer( SECURE_AUTH_SALT, 'cs_token', false ) ) {
 			wp_send_json(
 				array(

@@ -1,5 +1,7 @@
 <?php namespace UltimatePushNotifications\admin\builders;
 
+use UltimatePushNotifications\lib\Util;
+
 /**
  * Admin Page Builder Class
  *
@@ -163,9 +165,17 @@ class AdminPageBuilder {
 	 * @return string
 	 */
 	private function generate_footer() {
+		$free_plugins_suggestion = '';
+		if ( \current_user_can( 'install_plugins' ) ) {
+			$free_plugins_suggestion = 'Check out other <a href="' . esc_url( Util::cs_free_plugins() ) . '" > Useful Free Plugins</a>.';
+		}
+
 		return '<div class="panel-footer">
-            <p>Thank you for choosing <a href="https://www.codesolz.net" target="_blank">CodeSolz\'s</a> Software!
-				<span class="doc-link">Looking for features details? Check plugin\'s <a href="https://docs.codesolz.net/ultimate-push-notifications/" target="_blank">Documentation</a> </span> 
+            <p>Thank you for choosing <a href="https://www.codesolz.net" target="_blank">CodeSolz\'s</a> Software! 
+				<span class="doc-link">
+					Looking for features details? Check plugin\'s <a href="https://docs.codesolz.net/better-find-and-replace/" target="_blank">Documentation</a>. 
+					' . $free_plugins_suggestion . '  
+				</span> 
 			</p>
         </div>';
 	}

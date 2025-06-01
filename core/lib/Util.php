@@ -148,6 +148,27 @@ class Util {
 	}
 
 	/**
+	 * Get all super admins
+	 *
+	 * @return void
+	 */
+	public static function get_all_super_admins(){
+		$super_admins = \get_super_admins();
+		if( $super_admins ){
+			$admin_ids = [];
+			foreach ($super_admins as $login) {
+				$user = \get_user_by( 'login', $login);
+				if( isset($user->ID) && !empty($user->ID) ){
+					$admin_ids[] = $user->ID;
+				}
+			}
+			return $admin_ids;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Create file
 	 *
 	 * @param [type] $path
@@ -161,6 +182,54 @@ class Util {
 		\file_put_contents( $path, $content );
 
 		return true;
+	}
+
+	/**
+	 * Get current url slugs
+	 *
+	 * @return void
+	 */
+	public static function current_url_slugs() {
+		$current_url = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+		return empty( $current_url ) ? '' : \explode( '/', $current_url );
+	}
+
+	/**
+	 * App config notification
+	 *
+	 * @return void
+	 */
+	public static function upn_no_app_config_notification( $option ){
+		if( isset( $option['hasConfigSetup'] ) && false === $option['hasConfigSetup'] ){
+			return '<div class="badge-error">Please set "App Config" to make this plugin works.</div>';
+		}
+
+		return false;
+	}
+
+	/**
+	 * Free plugins
+	 *
+	 * @return void
+	 */
+	public static function cs_free_plugins() {
+		return \self_admin_url( 'plugin-install.php?s=codesolz&tab=search&type=author' );
+	}
+
+	/**
+	 * Nav Caps
+	 *
+	 * @return String or array
+	 */
+	public static function upn_nav_cap( $cap_key = ""  ){
+		$nav_caps = \apply_filters( "bfrp_nav_caps", array(
+			'menu_app_config'  => 'upn_menu_app_config',
+			'menu_set_notifications' => 'upn_menu_set_notifications',
+			'menu_add_my_device'     => 'upn_menu_add_my_device',
+			'menu_all_registered_devices'     => 'upn_menu_all_registered_devices'
+		));
+
+		return !empty( $cap_key ) && isset( $nav_caps[$cap_key] ) ? $nav_caps[$cap_key] : $nav_caps;
 	}
 
 }

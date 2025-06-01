@@ -24,16 +24,46 @@ class SetNotifications {
 	 * @return void
 	 */
 	public function save( $user_query ) {
+		if ( !current_user_can( 'manage_options' ) && !current_user_can( Util::upn_nav_cap('menu_set_notifications') ) ) {
+			return wp_send_json(
+				array(
+					'status' => false,
+					'title'  => __( 'Access Denied', 'ultimate-push-notifications' ),
+                'text'   => __( 'You do not have permission to perform this action.', 'ultimate-push-notifications' ),
+				)
+			);
+        }
+
 		global $wpdb;
 
 		$user_notifications  = Util::check_evil_script( $user_query['cs_set_notifications'] );
 		$get_current_user_id = Util::cs_current_user_id();
-		$is_row_exists       = $wpdb->get_var(
+		$is_row_exists       = $wpdb->get_row(
 			$wpdb->prepare(
-				"select id from `{$wpdb->prefix}upn_notifications` where user_id = %d ",
+				"select * from `{$wpdb->prefix}upn_notifications` where user_id = %d ",
 				$get_current_user_id
 			)
 		);
+
+		$is_single_settings = false;
+		// is single settings section
+		if ( isset( $user_notifications['single_settings'] ) && ! empty( $is_row_exists ) ) {
+			unset( $user_notifications['single_settings'] );
+			$is_single_settings = true;
+
+			if ( isset( $is_row_exists->notification_type ) && ! empty( $is_row_exists->notification_type ) ) {
+				$existing_settings = \maybe_unserialize( $is_row_exists->notification_type );
+
+				// print_r( $existing_settings );
+				$existing_settings = \array_merge( $existing_settings, $user_notifications );
+				// pre_print( $existing_settings );
+			}
+			// $existing_settings = isset( $is_row_exists['notification_type'] ) ? maybe_unserialize( $is_row_exists['notification_type'] ) : '';
+			// pre_print( $is_row_exists );
+
+		}
+
+		// pre_print(  $user_notifications );
 
 		// set checkbox val
 		if ( $user_notifications ) {
@@ -51,7 +81,7 @@ class SetNotifications {
 					'notification_type' => \maybe_serialize( $user_notifications ),
 				),
 				array(
-					'id'      => $is_row_exists,
+					'id'      => $is_row_exists->id,
 					'user_id' => $get_current_user_id,
 				)
 			);
@@ -67,13 +97,17 @@ class SetNotifications {
 			$resMsg = 'saved';
 		}
 
-		return wp_send_json(
-			array(
-				'status' => true,
-				'title'  => 'Success!',
-				'text'   => __( "Thank you! Notification settings {$resMsg} successfully.", 'ultimate-push-notifications' ),
-			)
-		);
+		if ( true === $is_single_settings ) {
+			return __( "Thank you! Notification settings {$resMsg} successfully.", 'ultimate-push-notifications' );
+		} else {
+			return wp_send_json(
+				array(
+					'status' => true,
+					'title'  => 'Success!',
+					'text'   => __( "Thank you! Notification settings {$resMsg} successfully.", 'ultimate-push-notifications' ),
+				)
+			);
+		}
 
 	}
 

@@ -32,6 +32,16 @@ class AppConfig {
 	 */
 	public function save( $user_query ) {
 
+		if ( !current_user_can( 'manage_options' ) && !current_user_can( Util::upn_nav_cap('menu_app_config') ) ) {
+			return wp_send_json(
+				array(
+					'status' => false,
+					'title'  => __( 'Access Denied', 'ultimate-push-notifications' ),
+                'text'   => __( 'You do not have permission to perform this action.', 'ultimate-push-notifications' ),
+				)
+			);
+        }
+
 		$user_app_config = Util::check_evil_script( $user_query['cs_app_config'] );
 
 		$measurementId = $user_app_config['measurementId'];
@@ -105,10 +115,7 @@ class AppConfig {
 	 * @return void
 	 */
 	public function cs_update_token( $user_input ) {
-		global $wpdb;
-
 		$current_user = Util::check_evil_script( $user_input['current_user'] );
-
 		if ( empty( $current_user ) ) {
 			return wp_send_json(
 				array(
@@ -119,13 +126,27 @@ class AppConfig {
 			);
 		}
 
-		$token     = Util::check_evil_script( $user_input['gen_token'] );
-		$device_id = Util::check_evil_script( $user_input['device_id'] );
+		
+		global $wpdb;
+		$token           = Util::check_evil_script( $user_input['gen_token'] );
+		$device_id       = Util::check_evil_script( $user_input['device_id'] );
+		$token_short_arr 	= \explode( ':', $token );
+		
+		if ( isset( $token_short_arr[0] ) && empty( $token_short = $token_short_arr[0] ) ) {
+			return wp_send_json(
+				array(
+					'status' => false,
+					'title'  => 'Error!',
+					'text'   => __( 'No device token found!', 'ultimate-push-notifications' ),
+				)
+			);
+		}
 
 		$is_exists = $wpdb->get_var(
 			$wpdb->prepare(
-				"select id from `{$wpdb->prefix}upn_user_devices` where device_id = %s ",
-				$device_id
+				"select id from `{$wpdb->prefix}upn_user_devices` where token like %s and user_id = %d ",
+				'%' . $wpdb->esc_like( $token_short ) . '%',
+				$current_user
 			)
 		);
 
@@ -135,6 +156,7 @@ class AppConfig {
 				array(
 					'user_id' => $current_user,
 					'token'   => $token,
+					'device_id'     => $device_id,
 				),
 				array(
 					'id' => $is_exists,

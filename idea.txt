@@ -1,0 +1,3 @@
+// pro -
+// woocommerce user will get notification when order status change
+// buddypress message 
