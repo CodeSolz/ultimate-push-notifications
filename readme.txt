@@ -176,7 +176,3 @@ Once you have allowed notifications, you'll be able to receive updates in real-t
 
 = Version: 1.1.4 ( April 06, 2023 ) =
 * **Improvement:** WordPress 6.2 & WooCommerce > 7.5 compatible
-
-= Version: 1.1.3 ( September 07, 2022 ) =
-* **Fix:** Small bug fixed - page loading
-* **Improvement:** Upgrade on APP connecting time
