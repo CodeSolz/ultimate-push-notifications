@@ -3,7 +3,7 @@
         'name' => 'codesolz/ultimate-push-notifications',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '3daf86f33bdbd49410a0dce68e5aeda64d22a288',
+        'reference' => 'b2e05ac579af9efbc02efd80d0fed0f11d305ca9',
         'type' => 'composer-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'codesolz/ultimate-push-notifications' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '3daf86f33bdbd49410a0dce68e5aeda64d22a288',
+            'reference' => 'b2e05ac579af9efbc02efd80d0fed0f11d305ca9',
             'type' => 'composer-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
