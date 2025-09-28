@@ -1,12 +1,12 @@
-=== Ultimate Push Notifications ( Mobile / Desktop ), Receive Notification From WooCommerce, BuddyPress, WordPress Default Events & Many More ===
+=== Ultimate Push Notifications ===
 Contributors: CodeSolz, m.tuhin
 Tags: desktop push notification, woocommerce, dokan, BuddyPress, push notifications, cloud push notification, firebase, push notification
 Requires at least: 4.0
 Tested up to: 6.7
-Stable tag: 1.1.9
+Stable tag: 1.2.0
 Requires PHP: 7.0
 WC requires at least: 4.0
-WC tested up to: 9.5
+WC tested up to: 10.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -158,6 +158,9 @@ Once you have allowed notifications, you'll be able to receive updates in real-t
 
 
 == Changelog ==
+
+= Version: 1.2.0 ( September 29, 2025 ) =
+* **Update:** Security patch updated
 
 = Version: 1.1.9 ( June 02, 2025 ) =
 * **Update:** Security patch updated
