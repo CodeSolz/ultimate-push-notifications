@@ -26,8 +26,11 @@
       "pluginZipFile": {
         "resource": "wordpress.org/plugins",
         "slug": "woocommerce"
-      },
-      "activate": true
+      }
+    },
+    {
+      "step": "activatePlugin",
+      "pluginPath": "woocommerce/woocommerce.php"
     },
     {
       "step": "runPHP",
