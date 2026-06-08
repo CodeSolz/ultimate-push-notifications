@@ -7,14 +7,14 @@ namespace Composer\Autoload;
 class ComposerStaticInit7b342cbfbd8a14ac7063d7c7ee5943fc
 {
     public static $prefixLengthsPsr4 = array (
-        'U' => 
+        'U' =>
         array (
             'UltimatePushNotifications\\' => 26,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'UltimatePushNotifications\\' => 
+        'UltimatePushNotifications\\' =>
         array (
             0 => __DIR__ . '/../..' . '/core',
         ),

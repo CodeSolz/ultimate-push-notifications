@@ -128,13 +128,22 @@ class AppConfig {
 				'desc_tip'    => __( 'Enter measurement id from your firebase app configuration. e.g: G-RH8F&MSE5R', 'ultimate-push-notifications' ),
 			),
 			'cs_app_config[key]'               => array(
-				'title'       => __( 'Server Key', 'ultimate-push-notifications' ),
+				'title'       => __( 'Server Key (Legacy FCM)', 'ultimate-push-notifications' ),
 				'type'        => 'textarea',
 				'class'       => 'form-control',
 				'required'    => true,
 				'value'       => FormBuilder::get_value( 'key', $option, '' ),
 				'placeholder' => __( 'please enter server key', 'ultimate-push-notifications' ),
-				'desc_tip'    => __( 'Enter server key from your firebase app configuration. e.g: AAAAayUMFs.. You\'ll be able to get it from firebase app: settings -> Cloud Messaging section.', 'ultimate-push-notifications' ),
+				'desc_tip'    => __( 'Enter server key from Firebase Console → Project Settings → Cloud Messaging → Cloud Messaging API (Legacy) section. Example: AAAAayUMFs...', 'ultimate-push-notifications' ),
+			),
+			'cs_app_config[vapidKey]'          => array(
+				'title'       => __( 'VAPID Key (Web Push Certificate)', 'ultimate-push-notifications' ),
+				'type'        => 'textarea',
+				'class'       => 'form-control',
+				'required'    => false,
+				'value'       => FormBuilder::get_value( 'vapidKey', $option, '' ),
+				'placeholder' => __( 'Enter VAPID public key pair (recommended for modern browsers)', 'ultimate-push-notifications' ),
+				'desc_tip'    => __( 'Strongly recommended for modern browser compatibility. Get it from Firebase Console → Project Settings → Cloud Messaging → Web configuration → Generate key pair. Copy the Key pair value here.', 'ultimate-push-notifications' ),
 			),
 		);
 

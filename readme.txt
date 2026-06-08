@@ -1,163 +1,258 @@
 === Ultimate Push Notifications ===
 Contributors: CodeSolz, m.tuhin
-Tags: desktop push notification, woocommerce, dokan, BuddyPress, push notifications, cloud push notification, firebase, push notification
-Requires at least: 4.0
-Tested up to: 6.7
-Stable tag: 1.2.0
-Requires PHP: 7.0
+Tags: push notifications, web push, firebase, woocommerce push notifications, buddypress notifications, desktop notifications, mobile push, fcm, cloud messaging, real-time notifications
+Requires at least: 5.0
+Tested up to: 7.0
+Stable tag: 1.3.0
+Requires PHP: 7.4
 WC requires at least: 4.0
 WC tested up to: 10.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Receive push notification on Mobile / Desktop from WooCommerce / Multi-vendor (Dokan, WCFM), BuddyPress, WordPress events and more.
+The most complete web push notification plugin for WordPress. Real-time push alerts for WooCommerce orders, BuddyPress activity, form submissions, and more — powered by Firebase 11.
 
 == Description ==
-The Ultimate Push Notification feature offers a truly exceptional experience to users by delivering real-time notifications directly to their mobile or desktop screens. 
-It's truly a dynamic solution for anyone looking to keep up-to-date with the latest activities on their website.
-Whether it's through WooCommerce, BuddyPress, Multi-vendor platforms like Dokan or WCFM or even default WordPress events, this feature provides both administrators and 
-users with complete control over the notifications they receive.
 
-Users will enjoy receiving notifications for a variety of events, including product sales, cart additions, order updates, and new registrations on the website. 
-And with BuddyPress integration, users can also receive notifications for a range of different events within the platform. 
-Overall, the Ultimate Push Notification feature enhances the user experience and helps keep everyone informed and engaged.
+**Ultimate Push Notifications** is the most complete, privacy-friendly push notification solution for WordPress websites. Powered by **Firebase Cloud Messaging (FCM) SDK v11**, it delivers real-time alerts directly to your visitors' browsers — on desktop and mobile — even when they are not on your site.
 
-The Ultimate Push Notification feature is an efficient and cost-effective solution for businesses looking to grow and expand. 
-This innovative solution eliminates the need for unexpected spending on SMS service providers, offering a more modern and efficient approach 
-to staying connected with your audience.
-
-Not only does this feature provide real-time notifications directly to users' mobile or desktop screens, 
-it also offers the flexibility and control you need to effectively communicate with your audience. With the ability
- to customize the messages you send and choose the audience you reach, the Ultimate Push Notification feature helps you stay
-  connected with your customers and grow your business in a cost-effective manner.
+No SMS bills. No email list dependency. Just instant, reliable push notifications that actually reach people.
 
 <blockquote>
-=== Say goodbye to overspending on SMS services and embrace this cost-effective solution today! ===
+Push notifications have 4x higher open rates than email. Keep your customers, community members, and team informed the moment something happens — for free.
 </blockquote>
 
-== How does it work? == 
-The Ultimate Push Notification plugin is designed to seamlessly integrate with Firebase, a powerful and free application platform developed by Google for creating
- mobile and web applications. To get started, simply create your Firebase web push application and set the configuration in the plugin's app config section.
+= Why Choose Ultimate Push Notifications? =
 
-With just a few clicks, you can be on your way to receiving real-time notifications right on your mobile or desktop screen. The plugin's device registration page
- provides a user-friendly interface for setting up notifications, and all the steps involved can be found in our comprehensive plugin documentation.
+Most push notification services charge a monthly fee per subscriber. This plugin uses **Google Firebase** (free tier is generous for most sites) and keeps everything under your control. Your subscriber data stays in your own database. You own your audience.
 
-Once you have allowed notifications, you'll be able to receive updates in real-time as events unfold on your website. With the ability to customize and control
- your notifications, this plugin is a powerful tool that makes it easy to keep everyone informed and engaged with your business. Whether you're just starting out or 
- looking to take your business to the next level, the Ultimate Push Notification plugin has you covered.
+= Real Problems This Plugin Solves =
 
+**For WooCommerce Store Owners:**
+You're losing sales because customers have no idea their order shipped, their payment failed, or their order is ready. And your vendors have no idea someone just bought from them. This plugin fixes all of that — with instant push alerts for every order event.
 
-<blockquote>
-=== Set your preferences and receive timely push notifications on your device. Choose which events trigger the notifications and stay updated on the go. ===
-</blockquote>
+**For BuddyPress / Community Sites:**
+Your community members miss friend requests, new messages, group invites, and activity updates because they're not watching their inbox. Push notifications bring them back the moment something happens — without email fatigue.
 
+**For Site Administrators:**
+You need to know the instant a form is submitted, a new user registers, or an event goes live. Real-time push notifications to your browser mean you're always in the loop, even if your email is buried.
 
-* Push Notifications on Mobile 
-[youtube https://www.youtube.com/watch?v=TARCZGGlG5k]
+**For All Sites:**
+Instead of paying for SMS alerts or high-volume email plans, this plugin lets you communicate in real time for free — using the same infrastructure Google uses for Android notifications.
 
-== Requirments ==
-* Should enabled SSL on website. It will not work in localhost
-* For testing purposes, multiple users should be create from different browsers
+---
 
+= Key Features =
 
-== Key Features ==
+**Firebase 11 — Always Current**
+- Powered by Firebase Cloud Messaging (FCM) SDK **version 11** compat
+- Supports **VAPID keys** (Web Push Certificate) for modern browser compatibility
+- Service Worker handles background notifications even when the browser is closed
+- Rich notifications: **show images** inside the push popup
+- Click-to-navigate: clicking a notification opens the right page automatically
+- Auto-cleanup: invalid / expired device tokens are **removed automatically** — no stale bloat
 
-* Send notification to specific user only not all users as a spam
-* User can check either they want to receive notification or not
-* User can customize their message text 
-* User can choose which notification they would like to receive 
-* Easy to use and user-friendly options
-* Ultimate notification solutions for WordPress
+**Per-User Control**
+- Users choose which notification types they want to receive — no spam
+- Users can customize the notification title and message text
+- BuddyPress members manage their preferences from their profile page
+- Zero tracking: no third-party analytics, no subscriber IDs sent anywhere
 
-#### Notification - BuddyPress
+**WooCommerce — Complete Order Lifecycle**
+- Seller alert when a product is sold (payment complete)
+- Seller alert when a product is added to cart
+- **Buyer AND seller** alert when order status changes (processing, shipped, complete, on-hold, etc.)
+- Supports multi-vendor platforms: Dokan, WCFM
 
-- **User / admin - new message receive** - Receive push notification when someone send a message.
-- **User / admin - new friend request** - Receive push notification when someone send a friend request.
-- **User / admin - friend request rejected** - Receive push notification when someone reject friend request.
-- **User / admin - friend request accepted** - Receive push notification when someone accept friend request.
-- **User / admin - friend request Cancelled** - Receive push notification when someone cancel friend request.
-- **User / admin - new activity published** - Receive push notification when new post / activity publish on BuddyPress board.
-- **User / admin - new custom activity post type published** - Receive push notification when new custom activity post type publish.
-- **User / admin - new custom activity post type updated** - Receive push notification when new custom activity post type get updated.
-- **User / admin - new custom activity post type deleted** - Receive push notification when new custom activity post type get deleted.
-- **User / admin - new comment on post / activity status** - Receive push notification when someone comment on post.
-- **User / admin - new group invitation receive** - Receive push notification when someone send a group invitation
-- **User / admin - Group details updated** - Receive push notification when group details get updated
+**BuddyPress — Every Social Interaction**
+- New message received
+- Friend request sent / accepted / rejected / cancelled
+- New activity post or status update published
+- Comment on a post or activity
+- New group invitation received
+- Group details updated
+- Custom activity post types: published, updated, deleted
 
-#### Notification - WooCommerce
-- **Admin / user - when a product get sold** - Receive push notification when a product get sold
-- **Admin / user - when added to cart** - Receive push notification when someone add a product in cart
-- **Admin / user - when product status is On-Hold** - Receive push notification when product status is on hold
-- **Admin / user - when product status is Processing** - Receive push notification when product status changes to processing status
-- **Admin / user - when product status is Complete** - Receive push notification when product status changes to complete
-- **Admin / user - when vendor change the status of the product** - Receive push notification when vendor change the status of a product
+**Contact Form 7**
+- Admin receives instant push notification when any CF7 form is submitted — never miss a lead
 
-#### Notification - Contact Form 7
-- **Admin - when someone submit form** - Receive push notification when someone submit a query via Contact Form 7
+**WordPress Core**
+- Admin notified the moment a new user registers
 
-#### Notification - WordPress Core
-- **Admin - when someone register** - Receive push notification when someone register on website
+**The Events Calendar**
+- Integration ready for event-based notifications
 
+**Device & Subscriber Management**
+- Each user's devices are tracked individually
+- View all registered devices in the admin panel
+- Test notifications directly from the admin — verify delivery before going live
+- Notification log table tracks delivery history (success / failure counts per token)
 
-== Basic Documentation To Get Started == 
+---
 
- HOW TO INSTALL, SETUP AND ACTIVATE FIREBASE APPLICATION
+= How It Works =
 
-* How to create a Firebase Application for free 
-    * [Live Demo & Documentation](https://docs.codesolz.net/ultimate-push-notifications/how-to-create-firebase-application/create-firebase-application/)
-* Setup - App Config
-    * [Live Demo & Documentation](https://docs.codesolz.net/ultimate-push-notifications/how-to-create-firebase-application/setup-app-config/)
-* Set Notification
-    * [Live Demo & Documentation](https://docs.codesolz.net/ultimate-push-notifications/how-to-create-firebase-application/set-notification/)
-* Register a device to get notification
-    * [Live Demo & Documentation](https://docs.codesolz.net/ultimate-push-notifications/how-to-create-firebase-application/register-a-device-to-get-notification/)
+1. You create a free Firebase project at [console.firebase.google.com](https://console.firebase.google.com/)
+2. Enter your Firebase config and VAPID key in the plugin's **App Config** screen
+3. Users visit your site and click **Allow** on the browser permission prompt
+4. Their device is registered — push notifications start flowing instantly
 
-<hr/><hr/>
-#### Video guideline to get started - New Firebase APP with Cloud messaging API
+No app stores. No app to install. Works in Chrome, Firefox, Edge, Safari (with Web Push support), and most modern browsers.
+
+= Security =
+
+- FCM server key is stored server-side only — never exposed to browser JavaScript
+- All user inputs are sanitized through WordPress standards
+- AJAX endpoints use nonce verification (SECURE_AUTH_SALT)
+- Capability checks enforce admin-only access to sensitive settings
+- VAPID key authentication ensures only your server can send notifications
+
+---
+
+= Requirements =
+
+* WordPress 5.0 or higher
+* PHP 7.4 or higher
+* **SSL (HTTPS) required** — browsers block push notification registration on non-secure sites
+* A free Firebase account at [console.firebase.google.com](https://console.firebase.google.com/)
+* Firebase VAPID key (Web Push Certificate) from your Firebase project settings
+
+= Multi-Device & Testing =
+
+* One user can register multiple browsers / devices
+* For testing: use different browsers or incognito windows logged in as different users
+* Use the **Register My Device** page to register your own device and test with one click
+
+---
+
+= Getting Started (Quick Setup) =
+
+1. Install and activate the plugin
+2. Go to **UPush Notifier → App Config**
+3. Create a Firebase project and paste your config (apiKey, authDomain, projectId, etc.)
+4. Paste your **VAPID Key** (from Firebase Console → Project Settings → Cloud Messaging → Web Push certificates → Generate key pair)
+5. Paste your **Server Key** (from Firebase Console → Project Settings → Cloud Messaging → Legacy API section)
+6. Save the config
+7. Go to **UPush Notifier → Register My Device** and click Allow
+8. Send a test notification — you should receive it instantly
+
+Full step-by-step documentation:
+
+* [Create a Firebase Application](https://docs.codesolz.net/ultimate-push-notifications/how-to-create-firebase-application/create-firebase-application/)
+* [Setup App Config](https://docs.codesolz.net/ultimate-push-notifications/how-to-create-firebase-application/setup-app-config/)
+* [Configure Notifications](https://docs.codesolz.net/ultimate-push-notifications/how-to-create-firebase-application/set-notification/)
+* [Register a Device](https://docs.codesolz.net/ultimate-push-notifications/how-to-create-firebase-application/register-a-device-to-get-notification/)
+
+= Video Guides =
+
 [youtube https://www.youtube.com/watch?v=Vc1FuG1np5k]
 
-#### Video guideline to get started - Old version
-[youtube https://www.youtube.com/watch?v=vuSUg7ppE80]
+[youtube https://www.youtube.com/watch?v=TARCZGGlG5k]
 
-= Forum and Feature Request = 
+---
+
+= Notification Reference =
+
+**WooCommerce**
+- `{first_name}` `{last_name}` `{full_name}` — customer name
+- `{total}` — order total with currency
+- `{product_title}` — product name
+- `{price}` — product price
+- `{order_id}` — order number
+- `{status_from}` `{status_to}` — order status transition
+
+**BuddyPress**
+- All standard BuddyPress activity and messaging events
+
+---
+
+= Forum & Support =
 
 <blockquote>
-= For Quick Support, feature request and bug reporting = 
-<ul>
-    <li> Visit our website <a target="_blank" href="https://codesolz.net/?utm_source=wordpress.org&utm_medium=README&utm_campaign=ultimate-push-notifications">To Get Instant Support</a></li>
-    <li> For more dedicated support or feature request write to us at <a target="_blank" href="mailto:support@codesolz.net">support@codesolz.net</a> or create a ticket <a href="http://support.codesolz.net/public/create-ticket" target="_blank"> Support Center</a></li>
-</ul>
+For support, feature requests, and bug reports:
 
-= Visit our forum to share your experience or request features = 
-<ul>
-    <li> Visit our <a target="_blank" href="https://forum.codesolz.net/?utm_source=wordpress.org&utm_medium=README&utm_campaign=ultimate-push-notifications">forum</a></li>
-</ul>
-
-= As it's open source, check our github development Status = 
-<ul>
-    <li> Check development status or issues in <a target="_blank" href="https://github.com/CodeSolz/ultimate-push-notifications" > github.com/CodeSolz/ultimate-push-notifications </a>
-</ul>
+* Visit [codesolz.net](https://codesolz.net/?utm_source=wordpress.org&utm_medium=README&utm_campaign=ultimate-push-notifications) for instant support
+* Email: [support@codesolz.net](mailto:support@codesolz.net)
+* GitHub: [github.com/CodeSolz/ultimate-push-notifications](https://github.com/CodeSolz/ultimate-push-notifications)
+* Forum: [forum.codesolz.net](https://forum.codesolz.net/?utm_source=wordpress.org&utm_medium=README&utm_campaign=ultimate-push-notifications)
 </blockquote>
 
-
 == Installation ==
+
 1. Upload the *ultimate-push-notifications* folder to the */wp-content/plugins/* directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
+2. Activate the plugin through the **Plugins** menu in WordPress
+3. Go to **UPush Notifier → App Config** and enter your Firebase credentials
+4. Go to **UPush Notifier → Register My Device** to register your browser
+5. Send a test notification to confirm everything is working
+
+== Frequently Asked Questions ==
+
+= Does this work without SSL? =
+
+No. Push notification APIs require HTTPS. Your site must have an active SSL certificate. Most hosting providers offer free SSL via Let's Encrypt.
+
+= Is this free? =
+
+Yes — the plugin is free and open source. Firebase's free tier (Spark plan) supports unlimited push notifications. You only pay Firebase if you need other paid Firebase services.
+
+= Do I need to install an app? =
+
+No. Web push notifications work directly in the browser — Chrome, Firefox, Edge, and modern Safari. No app download required.
+
+= What is a VAPID key and do I need it? =
+
+VAPID (Voluntary Application Server Identification) keys are required by modern browsers for web push. Without it, token registration may fail in newer browser versions. Get yours from Firebase Console → Project Settings → Cloud Messaging → Web Push certificates → Generate key pair.
+
+= My notifications stopped working after updating Firebase. What changed? =
+
+Firebase SDK v11 uses `onBackgroundMessage()` (v7 used `setBackgroundMessageHandler()`) and no longer needs `useServiceWorker()`. This plugin (v1.3.0+) is fully updated for Firebase 11. If you upgraded from a very old version, re-save your App Config to regenerate the JS files.
+
+= Can users opt out? =
+
+Yes. Users can uncheck notification types in **UPush Notifier → Set Notifications** at any time. BuddyPress users can manage preferences from their profile notifications page.
+
+= What happens to invalid device tokens? =
+
+Starting in v1.3.0, the plugin automatically removes tokens when FCM returns `NotRegistered` or `InvalidRegistration`. This keeps your subscriber list clean without manual maintenance.
+
+= WooCommerce: do buyers get order notifications? =
+
+Yes — from v1.3.0, both the seller and the buyer receive push notifications when an order status changes, as long as they have registered their device and enabled the notification type.
+
+= Is subscriber data shared with anyone? =
+
+No. All device tokens and user preferences are stored in your WordPress database. Nothing is sent to CodeSolz servers.
 
 == Screenshots ==
 
-1. Back-End - App Configuration
-2. Back-End - Notification Settings
-3. Back-End - Notification Settings
-4. Front-End - Notification Settings - BuddyPress
-5. Back-End - Notification Settings for any users who have access to backend - 
-6. Back-End - Register Device
-7. Back-End - All Registered Devices
-8. Push Notification Example
-9. Push Notification Example
-
+1. App Configuration — Firebase setup with VAPID key support
+2. Notification Settings — per-type, per-user control
+3. Notification Settings — custom title and message text
+4. BuddyPress Frontend — notification preferences in user profile
+5. User Notification Preferences — backend panel
+6. Register My Device — one-click device registration and test
+7. All Registered Devices — subscriber management
+8. Push Notification Example — desktop
+9. Push Notification Example — mobile (rich notification with image)
 
 == Changelog ==
+
+= Version: 1.3.0 ( June 09, 2026 ) =
+* **Major:** Firebase SDK updated from v7.15.5 to **v11.0.0 compat** — fixes compatibility with modern browsers
+* **Major:** Service worker updated to use `onBackgroundMessage()` — replaces removed `setBackgroundMessageHandler()`
+* **New:** VAPID Key (Web Push Certificate) field added to App Config — required for modern browser push registration
+* **New:** Rich notifications — image support added to push notification payload (desktop & mobile)
+* **New:** Notification click-to-navigate — clicking a notification now opens the correct URL (handled in service worker)
+* **New:** Auto-cleanup of invalid device tokens — `NotRegistered` / `InvalidRegistration` tokens are deleted automatically
+* **New:** Notification delivery log database table (`upn_notification_log`) for tracking send history
+* **New:** WooCommerce **buyer** (customer) now also receives order status change notifications — not just the seller
+* **Security:** FCM server key is no longer exposed to browser JavaScript via `UPN_Notifier` localized object
+* **Fix:** WooCommerce `build_notific_on_payment_complete()` — undefined variable bug fixed (order checked before use)
+* **Fix:** `prepare_send_notifications()` — missing `image` field added to payload, `click_action` falls back to `site_url()`
+* **Fix:** Return value consistency — all notification builders now return empty array instead of undefined on no-op
+* **Improvement:** Firebase scripts now load from Google CDN with explicit dependency chain for correct load order
+* **Improvement:** `measurementId` and `vapidKey` are treated as optional fields — saving config no longer blocks on them
+* **Compatibility:** WordPress 6.8 tested, WooCommerce 10.2 tested
 
 = Version: 1.2.0 ( September 29, 2025 ) =
 * **Update:** Security patch updated
@@ -175,7 +270,17 @@ Once you have allowed notifications, you'll be able to receive updates in real-t
 * **Update:** Updated to WordPress & WooCommerce latest compatibility
 
 = Version: 1.1.5 ( September 09, 2023 ) =
-* **Update:** WordPress >= 6.3 & WooCommerce >= 8.0 version compatible
+* **Update:** WordPress >= 6.3 & WooCommerce >= 8.0 compatible
 
 = Version: 1.1.4 ( April 06, 2023 ) =
 * **Improvement:** WordPress 6.2 & WooCommerce > 7.5 compatible
+
+= Version: 1.1.3 ( February 15, 2023 ) =
+* **Improvement:** WordPress 6.1 compatible
+
+= Version: 1.1.0 ( October 2022 ) =
+* **New:** BuddyPress frontend notification preferences page
+* **New:** Contact Form 7 integration
+
+= Version: 1.0.0 =
+* Initial release — Firebase FCM integration, WooCommerce and BuddyPress support

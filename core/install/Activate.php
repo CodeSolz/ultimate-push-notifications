@@ -31,14 +31,28 @@ class Activate {
 			`token` mediumtext,
 			`device_id` mediumtext,
 			`registered_on` datetime,
-			`total_sent_success_notifications` bigint(20),
-			`total_sent_fail_notifications` bigint(20),
+			`total_sent_success_notifications` bigint(20) DEFAULT 0,
+			`total_sent_fail_notifications` bigint(20) DEFAULT 0,
 			PRIMARY KEY ( `id`)
 			) $charset_collate",
 			"CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}upn_notifications`(
 			`id` int(11) NOT NULL auto_increment,
 			`user_id` bigint,
 			`notification_type` text,
+			PRIMARY KEY ( `id`)
+			) $charset_collate",
+			"CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}upn_notification_log`(
+			`id` int(11) NOT NULL auto_increment,
+			`notification_type` varchar(100),
+			`title` text,
+			`body` text,
+			`icon` varchar(500),
+			`image` varchar(500),
+			`click_action` varchar(500),
+			`recipients` int(11) DEFAULT 0,
+			`success_count` int(11) DEFAULT 0,
+			`fail_count` int(11) DEFAULT 0,
+			`sent_at` datetime,
 			PRIMARY KEY ( `id`)
 			) $charset_collate",
 		);

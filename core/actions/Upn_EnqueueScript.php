@@ -54,10 +54,17 @@ class Upn_EnqueueScript {
 			global $current_user;
 			wp_get_current_user();
 
-			wp_enqueue_script( 'firebase-app', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase-app.js', array(), CS_UPN_VERSION, true );
-			wp_enqueue_script( 'firebase-messaging', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebase-messaging.js', array(), CS_UPN_VERSION, true );
-			wp_enqueue_script( 'init_firebase_app', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebaseInit.min.js', array(), CS_UPN_VERSION, true );
+			// Load Firebase 11.x compat SDK from Google CDN (replaces outdated local v7.15.5 copies)
+			$firebase_sdk = '11.0.0';
+			wp_enqueue_script( 'firebase-app', 'https://www.gstatic.com/firebasejs/' . $firebase_sdk . '/firebase-app-compat.js', array(), null, true );
+			wp_enqueue_script( 'firebase-messaging', 'https://www.gstatic.com/firebasejs/' . $firebase_sdk . '/firebase-messaging-compat.js', array( 'firebase-app' ), null, true );
+			wp_enqueue_script( 'init_firebase_app', CS_UPN_PLUGIN_ASSET_URI . 'plugins/firebase/js/firebaseInit.min.js', array( 'firebase-messaging' ), CS_UPN_VERSION, true );
 			wp_enqueue_script( 'init_upn_app', CS_UPN_PLUGIN_ASSET_URI . 'js/app-upn.js', array(), CS_UPN_VERSION, false );
+
+			// Only expose safe public-facing config values — never the FCM server key
+			$public_config = array(
+				'vapidKey' => isset( $AppConfig['vapidKey'] ) ? $AppConfig['vapidKey'] : '',
+			);
 
 			// localize scripts
 			wp_localize_script(
@@ -70,7 +77,7 @@ class Upn_EnqueueScript {
 						'user_id'   => isset( $current_user->ID ) ? $current_user->ID : '',
 						'user_name' => isset( $current_user->user_login ) ? $current_user->user_login : '',
 					),
-				) + (array) $AppConfig
+				) + $public_config
 			);
 
 		}

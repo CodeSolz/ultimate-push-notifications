@@ -25,9 +25,6 @@ class Upn_WooNotifications {
 	 * @return void
 	 */
 	public static function build_notific_on_payment_complete( $order_id ) {
-		if ( empty( $order ) ) {
-			return;
-		}
 		$order = \wc_get_order( $order_id );
 
 		if ( empty( $order ) ) {
@@ -87,7 +84,7 @@ class Upn_WooNotifications {
 			}
 		}
 
-		return $response;
+		return isset( $response ) ? $response : array();
 	}
 
 	/**
@@ -211,7 +208,26 @@ class Upn_WooNotifications {
 			}
 		}
 
-		return $response;
+		// Also notify the customer/buyer about their order status change
+		$customer_id = $order->get_customer_id();
+		if ( $customer_id ) {
+			$buyer_find    = array( '{first_name}', '{last_name}', '{full_name}', '{order_id}', '{status_from}', '{status_to}' );
+			$buyer_replace = array( $first_name, $last_name, $full_name, $order_id, $status_from, $status_to );
+
+			$buyer_asked = SetNotifications::has_user_asked_for_notification( $customer_id, 'orderStatusUpdated' );
+			if ( $buyer_asked ) {
+				$response[] = SendNotifications::prepare_send_notifications(
+					(array) $buyer_asked + array(
+						'find'         => $buyer_find,
+						'replace'      => $buyer_replace,
+						'icon'         => $icon,
+						'click_action' => $order->get_view_order_url(),
+					)
+				);
+			}
+		}
+
+		return isset( $response ) ? $response : array();
 
 	}
 

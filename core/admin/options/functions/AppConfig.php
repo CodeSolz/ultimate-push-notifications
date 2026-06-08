@@ -44,13 +44,16 @@ class AppConfig {
 
 		$user_app_config = Util::check_evil_script( $user_query['cs_app_config'] );
 
-		$measurementId = $user_app_config['measurementId'];
-		unset( $user_app_config['measurementId'] );
+		// Optional fields — allowed to be empty
+		$optional_fields = array( 'measurementId', 'vapidKey' );
 
-		// check empty
+		// Check required fields are not empty
 		$is_empty = false;
 		if ( $user_app_config ) {
-			foreach ( $user_app_config as  $key => $val ) {
+			foreach ( $user_app_config as $key => $val ) {
+				if ( in_array( $key, $optional_fields, true ) ) {
+					continue;
+				}
 				if ( empty( $val ) ) {
 					$is_empty = true;
 					break;
@@ -63,17 +66,10 @@ class AppConfig {
 				array(
 					'status' => false,
 					'title'  => 'Error!',
-					'text'   => __( 'One or more field is empty. All fields are required.', 'ultimate-push-notifications' ),
+					'text'   => __( 'One or more required field is empty. Please fill in all required fields.', 'ultimate-push-notifications' ),
 				)
 			);
 		}
-
-		$user_app_config = array_merge_recursive(
-			$user_app_config,
-			array(
-				'measurementId' => $measurementId,
-			)
-		);
 
 		update_option( self::$app_config_key, $user_app_config );
 		$resMsg = isset( $user_query['cs_app_config_update']['id'] ) ? 'updated' : 'saved';

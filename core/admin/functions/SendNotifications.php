@@ -21,6 +21,12 @@ class SendNotifications {
 	private $fcm_url = 'https://fcm.googleapis.com/fcm/send';
 
 	/**
+	 * FCM error codes that indicate the device token is permanently invalid.
+	 * Tokens with these errors are removed automatically to keep the list clean.
+	 */
+	private $invalid_token_errors = array( 'NotRegistered', 'InvalidRegistration' );
+
+	/**
 	 * Send Test Notifications
 	 *
 	 * @return void
@@ -71,10 +77,10 @@ class SendNotifications {
 	}
 
 	/**
-	 * Prepare Send Notificaitons
+	 * Prepare and send notifications to all provided device tokens.
 	 *
-	 * @param [type] $dataObj
-	 * @return void
+	 * @param array|object $dataObj Notification data: title, body, icon, image, click_action, find, replace, tokens
+	 * @return array
 	 */
 	public static function prepare_send_notifications( $dataObj ) {
 		$dataObj = \is_object( $dataObj ) ? $dataObj : (object) $dataObj;
@@ -84,14 +90,14 @@ class SendNotifications {
 		$response    = array();
 		if ( ! empty( $dataObj->tokens ) ) {
 			foreach ( $dataObj->tokens as $item ) {
-				// send notifications
 				$payload = (object) array(
 					'to'   => $item->token,
 					'data' => array(
 						'title'        => $title,
 						'body'         => $description,
-						'icon'         => $dataObj->icon,
-						'click_action' => $dataObj->click_action,
+						'icon'         => isset( $dataObj->icon ) ? $dataObj->icon : '',
+						'image'        => isset( $dataObj->image ) ? $dataObj->image : '',
+						'click_action' => isset( $dataObj->click_action ) ? $dataObj->click_action : site_url(),
 					),
 				);
 
@@ -103,9 +109,10 @@ class SendNotifications {
 	}
 
 	/**
-	 * Send notfication
+	 * Send a single push notification via FCM Legacy HTTP API.
 	 *
-	 * @return void
+	 * @param object $payload { to, data: { title, body, icon, image, click_action } }
+	 * @return array|string
 	 */
 	private function send_notification( $payload ) {
 
@@ -118,7 +125,22 @@ class SendNotifications {
 			return __( 'Missing Configuration!', 'ultimate-push-notifications' );
 		}
 
-		$response = wp_remote_post(
+		$body = array(
+			'data' => $payload->data,
+			'to'   => $payload->to,
+		);
+
+		// Also send standard notification block for better delivery on some devices
+		$body['notification'] = array(
+			'title' => isset( $payload->data['title'] ) ? $payload->data['title'] : '',
+			'body'  => isset( $payload->data['body'] ) ? $payload->data['body'] : '',
+			'icon'  => isset( $payload->data['icon'] ) ? $payload->data['icon'] : '',
+		);
+		if ( ! empty( $payload->data['image'] ) ) {
+			$body['notification']['image'] = $payload->data['image'];
+		}
+
+		$http_response = wp_remote_post(
 			$this->fcm_url,
 			array(
 				'method'      => 'POST',
@@ -130,49 +152,57 @@ class SendNotifications {
 					'Authorization' => 'key=' . $app_config->key,
 					'Content-Type'  => 'application/json',
 				),
-				'body'        => json_encode(
-					array(
-						'notification' => $payload->data,
-						'to'           => $payload->to,
-					)
-				),
+				'body'        => wp_json_encode( $body ),
 				'cookies'     => array(),
 			)
 		);
 
-		$response = json_decode( $response['body'] );
+		if ( is_wp_error( $http_response ) ) {
+			return __( 'HTTP request failed! Please check your server connection.', 'ultimate-push-notifications' );
+		}
+
+		$response = json_decode( wp_remote_retrieve_body( $http_response ) );
 
 		if ( ! \is_object( $response ) ) {
 			return __( 'Something went wrong! Please check your configuration correctly.', 'ultimate-push-notifications' );
 		}
 
-		$finalRes = array(
-			'success' =>  \is_null( $response->success ) ? 0 : $response->success,
-			'failure' => \is_null($response->success) ? 1 : $response->failure,
-			'errorText' => isset($response->results[0]->error) ? $response->results[0]->error : 'Something went wrong!'
+		$error_text = isset( $response->results[0]->error ) ? $response->results[0]->error : '';
+
+		$final_res = array(
+			'success'   => isset( $response->success ) ? (int) $response->success : 0,
+			'failure'   => isset( $response->failure ) ? (int) $response->failure : 1,
+			'errorText' => $error_text ? $error_text : 'Unknown error',
 		);
 
-		$this->update_message_sent_count( $finalRes, $payload->to );
+		$this->update_message_sent_count( $final_res, $payload->to );
 
-		return $finalRes;
+		// Auto-remove permanently invalid tokens to keep the device list clean
+		if ( $final_res['failure'] > 0 && in_array( $error_text, $this->invalid_token_errors, true ) ) {
+			$this->remove_invalid_token( $payload->to );
+		}
+
+		return $final_res;
 	}
 
 	/**
-	 * Update message sent count
+	 * Update notification sent counters for a token.
 	 *
-	 * @return void
+	 * @param array  $res   { success, failure }
+	 * @param string $token FCM device token
+	 * @return bool
 	 */
 	private function update_message_sent_count( $res, $token ) {
 		global $wpdb;
 
-		$token_short_arr 	= \explode( ':', $token );
+		$token_short_arr = \explode( ':', $token );
 		if ( isset( $token_short_arr[0] ) && empty( $token_short = $token_short_arr[0] ) ) {
 			return false;
 		}
 
 		$is_exists = $wpdb->get_row(
 			$wpdb->prepare(
-				"select * from `{$wpdb->prefix}upn_user_devices` where token like %s ",
+				"SELECT * FROM `{$wpdb->prefix}upn_user_devices` WHERE token LIKE %s ",
 				'%' . $wpdb->esc_like( $token_short ) . '%'
 			)
 		);
@@ -184,12 +214,35 @@ class SendNotifications {
 					'total_sent_success_notifications' => $is_exists->total_sent_success_notifications + $res['success'],
 					'total_sent_fail_notifications'    => $is_exists->total_sent_fail_notifications + $res['failure'],
 				),
-				array(
-					'id' => $is_exists->id,
-				)
+				array( 'id' => $is_exists->id )
 			);
 		}
 		return true;
+	}
+
+	/**
+	 * Remove a permanently invalid token from the database.
+	 * Called automatically when FCM returns NotRegistered or InvalidRegistration.
+	 *
+	 * @param string $token Full FCM device token
+	 * @return void
+	 */
+	private function remove_invalid_token( $token ) {
+		global $wpdb;
+
+		$token_short_arr = \explode( ':', $token );
+		$token_short     = isset( $token_short_arr[0] ) ? $token_short_arr[0] : $token;
+
+		if ( empty( $token_short ) ) {
+			return;
+		}
+
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM `{$wpdb->prefix}upn_user_devices` WHERE token LIKE %s",
+				'%' . $wpdb->esc_like( $token_short ) . '%'
+			)
+		);
 	}
 
 

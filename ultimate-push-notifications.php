@@ -4,7 +4,7 @@
  * Plugin Name:       Ultimate Push Notifications
  * Plugin URI:        https://codesolz.net/our-products/wordpress-plugin/ultimate-push-notifications/
  * Description:       Push notification solutions for Desktop and Mobile devices. This plugin sends push notifications to Mobile and Desktop from WooCommerce, WordPress and a lot of other useful plugin's events.
- * Version:           1.2.0
+ * Version:           1.3.0
  * Author:            CodeSolz
  * Author URI:        https://www.codesolz.net
  * License:           GPLv3
@@ -13,7 +13,7 @@
  * Text Domain:       ultimate-push-notifications
  * Requires PHP: 7.0
  * Requires At Least: 4.0
- * Tested Up To: 6.8
+ * Tested Up To: 7.0
  * WC requires at least: 4.0
  * WC tested up to: 9.9
  */
@@ -37,7 +37,7 @@ class Ultimate_Push_Notifications {
 	 *
 	 * @var String
 	 */
-	private static $version = '1.2.0';
+	private static $version = '1.3.0';
 
 	/**
 	 * Hold version

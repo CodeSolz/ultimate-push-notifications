@@ -15,29 +15,52 @@ if ( ! defined( 'CS_UPN_VERSION' ) ) {
 class FirebaseJs {
 
 	/**
-	 * Firebase Init App
+	 * Firebase SDK version used for CDN imports
+	 */
+	const FIREBASE_SDK_VERSION = '11.0.0';
+
+	/**
+	 * Firebase Init App (front-end)
+	 * Generates firebaseInit.min.js using Firebase 11.x compat SDK.
 	 *
-	 * @param [type] $args
-	 * @return void
+	 * @param object $args Firebase config object
+	 * @return string|void
 	 */
 	public static function firebase_init( $args ) {
 		if ( ! \is_object( $args ) || empty( $args ) ) {
 			return;
 		}
-		return 'var firebaseConfig={apiKey:"' . $args->apiKey . '",authDomain:"' . $args->authDomain . '",databaseURL:"' . $args->databaseURL . '",projectId:"' . $args->projectId . '",storageBucket:"' . $args->storageBucket . '",messagingSenderId:"' . $args->messagingSenderId . '",appId:"' . $args->appId . '",measurementId:"' . $args->measurementId . '"};function createCookie(e,i){document.cookie=e+"="+i+";max-age=31536000"}function accessCookie(e){let i=e+"=",o=document.cookie.split(";");for(let e=0;e<o.length;e++){let n=o[e].trim();if(0==n.indexOf(i))return n.substring(i.length,n.length)}return""}firebase.initializeApp(firebaseConfig);const messaging=firebase.messaging();function sendTokenToServer(e){let i=new FormData;i.append("method","admin\\\\options\\\\functions\\\\AppConfig@cs_update_token"),i.append("gen_token",e),i.append("device_id",accessCookie("cs_wp_ultimate_device_id")),i.append("current_user",`${UPN_Notifier.current_user.user_id}`),fetch(`${UPN_Notifier.ajax_url}`,{method:"POST",body:i}).then(e=>e.json()).then(e=>{console.log(e)}).catch(function(e){console.log(e)})}navigator.serviceWorker.register(`${UPN_Notifier.asset_url}plugins/firebase/js/firebaseMessagingSW.min.js`).then(e=>{messaging.useServiceWorker(e),messaging.getToken().then(e=>{if(e)return accessCookie("cs_wp_ultimate_device_id")?sendTokenToServer(e):(createCookie("cs_wp_ultimate_device_id",`${e}`),sendTokenToServer(e)),e}).catch(e=>{console.log("An error occurred while retrieving token. ",e)}),messaging.onMessage(e=>{console.log("onMessage: ",e),window.Notification&&"denied"!==Notification.permission&&Notification.requestPermission(i=>{new Notification(e.notification.title,{body:e.notification.body,icon:e.notification.icon})})}),messaging.onTokenRefresh(()=>{messaging.getToken().then(e=>(sendTokenToServer(e),e)).catch(e=>{console.log("Unable to retrieve refreshed token ",e)})})});';
+
+		$config = 'var firebaseConfig={apiKey:"' . $args->apiKey . '",authDomain:"' . $args->authDomain . '",databaseURL:"' . $args->databaseURL . '",projectId:"' . $args->projectId . '",storageBucket:"' . $args->storageBucket . '",messagingSenderId:"' . $args->messagingSenderId . '",appId:"' . $args->appId . '",measurementId:"' . $args->measurementId . '"};';
+
+		// Minified front-end init using Firebase 11 compat API:
+		// - Removed deprecated useServiceWorker(), onTokenRefresh()
+		// - Added vapidKey from UPN_Notifier (localized via wp_localize_script)
+		// - Added rich notification (image) support in onMessage
+		// - Added serviceWorkerRegistration option for getToken()
+		$js = 'function createCookie(n,v){document.cookie=n+"="+v+";max-age=31536000"}function accessCookie(n){let q=n+"=",c=document.cookie.split(";");for(let i=0;i<c.length;i++){let s=c[i].trim();if(s.indexOf(q)===0)return s.substring(q.length,s.length)}return""}function sendTokenToServer(t){let f=new FormData;f.append("method","admin\\\\options\\\\functions\\\\AppConfig@cs_update_token"),f.append("gen_token",t),f.append("device_id",accessCookie("cs_wp_ultimate_device_id")),f.append("current_user",String(UPN_Notifier.current_user.user_id)),fetch(UPN_Notifier.ajax_url,{method:"POST",body:f}).then(function(r){return r.json()}).then(function(d){console.log(d)}).catch(function(e){console.error(e)})}firebase.initializeApp(firebaseConfig);if(typeof Notification!=="undefined"&&Notification.permission!=="denied"){navigator.serviceWorker.register(UPN_Notifier.asset_url+"plugins/firebase/js/firebaseMessagingSW.min.js").then(function(s){var m=firebase.messaging(),o={serviceWorkerRegistration:s};if(UPN_Notifier.vapidKey&&UPN_Notifier.vapidKey!==""){o.vapidKey=UPN_Notifier.vapidKey}m.getToken(o).then(function(t){if(t){if(!accessCookie("cs_wp_ultimate_device_id")){createCookie("cs_wp_ultimate_device_id",t)}sendTokenToServer(t)}}).catch(function(e){console.error("An error occurred while retrieving token.",e)});m.onMessage(function(p){var title=(p.data&&p.data.title)?p.data.title:(p.notification?p.notification.title:"");var opts={body:(p.data&&p.data.body)?p.data.body:"",icon:(p.data&&p.data.icon)?p.data.icon:""};if(p.data&&p.data.image){opts.image=p.data.image}if(title){new Notification(title,opts)}})}).catch(function(e){console.error("Service worker registration failed:",e)})}';
+
+		return $config . $js;
 	}
 
 	/**
-	 * Firebase messaging SW
+	 * Firebase Messaging Service Worker
+	 * Generates firebaseMessagingSW.min.js using Firebase 11.x compat SDK.
+	 * - Uses onBackgroundMessage() (replaces removed setBackgroundMessageHandler)
+	 * - Supports rich notifications (image field)
+	 * - Handles notificationclick for deep-link navigation
 	 *
-	 * @param [type] $args
-	 * @return void
+	 * @param object $args Firebase config object
+	 * @return string|void
 	 */
 	public static function firebase_msg_sw( $args ) {
 		if ( ! \is_object( $args ) || empty( $args ) ) {
 			return;
 		}
-		return 'importScripts("https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"),importScripts("https://www.gstatic.com/firebasejs/7.15.5/firebase-messaging.js");const firebaseConfig={apiKey:"' . $args->apiKey . '",authDomain:"' . $args->authDomain . '",databaseURL:"' . $args->databaseURL . '",projectId:"' . $args->projectId . '",storageBucket:"' . $args->storageBucket . '",messagingSenderId:"' . $args->messagingSenderId . '",appId:"' . $args->appId . '",measurementId:"' . $args->measurementId . '"};firebase.initializeApp(firebaseConfig);const messaging=firebase.messaging();messaging.setBackgroundMessageHandler(function(e){const a=e.data.title,s={body:e.data.body,icon:e.data.icon,click_action:e.data.click_action,data:e.data.click_action};return self.registration.showNotification(a,s)});';
+
+		$sdk = self::FIREBASE_SDK_VERSION;
+
+		return 'importScripts("https://www.gstatic.com/firebasejs/' . $sdk . '/firebase-app-compat.js");importScripts("https://www.gstatic.com/firebasejs/' . $sdk . '/firebase-messaging-compat.js");const firebaseConfig={apiKey:"' . $args->apiKey . '",authDomain:"' . $args->authDomain . '",databaseURL:"' . $args->databaseURL . '",projectId:"' . $args->projectId . '",storageBucket:"' . $args->storageBucket . '",messagingSenderId:"' . $args->messagingSenderId . '",appId:"' . $args->appId . '",measurementId:"' . $args->measurementId . '"};firebase.initializeApp(firebaseConfig);const messaging=firebase.messaging();messaging.onBackgroundMessage(function(p){const title=(p.data&&p.data.title)?p.data.title:(p.notification?p.notification.title:"Notification"),opts={body:(p.data&&p.data.body)?p.data.body:"",icon:(p.data&&p.data.icon)?p.data.icon:"",image:(p.data&&p.data.image)?p.data.image:"",data:{click_action:(p.data&&p.data.click_action)?p.data.click_action:"/"}};return self.registration.showNotification(title,opts)});self.addEventListener("notificationclick",function(e){e.notification.close();var u=(e.notification.data&&e.notification.data.click_action)?e.notification.data.click_action:"/";e.waitUntil(clients.openWindow(u))});';
 	}
 
 
