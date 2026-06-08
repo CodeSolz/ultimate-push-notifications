@@ -4,15 +4,15 @@
     "php": "8.2",
     "wp": "latest"
   },
-  "phpExtensionBundles": ["kitchen-sink"],
   "features": {
     "networking": true
   },
   "login": true,
+  "landingPage": "/wp-admin/admin.php?page=cs-upn-app-config",
   "steps": [
     {
       "step": "installPlugin",
-      "pluginZipFile": {
+      "pluginData": {
         "resource": "wordpress.org/plugins",
         "slug": "ultimate-push-notifications"
       }
@@ -22,27 +22,12 @@
       "pluginPath": "ultimate-push-notifications/ultimate-push-notifications.php"
     },
     {
-      "step": "installPlugin",
-      "pluginZipFile": {
-        "resource": "wordpress.org/plugins",
-        "slug": "woocommerce"
-      }
-    },
-    {
-      "step": "activatePlugin",
-      "pluginPath": "woocommerce/woocommerce.php"
+      "step": "runPHP",
+      "code": "<?php require_once '/wordpress/wp-load.php'; update_option('cs_upn_app_config', ['apiKey' => 'AIzaSy_DEMO_ReplaceWithYourRealFirebaseKey', 'authDomain' => 'your-project.firebaseapp.com', 'databaseURL' => 'https://your-project-default-rtdb.firebaseio.com', 'projectId' => 'your-project-id', 'storageBucket' => 'your-project.firebasestorage.app', 'messagingSenderId' => '000000000000', 'appId' => '1:000000000000:web:0000000000000000', 'measurementId' => 'G-XXXXXXXXXX', 'key' => 'REPLACE_WITH_YOUR_FCM_SERVER_KEY', 'vapidKey' => 'REPLACE_WITH_YOUR_VAPID_KEY']);"
     },
     {
       "step": "runPHP",
-      "code": "<?php require '/wordpress/wp-load.php'; update_option('cs_upn_app_config', ['apiKey' => 'AIzaSy_DEMO_ReplaceWithYourRealFirebaseKey', 'authDomain' => 'your-project.firebaseapp.com', 'databaseURL' => 'https://your-project-default-rtdb.firebaseio.com', 'projectId' => 'your-project-id', 'storageBucket' => 'your-project.firebasestorage.app', 'messagingSenderId' => '000000000000', 'appId' => '1:000000000000:web:0000000000000000', 'measurementId' => 'G-XXXXXXXXXX', 'key' => 'REPLACE_WITH_YOUR_FCM_SERVER_KEY', 'vapidKey' => 'REPLACE_WITH_YOUR_VAPID_KEY']);"
-    },
-    {
-      "step": "runPHP",
-      "code": "<?php require '/wordpress/wp-load.php'; $user_id = 1; global $wpdb; $wpdb->insert($wpdb->prefix . 'upn_user_devices', ['user_id' => $user_id, 'token' => 'demo:APA91bHDemoToken_ThisIsForPreviewOnly', 'device_id' => 'demo-browser-device-id', 'registered_on' => current_time('mysql'), 'total_sent_success_notifications' => 12, 'total_sent_fail_notifications' => 0]);"
-    },
-    {
-      "step": "goTo",
-      "path": "/wp-admin/admin.php?page=cs-upn-app-config"
+      "code": "<?php require_once '/wordpress/wp-load.php'; global $wpdb; $wpdb->insert($wpdb->prefix . 'upn_user_devices', ['user_id' => 1, 'token' => 'demo:APA91bHDemoToken_ThisIsForPreviewOnly', 'device_id' => 'demo-browser-device-id', 'registered_on' => current_time('mysql'), 'total_sent_success_notifications' => 12, 'total_sent_fail_notifications' => 0]);"
     }
   ]
 }
