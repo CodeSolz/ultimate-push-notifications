@@ -8,7 +8,7 @@
     "networking": true
   },
   "login": true,
-  "landingPage": "/wp-admin/admin.php?page=cs-upn-app-config",
+  "landingPage": "/wp-admin/admin.php?page=cs-upn-app-configuration",
   "steps": [
     {
       "step": "installPlugin",

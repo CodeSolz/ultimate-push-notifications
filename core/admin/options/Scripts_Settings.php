@@ -118,9 +118,11 @@ class Scripts_Settings {
 				$("body").on( 'click', '.send-test-notifications', function(e){
 					e.preventDefault();
 					var getToken = $(this).data('token');
+					var deviceId = $(this).data('device-id');
 					var formData = new FormData();
 					formData.append( "action", "upn_ajax" );
 					formData.append( "method", "admin\\functions\\SendNotifications@send_test_notifications" );
+					if ( deviceId ) { formData.append( "device_id", deviceId ); }
 					formData.append( "device_token", getToken );
 					formData.append( "cs_token", '<?php echo wp_create_nonce( SECURE_AUTH_SALT ); ?>' );
 					Swal.fire({ title: '<?php _e( 'Sending', 'ultimate-push-notifications' ); ?>', text: '<?php _e( 'Please wait a while...', 'ultimate-push-notifications' ); ?>', timer: 200000, imageUrl: '<?php echo CS_UPN_PLUGIN_ASSET_URI . 'img/loading-timer.gif'; ?>', showConfirmButton: false });

@@ -15,6 +15,7 @@ if ( ! defined( 'CS_UPN_VERSION' ) ) {
 use UltimatePushNotifications\lib\Util;
 use UltimatePushNotifications\admin\builders\FormBuilder;
 use UltimatePushNotifications\admin\builders\AdminPageBuilder;
+use UltimatePushNotifications\admin\options\functions\VapidPanel;
 
 
 class AppConfig {
@@ -188,7 +189,10 @@ class AppConfig {
 		$args['show_btn']   = true;
 		$args['body_class'] = 'no-bottom-margin';
 
-		$args['well'] = '<ul>
+		$args['well'] = VapidPanel::render()
+			. '<hr/><h3>' . __( 'Legacy: Firebase Cloud Messaging', 'ultimate-push-notifications' ) . '</h3>'
+			. '<p class="description">' . __( 'Only needed for devices registered before Web Push. Google shut down the legacy API on 22 July 2024; new devices should use Web Push above.', 'ultimate-push-notifications' ) . '</p>'
+			. '<ul>
 			<li> <b>' . __( 'Basic Hints', 'ultimate-push-notifications' ) . '</b>
 				<ol>
 					<li>

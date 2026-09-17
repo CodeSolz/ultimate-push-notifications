@@ -3,19 +3,19 @@
  * @wordpress-plugin
  * Plugin Name:       Ultimate Push Notifications
  * Plugin URI:        https://codesolz.net/our-products/wordpress-plugin/ultimate-push-notifications/
- * Description:       Push notification solutions for Desktop and Mobile devices. This plugin sends push notifications to Mobile and Desktop from WooCommerce, WordPress and a lot of other useful plugin's events.
- * Version:           1.3.0
+ * Description:       Self-hosted web push for WordPress — one-click setup, unlimited subscribers in your own database, a composer with live preview, push on publish, 29 automations for WooCommerce, BuddyPress, Contact Form 7 and membership plugins, a background delivery queue, click tracking and a health check that tells you when the channel breaks. Works on desktop, Android and iPhone. No Firebase, no per-subscriber fees.
+ * Version:           1.6.2
  * Author:            CodeSolz
  * Author URI:        https://www.codesolz.net
  * License:           GPLv3
  * License URI:       https://www.gnu.org/licenses/gpl.txt
  * Domain Path:       /languages
  * Text Domain:       ultimate-push-notifications
- * Requires PHP: 7.0
+ * Requires PHP: 7.4
  * Requires At Least: 4.0
  * Tested Up To: 7.0
  * WC requires at least: 4.0
- * WC tested up to: 9.9
+ * WC tested up to: 11.0
  */
 
 
@@ -37,14 +37,14 @@ class Ultimate_Push_Notifications {
 	 *
 	 * @var String
 	 */
-	private static $version = '1.3.0';
+	private static $version = '1.6.2';
 
 	/**
 	 * Hold version
 	 *
 	 * @var String
 	 */
-	private static $db_version = '1.0.0';
+	private static $db_version = '1.6.1';
 
 	/**
 	 * Hold nameSpace
@@ -148,7 +148,7 @@ class Ultimate_Push_Notifications {
 	private static function on_activate() {
 
 		// activation hook
-		register_deactivation_hook( __FILE__, array( self::$namespace . '\\install\\Activate', 'on_activate' ) );
+		register_activation_hook( __FILE__, array( self::$namespace . '\\install\\Activate', 'on_activate' ) );
 
 		// deactivation hook
 		register_deactivation_hook( __FILE__, array( self::$namespace . '\\install\\Activate', 'on_deactivate' ) );
@@ -184,6 +184,21 @@ class Ultimate_Push_Notifications {
 	}
 
 }
+
+/*
+ * WooCommerce: orders are only ever read through wc_get_order() / order objects
+ * and the analytics lookup tables, so both order storages work. Say so, or
+ * WooCommerce lists the plugin as incompatible with HPOS.
+ */
+add_action(
+	'before_woocommerce_init',
+	function () {
+		if ( class_exists( '\Automattic\WooCommerce\Utilities\FeaturesUtil' ) ) {
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+			\Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
+		}
+	}
+);
 
 global $UPN;
 $UPN = new Ultimate_Push_Notifications();

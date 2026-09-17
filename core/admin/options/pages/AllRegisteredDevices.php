@@ -69,6 +69,7 @@ class AllRegisteredDevices {
 
 
 		\ob_start();
+		RegisteredDevicesList::inline_styles();
 		$adCodeList = new RegisteredDevicesList( 'cs-upn-all-registered-devices' );
 		$adCodeList->prepare_items();
 		echo '<form id="plugins-filter" method="get"><input type="hidden" name="page" value="' . $page . '" />';

@@ -136,7 +136,7 @@ class AdminPageBuilder {
 		<p> ' . $sub_title . ' </p>
 	</div>';
 
-		return $res;
+		return $res . Layout::tabs();
 	}
 
 	/**

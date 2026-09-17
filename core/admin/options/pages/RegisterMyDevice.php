@@ -77,6 +77,7 @@ class RegisterMyDevice {
 		}
 
 		ob_start();
+		RegisteredDevicesList::inline_styles();
 		$adCodeList = new RegisteredDevicesList( 'cs-upn-register-my-device', true );
 		$adCodeList->prepare_items();
 		echo '<form id="plugins-filter" method="get"><input type="hidden" name="page" value="' . $page . '" />';

@@ -3,6 +3,10 @@
 /**
  * Send notifications
  *
+ * The single entry point every event handler calls. It knows nothing about
+ * Firebase or Web Push: it builds a payload, hands each subscription to the
+ * transport layer, and records what came back.
+ *
  * @package Functions
  * @since 1.0.0
  * @author M.Tuhin <info@codesolz.net>
@@ -13,42 +17,81 @@ if ( ! defined( 'CS_UPN_VERSION' ) ) {
 }
 
 use UltimatePushNotifications\lib\Util;
-use UltimatePushNotifications\admin\options\functions\AppConfig;
-
+use UltimatePushNotifications\queue\Runner;
+use UltimatePushNotifications\queue\SendJob;
+use UltimatePushNotifications\transport\DeliveryLog;
+use UltimatePushNotifications\transport\SendResult;
+use UltimatePushNotifications\transport\Subscription;
+use UltimatePushNotifications\transport\SubscriptionStore;
+use UltimatePushNotifications\transport\TransportFactory;
 
 class SendNotifications {
-
-	private $fcm_url = 'https://fcm.googleapis.com/fcm/send';
-
-	/**
-	 * FCM error codes that indicate the device token is permanently invalid.
-	 * Tokens with these errors are removed automatically to keep the list clean.
-	 */
-	private $invalid_token_errors = array( 'NotRegistered', 'InvalidRegistration' );
 
 	/**
 	 * Send Test Notifications
 	 *
+	 * Accepts either a subscription row id (preferred) or, for the existing
+	 * device-list markup, a raw legacy token. The response carries the real
+	 * reason on failure, because "check your configuration" was the message
+	 * that sat on this plugin's support forum unanswered.
+	 *
+	 * @param array $user_input
 	 * @return void
 	 */
 	public function send_test_notifications( $user_input ) {
 
-		global $current_user;
-		wp_get_current_user();
+		$subscription = null;
 
-		$args = (object) array(
-			'to'   => Util::check_evil_script( $user_input['device_token'] ),
-			'data' => array(
+		if ( ! empty( $user_input['device_id'] ) ) {
+			$subscription = SubscriptionStore::get( (int) $user_input['device_id'] );
+		} elseif ( ! empty( $user_input['device_token'] ) ) {
+			$subscription = SubscriptionStore::find_by_token( Util::check_evil_script( $user_input['device_token'] ) );
+		}
+
+		if ( ! $subscription ) {
+			return wp_send_json(
+				array(
+					'status' => false,
+					'title'  => __( 'Error!', 'ultimate-push-notifications' ),
+					'text'   => __( 'That device is no longer registered.', 'ultimate-push-notifications' ),
+				)
+			);
+		}
+
+		/*
+		 * A test send is the one place a user may legitimately target a device
+		 * that is not their own — an administrator checking a subscriber's row.
+		 * Anyone else may only test their own devices.
+		 */
+		if ( (int) $subscription->user_id !== \get_current_user_id() && ! \current_user_can( 'manage_options' ) ) {
+			return wp_send_json(
+				array(
+					'status' => false,
+					'title'  => __( 'Access Denied', 'ultimate-push-notifications' ),
+					'text'   => __( 'You can only send a test notification to your own devices.', 'ultimate-push-notifications' ),
+				)
+			);
+		}
+
+		$current_user = \wp_get_current_user();
+
+		$payload = self::build_payload(
+			array(
 				'title'        => __( 'Ultimate Push Notification', 'ultimate-push-notifications' ),
-				'body'         => sprintf( __( "Hi %s, I'm Ultimate Push Notifications. Hope you will enjoy it!", 'ultimate-push-notifications' ), $current_user->user_login ),
+				'body'         => sprintf(
+					/* translators: %s: user login */
+					__( "Hi %s, I'm Ultimate Push Notifications. Hope you will enjoy it!", 'ultimate-push-notifications' ),
+					$current_user->user_login
+				),
 				'icon'         => CS_UPN_PLUGIN_ASSET_URI . 'img/icon-push.png',
 				'click_action' => site_url(),
-			),
+			)
 		);
 
-		$response = $this->send_notification( $args );
+		$result = self::deliver( $subscription, $payload, array( 'type' => 'test' ) );
+		DeliveryLog::record( 'test', $payload, array( $result ) );
 
-		if ( isset( $response['success'] ) && $response['success'] > 0 ) {
+		if ( $result->success ) {
 			return wp_send_json(
 				array(
 					'status' => true,
@@ -56,196 +99,246 @@ class SendNotifications {
 					'text'   => __( 'Notification sent successfully.', 'ultimate-push-notifications' ),
 				)
 			);
-		} elseif ( isset( $response['failure'] ) && $response['failure'] > 0 ) {
-			return wp_send_json(
-				array(
-					'status' => false,
-					'title'  => __( 'Failure!', 'ultimate-push-notifications' ),
-					'text'   => sprintf( __( 'Error : %s. Please check your application configuration properly.', 'ultimate-push-notifications' ), $response['errorText'] ),
-				)
-			);
-		} else {
-			return wp_send_json(
-				array(
-					'status' => false,
-					'title'  => __( 'Error!', 'ultimate-push-notifications' ),
-					'text'   => $response,
-				)
-			);
 		}
 
+		$text = $result->error_message;
+		if ( $result->subscription_gone ) {
+			$text .= ' ' . __( 'The device has been removed from the list.', 'ultimate-push-notifications' );
+		}
+
+		return wp_send_json(
+			array(
+				'status' => false,
+				'title'  => __( 'Failure!', 'ultimate-push-notifications' ),
+				'text'   => $text,
+			)
+		);
 	}
 
 	/**
-	 * Prepare and send notifications to all provided device tokens.
+	 * Prepare and send notifications to every subscription in $dataObj->tokens.
 	 *
-	 * @param array|object $dataObj Notification data: title, body, icon, image, click_action, find, replace, tokens
-	 * @return array
+	 * The contract the event handlers rely on: title and body have their
+	 * placeholders substituted, tokens is a list of device rows, and the return
+	 * value is one entry per delivery attempt.
+	 *
+	 * @param array|object $dataObj title, body, icon, image, click_action, find, replace, tokens, type
+	 * @return SendResult[]
 	 */
 	public static function prepare_send_notifications( $dataObj ) {
 		$dataObj = \is_object( $dataObj ) ? $dataObj : (object) $dataObj;
 
-		$title       = \str_replace( $dataObj->find, $dataObj->replace, $dataObj->title );
-		$description = \str_replace( $dataObj->find, $dataObj->replace, $dataObj->body );
-		$response    = array();
-		if ( ! empty( $dataObj->tokens ) ) {
-			foreach ( $dataObj->tokens as $item ) {
-				$payload = (object) array(
-					'to'   => $item->token,
-					'data' => array(
-						'title'        => $title,
-						'body'         => $description,
-						'icon'         => isset( $dataObj->icon ) ? $dataObj->icon : '',
-						'image'        => isset( $dataObj->image ) ? $dataObj->image : '',
-						'click_action' => isset( $dataObj->click_action ) ? $dataObj->click_action : site_url(),
-					),
-				);
+		if ( empty( $dataObj->tokens ) ) {
+			return array();
+		}
 
-				$response[] = ( new self() )->send_notification( $payload );
+		$find    = isset( $dataObj->find ) ? (array) $dataObj->find : array();
+		$replace = isset( $dataObj->replace ) ? (array) $dataObj->replace : array();
+
+		$payload = self::build_payload(
+			array(
+				'title'        => \str_replace( $find, $replace, isset( $dataObj->title ) ? $dataObj->title : '' ),
+				'body'         => \str_replace( $find, $replace, isset( $dataObj->body ) ? $dataObj->body : '' ),
+				'icon'         => isset( $dataObj->icon ) ? $dataObj->icon : '',
+				'image'        => isset( $dataObj->image ) ? $dataObj->image : '',
+				'click_action' => isset( $dataObj->click_action ) ? $dataObj->click_action : site_url(),
+			)
+		);
+
+		$options = array(
+			'type' => isset( $dataObj->type ) ? (string) $dataObj->type : 'event',
+		);
+
+		$subscriptions = SubscriptionStore::hydrate( $dataObj->tokens );
+
+		if ( ! $subscriptions ) {
+			return array();
+		}
+
+		/*
+		 * Queue by default. The triggering request — a customer's checkout, a
+		 * member sending a message — returns immediately, and delivery happens
+		 * in a background tick with retries and per-service backoff. The
+		 * inline path remains for sites where no scheduler is available.
+		 */
+		if ( Runner::enabled() ) {
+			return self::enqueue_all( $subscriptions, $payload, $options );
+		}
+
+		$results = array();
+
+		foreach ( $subscriptions as $subscription ) {
+			// Inline there is nothing to wait with, so a hold cannot be honoured; a skip can.
+			if ( '' !== self::gate( $subscription, $payload, $options )['skip'] ) {
+				continue;
+			}
+			$results[] = self::deliver( $subscription, $payload, $options );
+		}
+
+		DeliveryLog::record( $options['type'], $payload, $results );
+
+		return $results;
+	}
+
+	/**
+	 * Queue one job per subscription and kick the runner.
+	 *
+	 * Returns one placeholder result per recipient so callers that count the
+	 * return value still get the right number. The real outcomes land in the
+	 * delivery log as the jobs complete.
+	 *
+	 * @param Subscription[] $subscriptions
+	 * @param array          $payload
+	 * @param array          $options
+	 * @return SendResult[]
+	 */
+	private static function enqueue_all( array $subscriptions, array $payload, array $options ) {
+		$log_id  = DeliveryLog::open( $options['type'], $payload, \count( $subscriptions ) );
+		$results = array();
+
+		foreach ( $subscriptions as $subscription ) {
+			SendJob::enqueue( $subscription->id, $payload, $options, (int) $log_id );
+
+			$queued            = SendResult::success( 0, $subscription->transport );
+			$queued->error_code = 'queued';
+			$results[]         = $queued;
+		}
+
+		Runner::schedule( 0 );
+
+		return $results;
+	}
+
+	/**
+	 * Should this delivery wait, or not happen at all?
+	 *
+	 * Asked once per recipient just before delivery — the only point where the
+	 * subscriber, the notification and the moment are all known. Quiet hours
+	 * and frequency caps hang off this. Test and preview sends are never
+	 * gated: a send the owner is watching for must arrive.
+	 *
+	 * @param Subscription $subscription
+	 * @param array        $payload
+	 * @param array        $options
+	 * @return array{hold:int,skip:string} hold = seconds to wait (0 = none); skip = reason ("" = deliver).
+	 */
+	public static function gate( Subscription $subscription, array $payload, array $options ) {
+		$none = array( 'hold' => 0, 'skip' => '' );
+		$type = isset( $options['type'] ) ? (string) $options['type'] : '';
+		if ( 'test' === $type || 'preview' === $type ) {
+			return $none;
+		}
+
+		/**
+		 * Return a non-empty reason to drop this delivery for this subscriber.
+		 *
+		 * @param string       $reason
+		 * @param Subscription $subscription
+		 * @param array        $payload
+		 * @param array        $options
+		 */
+		$skip = \apply_filters( 'upn_delivery_skip', '', $subscription, $payload, $options );
+		if ( \is_string( $skip ) && '' !== $skip ) {
+			return array( 'hold' => 0, 'skip' => $skip );
+		}
+
+		/**
+		 * Return seconds to wait before delivering to this subscriber (0 = now).
+		 * Only the queued path can wait; inline sends ignore this.
+		 *
+		 * @param int          $seconds
+		 * @param Subscription $subscription
+		 * @param array        $payload
+		 * @param array        $options
+		 */
+		$hold = (int) \apply_filters( 'upn_delivery_hold', 0, $subscription, $payload, $options );
+
+		return array( 'hold' => \max( 0, $hold ), 'skip' => '' );
+	}
+
+	/**
+	 * Deliver one notification and record the outcome.
+	 *
+	 * @param Subscription $subscription
+	 * @param array        $payload
+	 * @param array        $options
+	 * @return SendResult
+	 */
+	public static function deliver( Subscription $subscription, array $payload, array $options = array() ) {
+
+		/**
+		 * Filter the payload immediately before it is handed to a transport.
+		 *
+		 * @param array        $payload
+		 * @param Subscription $subscription
+		 * @param array        $options
+		 */
+		$payload = (array) \apply_filters( 'upn_before_send', $payload, $subscription, $options );
+
+		// The service worker reports clicks against this id.
+		if ( ! empty( $options['log_id'] ) ) {
+			$payload['log_id'] = (int) $options['log_id'];
+		}
+
+		$result = TransportFactory::send( $subscription, $payload, $options );
+
+		SubscriptionStore::record_result( $subscription, $result );
+
+		/**
+		 * Fires after every delivery attempt, successful or not.
+		 *
+		 * The delivery log and the health monitor hang off this.
+		 *
+		 * @param SendResult   $result
+		 * @param Subscription $subscription
+		 * @param array        $payload
+		 * @param array        $options
+		 */
+		\do_action( 'upn_after_send', $result, $subscription, $payload, $options );
+
+		return $result;
+	}
+
+	/**
+	 * Normalise the fields every transport understands.
+	 *
+	 * Drops empty optional fields so the encrypted payload stays small — the
+	 * push services cap it around 4KB, and an empty "image": "" is wasted room.
+	 *
+	 * @param array $fields
+	 * @return array
+	 */
+	public static function build_payload( array $fields ) {
+		$payload = array(
+			'title'        => isset( $fields['title'] ) ? \wp_strip_all_tags( (string) $fields['title'] ) : '',
+			'body'         => isset( $fields['body'] ) ? \wp_strip_all_tags( (string) $fields['body'] ) : '',
+			'click_action' => isset( $fields['click_action'] ) && '' !== $fields['click_action']
+				? \esc_url_raw( $fields['click_action'] )
+				: site_url(),
+		);
+
+		foreach ( array( 'icon', 'image', 'badge', 'tag' ) as $optional ) {
+			if ( ! empty( $fields[ $optional ] ) ) {
+				$payload[ $optional ] = ( 'tag' === $optional )
+					? \sanitize_key( $fields[ $optional ] )
+					: \esc_url_raw( $fields[ $optional ] );
 			}
 		}
 
-		return $response;
+		if ( ! empty( $fields['actions'] ) && \is_array( $fields['actions'] ) ) {
+			$payload['actions'] = array();
+			foreach ( \array_slice( \array_values( $fields['actions'] ), 0, 2 ) as $i => $a ) {
+				if ( empty( $a['title'] ) || empty( $a['url'] ) ) {
+					continue;
+				}
+				$payload['actions'][] = array( 'action' => 'a' . $i, 'title' => \wp_strip_all_tags( (string) $a['title'] ), 'url' => \esc_url_raw( (string) $a['url'] ) );
+			}
+			if ( ! $payload['actions'] ) {
+				unset( $payload['actions'] );
+			}
+		}
+
+		return $payload;
 	}
-
-	/**
-	 * Send a single push notification via FCM Legacy HTTP API.
-	 *
-	 * @param object $payload { to, data: { title, body, icon, image, click_action } }
-	 * @return array|string
-	 */
-	private function send_notification( $payload ) {
-
-		$app_config = (object) AppConfig::get_config();
-
-		if ( ! isset( $app_config->key ) || empty( $app_config->key ) ||
-		! isset( $payload->data ) || empty( $payload->data ) ||
-		! isset( $payload->to ) || empty( $payload->to )
-		) {
-			return __( 'Missing Configuration!', 'ultimate-push-notifications' );
-		}
-
-		$body = array(
-			'data' => $payload->data,
-			'to'   => $payload->to,
-		);
-
-		// Also send standard notification block for better delivery on some devices
-		$body['notification'] = array(
-			'title' => isset( $payload->data['title'] ) ? $payload->data['title'] : '',
-			'body'  => isset( $payload->data['body'] ) ? $payload->data['body'] : '',
-			'icon'  => isset( $payload->data['icon'] ) ? $payload->data['icon'] : '',
-		);
-		if ( ! empty( $payload->data['image'] ) ) {
-			$body['notification']['image'] = $payload->data['image'];
-		}
-
-		$http_response = wp_remote_post(
-			$this->fcm_url,
-			array(
-				'method'      => 'POST',
-				'timeout'     => 45,
-				'redirection' => 5,
-				'httpversion' => '1.0',
-				'blocking'    => true,
-				'headers'     => array(
-					'Authorization' => 'key=' . $app_config->key,
-					'Content-Type'  => 'application/json',
-				),
-				'body'        => wp_json_encode( $body ),
-				'cookies'     => array(),
-			)
-		);
-
-		if ( is_wp_error( $http_response ) ) {
-			return __( 'HTTP request failed! Please check your server connection.', 'ultimate-push-notifications' );
-		}
-
-		$response = json_decode( wp_remote_retrieve_body( $http_response ) );
-
-		if ( ! \is_object( $response ) ) {
-			return __( 'Something went wrong! Please check your configuration correctly.', 'ultimate-push-notifications' );
-		}
-
-		$error_text = isset( $response->results[0]->error ) ? $response->results[0]->error : '';
-
-		$final_res = array(
-			'success'   => isset( $response->success ) ? (int) $response->success : 0,
-			'failure'   => isset( $response->failure ) ? (int) $response->failure : 1,
-			'errorText' => $error_text ? $error_text : 'Unknown error',
-		);
-
-		$this->update_message_sent_count( $final_res, $payload->to );
-
-		// Auto-remove permanently invalid tokens to keep the device list clean
-		if ( $final_res['failure'] > 0 && in_array( $error_text, $this->invalid_token_errors, true ) ) {
-			$this->remove_invalid_token( $payload->to );
-		}
-
-		return $final_res;
-	}
-
-	/**
-	 * Update notification sent counters for a token.
-	 *
-	 * @param array  $res   { success, failure }
-	 * @param string $token FCM device token
-	 * @return bool
-	 */
-	private function update_message_sent_count( $res, $token ) {
-		global $wpdb;
-
-		$token_short_arr = \explode( ':', $token );
-		if ( isset( $token_short_arr[0] ) && empty( $token_short = $token_short_arr[0] ) ) {
-			return false;
-		}
-
-		$is_exists = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT * FROM `{$wpdb->prefix}upn_user_devices` WHERE token LIKE %s ",
-				'%' . $wpdb->esc_like( $token_short ) . '%'
-			)
-		);
-
-		if ( $is_exists ) {
-			$wpdb->update(
-				"{$wpdb->prefix}upn_user_devices",
-				array(
-					'total_sent_success_notifications' => $is_exists->total_sent_success_notifications + $res['success'],
-					'total_sent_fail_notifications'    => $is_exists->total_sent_fail_notifications + $res['failure'],
-				),
-				array( 'id' => $is_exists->id )
-			);
-		}
-		return true;
-	}
-
-	/**
-	 * Remove a permanently invalid token from the database.
-	 * Called automatically when FCM returns NotRegistered or InvalidRegistration.
-	 *
-	 * @param string $token Full FCM device token
-	 * @return void
-	 */
-	private function remove_invalid_token( $token ) {
-		global $wpdb;
-
-		$token_short_arr = \explode( ':', $token );
-		$token_short     = isset( $token_short_arr[0] ) ? $token_short_arr[0] : $token;
-
-		if ( empty( $token_short ) ) {
-			return;
-		}
-
-		$wpdb->query(
-			$wpdb->prepare(
-				"DELETE FROM `{$wpdb->prefix}upn_user_devices` WHERE token LIKE %s",
-				'%' . $wpdb->esc_like( $token_short ) . '%'
-			)
-		);
-	}
-
 
 }
-
-

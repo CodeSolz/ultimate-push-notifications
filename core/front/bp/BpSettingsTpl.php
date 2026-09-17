@@ -1,78 +1,91 @@
 <?php namespace UltimatePushNotifications\front\bp;
 
 /**
- * Class: Admin Menu Scripts
+ * The "Push Notifications" tab under a member's BuddyPress notification
+ * settings: the same preference form as wp-admin, in the member's own
+ * profile.
  *
- * @package Admin
+ * @package Front
  * @since 1.0.0
- * @author M.Tuhin <info@codesolz.net>
+ * @since 1.6.0 Renders the automation preference form; the per-user copy
+ *              editor is gone.
  */
 
 if ( ! defined( 'CS_UPN_VERSION' ) ) {
-	exit;
+	die();
 }
 
-use UltimatePushNotifications\admin\builders\FormBuilder;
-use UltimatePushNotifications\admin\options\pages\SetNotifications;
-use UltimatePushNotifications\admin\options\functions\SetNotifications as FuncSetNotifications;
+use UltimatePushNotifications\automation\PreferencesForm;
 
 class BpSettingsTpl {
 
-	/**
-	 * Form Generator
-	 *
-	 * @var type
-	 */
-	private $Form_Generator;
+	/** @var true|\WP_Error|null */
+	private $result = null;
 
 	public function __construct() {
-		// global $bp;
+		// Save before anything is rendered so the form shows the new state.
+		$this->result = $this->can_edit() ? PreferencesForm::handle() : null;
 
-		add_action( 'bp_template_title', array( $this, 'upn_bp_settings_top_points_events_title' ) );
-		add_action( 'bp_template_content', array( $this, 'upn_bp_settings_top_points_events_content' ) );
-		\bp_core_load_template( \apply_filters( 'bp_core_template_plugin', 'members/single/plugins' ) );
-
-		/*create obj form generator*/
-		$this->Form_Generator = new FormBuilder();
+		add_action( 'bp_template_title', array( $this, 'title' ) );
+		add_action( 'bp_template_content', array( $this, 'content' ) );
+		bp_core_load_template( 'members/single/plugins' );
 	}
 
 	/**
-	 * Section Title
+	 * A member may only edit their own tab, never one they are merely viewing.
 	 *
-	 * @return void
+	 * @return bool
 	 */
-	public function upn_bp_settings_top_points_events_title() {
-		_e( 'Settings', 'ultimate-push-notifications' );
+	private function can_edit() {
+		return \is_user_logged_in()
+			&& \function_exists( 'bp_displayed_user_id' )
+			&& (int) \bp_displayed_user_id() === \get_current_user_id();
 	}
 
 	/**
-	 * Generate front-end BuddyPress settings for user
-	 *
 	 * @return void
 	 */
-	public function upn_bp_settings_top_points_events_content() {
+	public function title() {
+		\esc_html_e( 'Push Notifications', 'ultimate-push-notifications' );
+	}
 
-		$options = FuncSetNotifications::get_notification_type();
+	/**
+	 * @return void
+	 */
+	public function content() {
+		if ( ! $this->can_edit() ) {
+			$this->notice( \__( 'Only the account owner can change these settings.', 'ultimate-push-notifications' ), 'error' );
+			return;
+		}
 
-		$buddyPress        = SetNotifications::upn_buddypress_fields( $options );
-		$buddyPress['st1'] = array(
-			'type'     => 'section_title',
-			'title'    => __( 'Push Notifications', 'ultimate-push-notifications' ),
-			'desc_tip' => __( 'Please set the following configuration to get push notifications when your browser is open.', 'ultimate-push-notifications' ),
-		);
+		if ( true === $this->result ) {
+			$this->notice( \__( 'Saved.', 'ultimate-push-notifications' ), 'success' );
+		} elseif ( \is_wp_error( $this->result ) ) {
+			$this->notice( $this->result->get_error_message(), 'error' );
+		}
 
+		$action = \function_exists( 'bp_displayed_user_domain' )
+			? \trailingslashit( \bp_displayed_user_domain() ) . 'notifications/push-notifications/'
+			: '';
+
+		PreferencesForm::render( $action, 'standard-form base notifications-settings-form' );
+	}
+
+	/**
+	 * A BuddyPress-styled feedback notice.
+	 *
+	 * @param string $message
+	 * @param string $type success|error
+	 * @return void
+	 */
+	private function notice( $message, $type = 'success' ) {
+		$class = ( 'error' === $type ) ? 'error upn-bp-error' : 'success upn-bp-success';
 		?>
-		<form action="<?php echo trailingslashit( bp_displayed_user_domain() ) . 'notifications/push-notifications'; ?>" method="post" id="" class="standard-form base notifications-settings-form">
-			<?php do_action( 'upn_bp_front_notifications_settings' ); ?>	
-			<?php echo $this->Form_Generator->generate_html_fields( $buddyPress ); ?>	
-			<div class="submit">
-				<?php wp_nonce_field( SECURE_AUTH_SALT, 'cs_token' ); ?>
-				<input type="hidden" name="cs_set_notifications[single_settings]" value="1" />
-				<input type="submit" name="profile-group-edit-submit" id="profile-group-edit-submit" value="<?php esc_attr_e( 'Save Changes', 'buddypress' ); ?> " />
-			</div>
-		</form>
+		<aside class="bp-feedback bp-messages bp-template-notice <?php echo \esc_attr( $class ); ?>">
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p><?php echo \esc_html( \wp_strip_all_tags( (string) $message ) ); ?></p>
+		</aside>
 		<?php
 	}
 
 }
-

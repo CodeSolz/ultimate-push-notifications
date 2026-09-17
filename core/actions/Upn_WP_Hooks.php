@@ -13,28 +13,15 @@ if ( ! defined( 'CS_UPN_VERSION' ) ) {
 }
 
 use UltimatePushNotifications\lib\Util;
-use UltimatePushNotifications\admin\functions\notifications\Upn_UserRegistration;
 
 class Upn_WP_Hooks {
 
 	function __construct() {
-		add_action( 'user_register', array( $this, 'upn_on_user_registrations' ) );
-
 		/*** add settings link */
 		add_filter( 'plugin_action_links_' . CS_UPN_PLUGIN_IDENTIFIER, array( $this, 'upn_action_links' ) );
 
 		/*** add docs link */
 		add_filter( 'plugin_row_meta', array( $this, 'upn_plugin_row_meta' ), 10, 2 );
-	}
-
-	/**
-	 * When new user get registered
-	 *
-	 * @param [type] $user_id
-	 * @return void
-	 */
-	public function upn_on_user_registrations( $user_id ) {
-		return Upn_UserRegistration::on_user_registration( $user_id );
 	}
 
 	/**

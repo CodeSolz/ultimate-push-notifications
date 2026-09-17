@@ -14,8 +14,14 @@ if ( ! defined( 'CS_UPN_VERSION' ) ) {
 
 use UltimatePushNotifications\admin\options\Scripts_Settings;
 use UltimatePushNotifications\admin\builders\AdminPageBuilder;
+use UltimatePushNotifications\admin\builders\Screens;
 use UltimatePushNotifications\admin\options\functions\AppConfig;
-use UltimatePushNotifications\admin\options\functions\SetNotifications;
+use UltimatePushNotifications\admin\functions\Compose;
+use UltimatePushNotifications\admin\options\pages\ComposePage;
+use UltimatePushNotifications\admin\options\pages\AutomationsPage;
+use UltimatePushNotifications\admin\options\pages\OptInPage;
+use UltimatePushNotifications\admin\options\pages\PreferencesPage;
+use UltimatePushNotifications\health\HealthPage;
 
 class Upn_RegisterMenu {
 
@@ -70,58 +76,67 @@ class Upn_RegisterMenu {
 			'UPush Notifier',
 			'read',
 			CS_UPN_PLUGIN_IDENTIFIER,
-			'cs-woo-altcoin-gateway',
+			array( $this, 'upn_page_landing' ),
 			CS_UPN_PLUGIN_ASSET_URI . 'img/icon-24x24.png',
 			57
 		);
 
-		$this->upn_menus['menu_app_config'] = add_submenu_page(
-			CS_UPN_PLUGIN_IDENTIFIER,
-			__( 'APP Configuration', 'ultimate-push-notifications' ),
-			'App Config',
-			'administrator',
-			'cs-upn-app-configuration',
-			array( $this, 'upn_app_config' )
-		);
+		/*
+		 * Screens register with a group; Screens::emit() turns each group into one
+		 * menu entry with tabs (the Pro plugin adds its screens to the same groups).
+		 * Every slug stays routable on its own.
+		 */
+		Screens::boot();
+		Screens::register( 'cs-upn-compose', __( 'Compose', 'ultimate-push-notifications' ), Compose::capability(), array( $this, 'upn_page_compose' ), 'compose', __( 'Compose a Notification', 'ultimate-push-notifications' ), 10 );
+		Screens::register( 'cs-upn-automations', __( 'Automations', 'ultimate-push-notifications' ), \UltimatePushNotifications\admin\options\pages\RulesPage::capability(), array( $this, 'upn_page_automations' ), 'automations', '', 10 );
+		Screens::register( 'cs-upn-all-registered-devices', __( 'All Registered Devices', 'ultimate-push-notifications' ), 'administrator', array( $this, 'upn_page_all_registered_devices' ), 'subscribers', __( 'All Registered devices', 'ultimate-push-notifications' ), 10 );
+		Screens::register( 'cs-upn-register-my-device', __( 'Register My Device', 'ultimate-push-notifications' ), 'read', array( $this, 'upn_page_register_my_device' ), 'subscribers', __( 'Register my device', 'ultimate-push-notifications' ), 20 );
+		Screens::register( 'cs-upn-set-notifications', __( 'Set Notifications', 'ultimate-push-notifications' ), 'read', array( $this, 'upn_set_notifications' ), 'subscribers', __( 'Set notifications', 'ultimate-push-notifications' ), 30 );
+		Screens::register( 'cs-upn-optin', __( 'Subscribe Prompt', 'ultimate-push-notifications' ), 'manage_options', array( $this, 'upn_page_optin' ), 'optin', '', 10 );
+		Screens::register( 'cs-upn-health', __( 'Health', 'ultimate-push-notifications' ), 'manage_options', array( $this, 'upn_page_health' ), 'health', __( 'Push Notification Health', 'ultimate-push-notifications' ), 10 );
+		Screens::register( 'cs-upn-app-configuration', __( 'App Config', 'ultimate-push-notifications' ), 'administrator', array( $this, 'upn_app_config' ), 'settings', __( 'APP Configuration', 'ultimate-push-notifications' ), 10 );
 
-		$this->upn_menus['menu_set_notifications'] = add_submenu_page(
-			CS_UPN_PLUGIN_IDENTIFIER,
-			__( 'Set notifications', 'ultimate-push-notifications' ),
-			'Set Notifications',
-			'read',
-			'cs-upn-set-notifications',
-			array( $this, 'upn_set_notifications' )
-		);
+		// The Pro screens as tabs with a badge until Pro registers them itself.
+		\UltimatePushNotifications\pro\Adverts::register();
 
-		$this->upn_menus['menu_add_my_device'] = add_submenu_page(
-			CS_UPN_PLUGIN_IDENTIFIER,
-			__( 'Register my device', 'ultimate-push-notifications' ),
-			'Register My Device',
-			'read',
-			'cs-upn-register-my-device',
-			array( $this, 'upn_page_register_my_device' )
-		);
+		// The hook suffixes the footer scripts are keyed by, once the menu is built.
+		add_action( 'admin_menu', array( $this, 'upn_collect_menu_hooks' ), 51 );
 
-		$this->upn_menus['menu_all_registered_devices'] = add_submenu_page(
-			CS_UPN_PLUGIN_IDENTIFIER,
-			__( 'All Registered devices', 'ultimate-push-notifications' ),
-			'All Registered Devices',
-			'administrator',
-			'cs-upn-all-registered-devices',
-			array( $this, 'upn_page_all_registered_devices' )
-		);
-
-		// load script
-		add_action( "load-{$this->upn_menus['menu_app_config']}", array( $this, 'upn_register_admin_settings_scripts' ) );
-		add_action( "load-{$this->upn_menus['menu_set_notifications']}", array( $this, 'upn_register_admin_settings_scripts' ) );
-		add_action( "load-{$this->upn_menus['menu_add_my_device']}", array( $this, 'upn_register_admin_settings_scripts' ) );
-		add_action( "load-{$this->upn_menus['menu_all_registered_devices']}", array( $this, 'upn_register_admin_settings_scripts' ) );
+		// load script: the plugin's look on every one of its screens, the Pro plugin's included.
+		add_action( 'current_screen', array( $this, 'upn_maybe_register_admin_settings_scripts' ) );
 
 		remove_submenu_page( CS_UPN_PLUGIN_IDENTIFIER, CS_UPN_PLUGIN_IDENTIFIER );
 
 		// init pages
 		$this->pages = new AdminPageBuilder();
 		$upn_menu    = $this->upn_menus;
+	}
+
+	/**
+	 * The top-level entry itself, if it is ever opened directly: the first screen the user may see.
+	 *
+	 * @return void
+	 */
+	public function upn_page_landing() {
+		foreach ( Screens::all() as $p ) {
+			if ( current_user_can( $p['cap'] ) ) {
+				call_user_func( $p['callback'] );
+				return;
+			}
+		}
+		wp_die( esc_html__( 'You do not have permission to view this page.', 'ultimate-push-notifications' ) );
+	}
+
+	/**
+	 * Hook suffixes by the old keys, after Screens built the menu.
+	 *
+	 * @return void
+	 */
+	public function upn_collect_menu_hooks() {
+		foreach ( array( 'menu_app_config' => 'cs-upn-app-configuration', 'menu_set_notifications' => 'cs-upn-set-notifications', 'menu_add_my_device' => 'cs-upn-register-my-device', 'menu_all_registered_devices' => 'cs-upn-all-registered-devices', 'menu_compose' => 'cs-upn-compose', 'menu_optin' => 'cs-upn-optin', 'menu_automations' => 'cs-upn-automations', 'menu_health' => 'cs-upn-health' ) as $key => $slug ) {
+			$this->upn_menus[ $key ] = Screens::hook( $slug );
+		}
+		$GLOBALS['upn_menu'] = $this->upn_menus;
 	}
 
 	/**
@@ -153,21 +168,11 @@ class Upn_RegisterMenu {
 	 * @return void
 	 */
 	public function upn_set_notifications() {
-		$option    = SetNotifications::get_notification_type();
-		$option = $this->upn_has_config( $option );
-		$page_info = array(
-			'title'     => __( 'Set Notification', 'ultimate-push-notifications' ),
-			'sub_title' => __( 'Please set the following settings to get notifications', 'ultimate-push-notifications' ),
-		);
-
-		if ( current_user_can( 'read' ) || current_user_can( 'read' ) ) {
-			$SetNotifications = $this->pages->SetNotifications();
-			echo $this->generate_page( $SetNotifications, $page_info, $option );
-		} else {
-			echo $this->page_permission_restricted( $page_info );
+		if ( ! current_user_can( 'read' ) ) {
+			wp_die( esc_html__( 'You do not have permission to view this page.', 'ultimate-push-notifications' ) );
 		}
 
-		return;
+		PreferencesPage::render();
 	}
 
 	/**
@@ -250,6 +255,16 @@ class Upn_RegisterMenu {
 	/**
 	 * load funnel builder scripts
 	 */
+	public function upn_maybe_register_admin_settings_scripts( $screen ) {
+		$id = \is_object( $screen ) && isset( $screen->id ) ? (string) $screen->id : '';
+		if ( '' === $id ) {
+			return;
+		}
+		if ( \in_array( $id, (array) $this->upn_menus, true ) || false !== \strpos( $id, 'cs-upn' ) || false !== \strpos( $id, CS_UPN_PLUGIN_IDENTIFIER ) ) {
+			$this->upn_register_admin_settings_scripts();
+		}
+	}
+
 	public function upn_register_admin_settings_scripts() {
 		// register scripts
 		add_action( 'admin_enqueue_scripts', array( $this, 'upn_load_settings_scripts' ) );
@@ -290,6 +305,58 @@ class Upn_RegisterMenu {
 		));
 
 		return $option;
+	}
+
+	/**
+	 * Compose page
+	 *
+	 * @return void
+	 */
+	public function upn_page_compose() {
+		if ( ! current_user_can( Compose::capability() ) ) {
+			wp_die( esc_html__( 'You do not have permission to view this page.', 'ultimate-push-notifications' ) );
+		}
+
+		ComposePage::render();
+	}
+
+	/**
+	 * Subscribe Prompt page
+	 *
+	 * @return void
+	 */
+	public function upn_page_optin() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to view this page.', 'ultimate-push-notifications' ) );
+		}
+
+		OptInPage::render();
+	}
+
+	/**
+	 * Automations page
+	 *
+	 * @return void
+	 */
+	public function upn_page_automations() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to view this page.', 'ultimate-push-notifications' ) );
+		}
+
+		AutomationsPage::render();
+	}
+
+	/**
+	 * Health page
+	 *
+	 * @return void
+	 */
+	public function upn_page_health() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You do not have permission to view this page.', 'ultimate-push-notifications' ) );
+		}
+
+		HealthPage::render();
 	}
 
 }

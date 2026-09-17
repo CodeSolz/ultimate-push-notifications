@@ -14,6 +14,8 @@ if ( ! defined( 'CS_UPN_VERSION' ) ) {
 
 use UltimatePushNotifications\lib\Util;
 use UltimatePushNotifications\admin\options\functions\firebasejs\FirebaseJs;
+use UltimatePushNotifications\transport\SubscriptionStore;
+use UltimatePushNotifications\transport\Vapid;
 
 
 class AppConfig {
@@ -103,6 +105,104 @@ class AppConfig {
 		return get_option( self::$app_config_key );
 	}
 
+	/**
+	 * Generate a VAPID key pair (AJAX).
+	 *
+	 * @param array $user_input force, subject
+	 * @return void
+	 */
+	public function generate_vapid_keys( $user_input ) {
+		if ( ! \current_user_can( 'manage_options' ) ) {
+			return $this->json( false, __( 'Access Denied', 'ultimate-push-notifications' ), __( 'You do not have permission to perform this action.', 'ultimate-push-notifications' ) );
+		}
+
+		$this->save_vapid_subject( isset( $user_input['subject'] ) ? $user_input['subject'] : '' );
+
+		$force  = ! empty( $user_input['force'] ) && '1' === (string) $user_input['force'];
+		$result = Vapid::generate_keys( $force );
+
+		if ( \is_wp_error( $result ) ) {
+			return $this->json( false, __( 'Could not generate keys', 'ultimate-push-notifications' ), $result->get_error_message() );
+		}
+
+		return $this->json(
+			true,
+			__( 'Web Push is ready', 'ultimate-push-notifications' ),
+			__( 'A key pair has been generated. Devices can now register.', 'ultimate-push-notifications' )
+		);
+	}
+
+	/**
+	 * Store a pasted VAPID key pair (AJAX).
+	 *
+	 * @param array $user_input public_key, private_key, subject
+	 * @return void
+	 */
+	public function save_vapid_keys( $user_input ) {
+		if ( ! \current_user_can( 'manage_options' ) ) {
+			return $this->json( false, __( 'Access Denied', 'ultimate-push-notifications' ), __( 'You do not have permission to perform this action.', 'ultimate-push-notifications' ) );
+		}
+
+		$this->save_vapid_subject( isset( $user_input['subject'] ) ? $user_input['subject'] : '' );
+
+		$public  = isset( $user_input['public_key'] ) ? \preg_replace( '/[^A-Za-z0-9_\-=]/', '', (string) $user_input['public_key'] ) : '';
+		$private = isset( $user_input['private_key'] ) ? \preg_replace( '/[^A-Za-z0-9_\-=]/', '', (string) $user_input['private_key'] ) : '';
+
+		$result = Vapid::save_keys( $public, $private );
+
+		if ( \is_wp_error( $result ) ) {
+			return $this->json( false, __( 'Keys not saved', 'ultimate-push-notifications' ), $result->get_error_message() );
+		}
+
+		return $this->json(
+			true,
+			__( 'Web Push is ready', 'ultimate-push-notifications' ),
+			__( 'The key pair has been saved. Devices can now register.', 'ultimate-push-notifications' )
+		);
+	}
+
+	/**
+	 * Persist the VAPID contact subject if a usable one was supplied.
+	 *
+	 * @param string $subject
+	 * @return void
+	 */
+	private function save_vapid_subject( $subject ) {
+		$subject = \trim( \sanitize_text_field( (string) $subject ) );
+
+		if ( '' === $subject ) {
+			return;
+		}
+
+		if ( 0 === \strpos( $subject, 'mailto:' ) && \is_email( \substr( $subject, 7 ) ) ) {
+			\update_option( Vapid::OPTION_SUBJECT, $subject, false );
+		} elseif ( \is_email( $subject ) ) {
+			\update_option( Vapid::OPTION_SUBJECT, 'mailto:' . $subject, false );
+		} elseif ( 0 === \strpos( $subject, 'https://' ) ) {
+			\update_option( Vapid::OPTION_SUBJECT, \esc_url_raw( $subject ), false );
+		}
+
+		Vapid::flush_token_cache();
+	}
+
+	/**
+	 * Emit a JSON response and stop.
+	 *
+	 * @param bool   $status
+	 * @param string $title
+	 * @param string $text
+	 * @return void
+	 */
+	private function json( $status, $title, $text ) {
+		return wp_send_json(
+			array(
+				'status' => (bool) $status,
+				'title'  => $title,
+				'text'   => $text,
+			)
+		);
+	}
+
 
 	/**
 	 * Save / update token
@@ -111,7 +211,13 @@ class AppConfig {
 	 * @return void
 	 */
 	public function cs_update_token( $user_input ) {
-		$current_user = Util::check_evil_script( $user_input['current_user'] );
+		/**
+		 * The owner of a device token is always the authenticated user making the
+		 * request. It is never read from the request body: a client-supplied user id
+		 * would let any visitor bind their own device to another account and receive
+		 * that account's private notifications.
+		 */
+		$current_user = \get_current_user_id();
 		if ( empty( $current_user ) ) {
 			return wp_send_json(
 				array(
@@ -122,50 +228,19 @@ class AppConfig {
 			);
 		}
 
-		
-		global $wpdb;
-		$token           = Util::check_evil_script( $user_input['gen_token'] );
-		$device_id       = Util::check_evil_script( $user_input['device_id'] );
-		$token_short_arr 	= \explode( ':', $token );
-		
-		if ( isset( $token_short_arr[0] ) && empty( $token_short = $token_short_arr[0] ) ) {
+		$token     = isset( $user_input['gen_token'] ) ? Util::check_evil_script( $user_input['gen_token'] ) : '';
+		$device_id = isset( $user_input['device_id'] ) ? Util::check_evil_script( $user_input['device_id'] ) : '';
+
+		// The store matches on the full token, never a prefix — a prefix LIKE
+		// could match (and later delete) another user's row.
+		$saved = SubscriptionStore::save_fcm_token( $current_user, $token, $device_id );
+
+		if ( \is_wp_error( $saved ) ) {
 			return wp_send_json(
 				array(
 					'status' => false,
 					'title'  => 'Error!',
-					'text'   => __( 'No device token found!', 'ultimate-push-notifications' ),
-				)
-			);
-		}
-
-		$is_exists = $wpdb->get_var(
-			$wpdb->prepare(
-				"select id from `{$wpdb->prefix}upn_user_devices` where token like %s and user_id = %d ",
-				'%' . $wpdb->esc_like( $token_short ) . '%',
-				$current_user
-			)
-		);
-
-		if ( $is_exists ) {
-			$wpdb->update(
-				"{$wpdb->prefix}upn_user_devices",
-				array(
-					'user_id' => $current_user,
-					'token'   => $token,
-					'device_id'     => $device_id,
-				),
-				array(
-					'id' => $is_exists,
-				)
-			);
-		} else {
-			$wpdb->insert(
-				"{$wpdb->prefix}upn_user_devices",
-				array(
-					'user_id'       => $current_user,
-					'token'         => $token,
-					'device_id'     => $device_id,
-					'registered_on' => date( 'Y-m-d H:i:s' ),
+					'text'   => $saved->get_error_message(),
 				)
 			);
 		}
