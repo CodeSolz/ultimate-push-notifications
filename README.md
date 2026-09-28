@@ -39,36 +39,41 @@
 </p>
 <h2 align="center">Ultimate Push Notifications - Wordpress plugin</h2>
 
-### Description 
+### Description
 
-Ultimate push notification allows WooCommerce Store Managers, Multivendors & Administrator to receive real-time push notification right on their desktop screen. They will 
-able to receive notification when a product get sold, added to cart, product order changes and someone register to the website.
+Self-hosted web push for WordPress. Unlimited subscribers, a composer, and automations for WooCommerce, BuddyPress, membership plugins and forms — one click to set up, no account with anyone, no per-subscriber fees.
 
+Notifications go from your own server straight to each browser's push service over the open **Web Push standard (VAPID)** — desktop and mobile, even when the visitor is not on your site. Every subscription stays in your own database.
 
-<blockquote>
-=== Receive real-time Push Notifications right on your desktop screen! ===
-</blockquote>
+### How does it work?
 
-### How does it work? 
-This plugin works along with the firebase application. Firebase is a free application platform developed by Google to create mobile and web application. After
-creating your firebase web push application, you need to set the application configuration to this plugin's app config section & you are ready to go! 
-By visinting On plugin's device registration page, you will notification prompt. Accept it to 'allow' notification. You are all set! 
-You will be able to receive real-time notifications right on your desktop screen when particular actions happens on your website. 
+1. **UPush Notifier → Settings → App Config** → **Generate key pair**. That is the whole setup — no Firebase, no Google account.
+2. Turn on the **Subscribe Prompt** (a soft-ask bar, a bell, a shortcode or a block) and visitors allow notifications.
+3. Compose a notification, or let an automation send one — new order, order status, new post, form submitted, friend request…
 
-<blockquote>
-=== Easily set when and on which event's you want to receive notifications! ===
-</blockquote>
+### Key features
 
+* **Unlimited subscribers** — visitors without an account, members with theirs
+* **Compose** — audience by role, device, activity; live recipient count; send to yourself first
+* **Automations** — 29 triggers across WordPress, WooCommerce, BuddyPress / BuddyBoss, membership plugins and Contact Form 7, each with its own audience and merge tags
+* **Push on publish**, rich notifications with images, click tracking
+* **Background queue** with retries and back-off — sending never slows down checkout
+* **Health page** — every link in the chain checked and explained
+* **Privacy** — export / erase with WordPress's own tools
 
-### Key Features
+### Ultimate Push Notifications Pro
 
-* Easy to use and user-friendly options
-* Ultimate notification solutions for WordPress
-* Various types of notifications
-* Receive push notification when a product get sold 
-* Receive push notification when added to cart 
-* Receive push notification when vendor change the status of the product
-* As a Administrator, you can receive push notification when someone register on your website as a seller or other level
+The free plugin sends. **[Pro](https://codesolz.net/our-products/wordpress-plugin/ultimate-push-notifications/?utm_source=github&utm_medium=readme&utm_campaign=pro-section)** reaches people push cannot, sends to the right people at the right time, and tells you what each notification earned:
+
+* **SMS, WhatsApp and Telegram for customers** — opt-in at checkout or in their account; SMS through your own Android phone with [httpSMS](https://httpsms.com/), WhatsApp through Meta's Cloud API, Telegram through your bot
+* **Carriers for your team** — email, Slack, Discord, Telegram, SMS or WhatsApp alongside push, or when push cannot reach
+* **Segments**, **scheduling**, **A/B tests**, **best-time delivery**, unlimited automations with **conditions** and **digests**
+* **Store automations** — abandoned cart, browse reminders, back in stock, price drop
+* **Delivery rules** (quiet hours, frequency caps) and a subscriber **preference centre**
+* **Revenue attribution**, **goals**, unlimited **history** and scheduled **reports**
+* **Health monitor**, **roles**, **white label**, **export / import**, **multisite**, **REST API** and **WP-CLI**, and an **AI assistant** with your own key
+
+**[See everything Pro adds →](https://codesolz.net/our-products/wordpress-plugin/ultimate-push-notifications/?utm_source=github&utm_medium=readme&utm_campaign=pro-section-cta)**
 
 
 ### Forum and Feature Request
@@ -95,6 +100,8 @@ You will be able to receive real-time notifications right on your desktop screen
 
 ### useful links
 - Free download from WordPress.org plugins directory - [Download Ultimate Push Notifications](https://wordpress.org/plugins/ultimate-push-notifications/)
+- Documentation - [docs.codesolz.net/ultimate-push-notifications](https://docs.codesolz.net/ultimate-push-notifications/)
+- Pro version - [Ultimate Push Notifications Pro](https://codesolz.net/our-products/wordpress-plugin/ultimate-push-notifications/?utm_source=github&utm_medium=readme&utm_campaign=useful-links)
 
 ### Credentials
 - *Created & Supported by - [M.Tuhin](https://codesolz.net/)  - [CodeSolz.net](https://codesolz.net/)*

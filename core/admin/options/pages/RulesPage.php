@@ -449,7 +449,7 @@ class RulesPage {
 								),
 							) );
 							?>
-							<p class="description"><?php echo Locked::label( \__( 'Also by email, Slack, Discord or Telegram', 'ultimate-push-notifications' ), 'carriers' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped inside ?> — <?php \esc_html_e( 'always, or only when push has nobody to reach or fails — the floor an order alert needs.', 'ultimate-push-notifications' ); ?></p>
+							<p class="description"><?php echo Locked::label( \__( 'Also by email, Slack, Discord, Telegram, SMS or WhatsApp', 'ultimate-push-notifications' ), 'carriers' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped inside ?> — <?php \esc_html_e( 'always, or only when push has nobody to reach or fails — the floor an order alert needs.', 'ultimate-push-notifications' ); ?></p>
 						<?php endif; ?></div>
 					</div>
 			</div>

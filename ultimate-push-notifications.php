@@ -4,7 +4,7 @@
  * Plugin Name:       Ultimate Push Notifications
  * Plugin URI:        https://codesolz.net/our-products/wordpress-plugin/ultimate-push-notifications/
  * Description:       Self-hosted web push for WordPress — one-click setup, unlimited subscribers in your own database, a composer with live preview, push on publish, 29 automations for WooCommerce, BuddyPress, Contact Form 7 and membership plugins, a background delivery queue, click tracking and a health check that tells you when the channel breaks. Works on desktop, Android and iPhone. No Firebase, no per-subscriber fees.
- * Version:           1.6.2
+ * Version:           1.6.3
  * Author:            CodeSolz
  * Author URI:        https://www.codesolz.net
  * License:           GPLv3
@@ -13,7 +13,7 @@
  * Text Domain:       ultimate-push-notifications
  * Requires PHP: 7.4
  * Requires At Least: 4.0
- * Tested Up To: 7.0
+ * Tested Up To: 7.1
  * WC requires at least: 4.0
  * WC tested up to: 11.0
  */
@@ -37,7 +37,7 @@ class Ultimate_Push_Notifications {
 	 *
 	 * @var String
 	 */
-	private static $version = '1.6.2';
+	private static $version = '1.6.3';
 
 	/**
 	 * Hold version

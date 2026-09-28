@@ -115,36 +115,19 @@ class Engine {
 
 		$audience = Audience::resolve( $rule, $event );
 		if ( null === $audience ) {
+			/**
+			 * A rule applied but push has nobody to reach — a guest's order, an
+			 * empty role. Another channel may still reach them; render() gives
+			 * the notification the rule would have sent.
+			 *
+			 * @param array $rule
+			 * @param Event $event
+			 */
+			\do_action( 'upn_automation_unreached', $rule, $event );
 			return null;
 		}
 
-		$context = $event->context;
-		$context['rule'] = $rule;
-
-		/*
-		 * Render before sanitising: a URL of "{order_admin_url}" is not a URL
-		 * until the tag is resolved. A URL field that renders to something
-		 * that is not a URL (a tag the event did not supply) is dropped on its
-		 * own rather than failing the notification. Send with an empty context
-		 * so nothing is rendered twice.
-		 */
-		$urls = array(
-			'click_action' => '' !== $rule['url'] ? MergeTags::render( $rule['url'], $context ) : $event->url,
-			'icon'         => '' !== $rule['icon'] ? MergeTags::render( $rule['icon'], $context ) : (string) \get_site_icon_url( 192 ),
-			'image'        => '' !== $rule['image'] ? MergeTags::render( $rule['image'], $context ) : $event->image,
-		);
-		foreach ( $urls as $k => $v ) {
-			$urls[ $k ] = \preg_match( '#^https?://#i', (string) $v ) ? (string) $v : '';
-		}
-
-		$fields = Composer::sanitize(
-			$urls + array(
-				'title' => MergeTags::render( $rule['title'], $context ),
-				'body'  => MergeTags::render( $rule['body'], $context ),
-				// Re-notifying the same occurrence under the same rule replaces the notification rather than stacking.
-				'tag'   => 'upn-a' . (int) $rule['id'] . '-' . \substr( \md5( $event->key ), 0, 12 ),
-			)
-		);
+		$fields = self::render( $rule, $event );
 		if ( \is_wp_error( $fields ) ) {
 			return $fields;
 		}
@@ -187,6 +170,43 @@ class Engine {
 		\do_action( 'upn_automation_fired', $rule, $event, $result );
 
 		return $result;
+	}
+
+	/**
+	 * The notification a rule makes of an event: tags resolved, fields sanitised.
+	 *
+	 * @param array $rule
+	 * @param Event $event
+	 * @return array|\WP_Error
+	 */
+	public static function render( array $rule, Event $event ) {
+		$context = $event->context;
+		$context['rule'] = $rule;
+
+		/*
+		 * Render before sanitising: a URL of "{order_admin_url}" is not a URL
+		 * until the tag is resolved. A URL field that renders to something
+		 * that is not a URL (a tag the event did not supply) is dropped on its
+		 * own rather than failing the notification. Send with an empty context
+		 * so nothing is rendered twice.
+		 */
+		$urls = array(
+			'click_action' => '' !== $rule['url'] ? MergeTags::render( $rule['url'], $context ) : $event->url,
+			'icon'         => '' !== $rule['icon'] ? MergeTags::render( $rule['icon'], $context ) : (string) \get_site_icon_url( 192 ),
+			'image'        => '' !== $rule['image'] ? MergeTags::render( $rule['image'], $context ) : $event->image,
+		);
+		foreach ( $urls as $k => $v ) {
+			$urls[ $k ] = \preg_match( '#^https?://#i', (string) $v ) ? (string) $v : '';
+		}
+
+		return Composer::sanitize(
+			$urls + array(
+				'title' => MergeTags::render( $rule['title'], $context ),
+				'body'  => MergeTags::render( $rule['body'], $context ),
+				// Re-notifying the same occurrence under the same rule replaces the notification rather than stacking.
+				'tag'   => 'upn-a' . (int) $rule['id'] . '-' . \substr( \md5( $event->key ), 0, 12 ),
+			)
+		);
 	}
 
 	/**

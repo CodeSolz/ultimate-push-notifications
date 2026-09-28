@@ -80,6 +80,7 @@ class Entitlements {
 		'sto',
 		'preferences',
 		'carriers',
+		'channels',
 		'api',
 		'roles',
 		'reports',

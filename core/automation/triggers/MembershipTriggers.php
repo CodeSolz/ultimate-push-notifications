@@ -102,7 +102,7 @@ class MembershipTriggers {
 	private static function pmpro_level_changed() {
 		return array(
 			'key'         => 'member.pmpro_level_changed',
-			'next'        => array( 'key' => 'carriers', 'label' => \__( 'Reach them before they subscribe', 'ultimate-push-notifications' ), 'text' => \__( 'a new member rarely has push yet — send the same message by email, Slack or Telegram when push has nobody to reach.', 'ultimate-push-notifications' ) ),
+			'next'        => array( 'key' => 'carriers', 'label' => \__( 'Reach them before they subscribe', 'ultimate-push-notifications' ), 'text' => \__( 'a new member rarely has push yet — send the same message by email, SMS, WhatsApp or Telegram when push has nobody to reach.', 'ultimate-push-notifications' ) ),
 			'label'       => \__( 'Membership level changes (Paid Memberships Pro)', 'ultimate-push-notifications' ),
 			'group'       => \__( 'Membership', 'ultimate-push-notifications' ),
 			'description' => \__( 'A member joins a level, moves to another, or is cancelled.', 'ultimate-push-notifications' ),
@@ -143,7 +143,7 @@ class MembershipTriggers {
 	private static function mepr_transaction_completed() {
 		return array(
 			'key'         => 'member.mepr_transaction_completed',
-			'next'        => array( 'key' => 'carriers', 'label' => \__( 'Reach them before they subscribe', 'ultimate-push-notifications' ), 'text' => \__( 'a new member rarely has push yet — send the same message by email, Slack or Telegram when push has nobody to reach.', 'ultimate-push-notifications' ) ),
+			'next'        => array( 'key' => 'carriers', 'label' => \__( 'Reach them before they subscribe', 'ultimate-push-notifications' ), 'text' => \__( 'a new member rarely has push yet — send the same message by email, SMS, WhatsApp or Telegram when push has nobody to reach.', 'ultimate-push-notifications' ) ),
 			'label'       => \__( 'Membership purchased (MemberPress)', 'ultimate-push-notifications' ),
 			'group'       => \__( 'Membership', 'ultimate-push-notifications' ),
 			'description' => \__( 'A MemberPress transaction completes: a membership is bought or renewed.', 'ultimate-push-notifications' ),
@@ -193,7 +193,7 @@ class MembershipTriggers {
 	private static function rcp_activated() {
 		return array(
 			'key'         => 'member.rcp_activated',
-			'next'        => array( 'key' => 'carriers', 'label' => \__( 'Reach them before they subscribe', 'ultimate-push-notifications' ), 'text' => \__( 'a new member rarely has push yet — send the same message by email, Slack or Telegram when push has nobody to reach.', 'ultimate-push-notifications' ) ),
+			'next'        => array( 'key' => 'carriers', 'label' => \__( 'Reach them before they subscribe', 'ultimate-push-notifications' ), 'text' => \__( 'a new member rarely has push yet — send the same message by email, SMS, WhatsApp or Telegram when push has nobody to reach.', 'ultimate-push-notifications' ) ),
 			'label'       => \__( 'Membership activated (Restrict Content Pro)', 'ultimate-push-notifications' ),
 			'group'       => \__( 'Membership', 'ultimate-push-notifications' ),
 			'description' => \__( 'A membership becomes active.', 'ultimate-push-notifications' ),
@@ -255,7 +255,7 @@ class MembershipTriggers {
 	private static function wcm_status_changed() {
 		return array(
 			'key'         => 'member.wcm_status_changed',
-			'next'        => array( 'key' => 'carriers', 'label' => \__( 'Reach them before they subscribe', 'ultimate-push-notifications' ), 'text' => \__( 'a new member rarely has push yet — send the same message by email, Slack or Telegram when push has nobody to reach.', 'ultimate-push-notifications' ) ),
+			'next'        => array( 'key' => 'carriers', 'label' => \__( 'Reach them before they subscribe', 'ultimate-push-notifications' ), 'text' => \__( 'a new member rarely has push yet — send the same message by email, SMS, WhatsApp or Telegram when push has nobody to reach.', 'ultimate-push-notifications' ) ),
 			'label'       => \__( 'Membership status changes (WooCommerce Memberships)', 'ultimate-push-notifications' ),
 			'group'       => \__( 'Membership', 'ultimate-push-notifications' ),
 			'description' => \__( 'A membership becomes active, paused, expired, cancelled…', 'ultimate-push-notifications' ),
@@ -297,7 +297,7 @@ class MembershipTriggers {
 	private static function um_approved() {
 		return array(
 			'key'         => 'member.um_approved',
-			'next'        => array( 'key' => 'carriers', 'label' => \__( 'Reach them before they subscribe', 'ultimate-push-notifications' ), 'text' => \__( 'a new member rarely has push yet — send the same message by email, Slack or Telegram when push has nobody to reach.', 'ultimate-push-notifications' ) ),
+			'next'        => array( 'key' => 'carriers', 'label' => \__( 'Reach them before they subscribe', 'ultimate-push-notifications' ), 'text' => \__( 'a new member rarely has push yet — send the same message by email, SMS, WhatsApp or Telegram when push has nobody to reach.', 'ultimate-push-notifications' ) ),
 			'label'       => \__( 'Member approved (Ultimate Member)', 'ultimate-push-notifications' ),
 			'group'       => \__( 'Membership', 'ultimate-push-notifications' ),
 			'description' => \__( 'An administrator approves a pending registration.', 'ultimate-push-notifications' ),

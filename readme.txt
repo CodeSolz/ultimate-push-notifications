@@ -2,8 +2,8 @@
 Contributors: CodeSolz, m.tuhin
 Tags: push notifications, web push, woocommerce push notifications, buddypress notifications, desktop notifications, mobile push, subscribers, automation, real-time notifications, vapid
 Requires at least: 5.0
-Tested up to: 7.0
-Stable tag: 1.6.2
+Tested up to: 7.1
+Stable tag: 1.6.3
 Requires PHP: 7.4
 WC requires at least: 4.0
 WC tested up to: 11.0
@@ -80,6 +80,40 @@ Instead of paying for SMS alerts or high-volume email plans, this plugin lets yo
 - Every device is tracked individually; one member can register several
 - Test notifications directly from the admin — verify delivery before going live
 - Devices a push service reports as gone are removed automatically
+
+---
+
+= Ultimate Push Notifications Pro =
+
+The free plugin sends. **[Ultimate Push Notifications Pro](https://codesolz.net/our-products/wordpress-plugin/ultimate-push-notifications/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=pro-section)** reaches people push cannot, sends to the right people at the right moment, and tells you what each notification earned. Same unlimited subscribers, a flat licence fee, and still no account with anyone for push.
+
+**Reach them where push cannot**
+- **SMS, WhatsApp and Telegram for your customers** — they opt in at checkout ("send me updates about this order by SMS") or in their account, and automations and broadcasts reach them there too, always or only when push cannot. STOP always works.
+- **SMS through your own Android phone** with [httpSMS](https://httpsms.com/) — your SIM is the gateway, no per-message SMS provider. WhatsApp through Meta's Cloud API, Telegram through your own bot.
+- **Carriers for your team** — mirror an order alert to email, Slack, Discord, Telegram, SMS or WhatsApp, or send it there only when push has nobody to reach.
+
+**Send to the right people, at the right time**
+- **Segments** — saved filters over subscribers and WooCommerce data (bought a category, spent over an amount, lapsed buyers), with seven built-in cohorts
+- **Scheduling** — once, daily, weekly or monthly, in each subscriber's time zone; and **best time** — each person at the hour they usually click
+- **A/B tests** — two versions to slices of the audience; the winner goes to everyone else
+- **Unlimited automations** with conditions, and **digests** ("5 new comments", not five alerts)
+- **Store automations** — abandoned cart and browse reminders, back in stock and price drop alerts, per shopper
+- **Welcome series** — a short sequence for every new subscriber
+- **Delivery rules** — quiet hours and frequency caps; a **preference centre** where subscribers mute categories or pause instead of unsubscribing
+
+**Know what it earned**
+- **Revenue attribution** — WooCommerce orders credited to the notification that was clicked, net of refunds; **Goals** for sites that are not stores
+- **Unlimited history**, weekly or monthly **reports** by email or as a print-ready page, and an **opt-out risk** estimate before you send
+- **Health monitor** — the health check every day, with alerts and one-click fixes
+
+**For agencies and teams**
+- **Roles** — compose, automations, segments and analytics per role, without making anyone an administrator
+- **White label**, **export / import** between sites, a **multisite** screen, a **REST API** and **WP-CLI**
+- **AI assistant** with your own key (OpenAI, Anthropic, Gemini, Groq, Mistral, Ollama and more) — copy drafts, plain-language health explanations, segment ideas
+
+Every Pro feature is already marked in the free plugin where it would live, with this site's own numbers where the free plugin knows them — so you can see what it would do before you decide.
+
+**[See everything Pro adds →](https://codesolz.net/our-products/wordpress-plugin/ultimate-push-notifications/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=pro-section-cta)**
 
 ---
 
@@ -173,6 +207,7 @@ For support, feature requests, and bug reports:
 * Email: [support@codesolz.net](mailto:support@codesolz.net)
 * GitHub: [github.com/CodeSolz/ultimate-push-notifications](https://github.com/CodeSolz/ultimate-push-notifications)
 * Forum: [forum.codesolz.net](https://forum.codesolz.net/?utm_source=wordpress.org&utm_medium=README&utm_campaign=ultimate-push-notifications)
+* Pro: [Ultimate Push Notifications Pro](https://codesolz.net/our-products/wordpress-plugin/ultimate-push-notifications/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=support-section)
 </blockquote>
 
 == Installation ==
@@ -231,7 +266,11 @@ Whoever each automation says. "New order" typically goes to administrators and s
 
 = What does Pro add? =
 
-Segments (saved filters over subscriber and WooCommerce data), scheduling and recurring sends, unlimited automations with conditions, unlimited analytics history, templates, action buttons, a health monitor that runs on a schedule and alerts you, and AI help writing copy — all on the same unlimited-subscriber, flat-fee terms. The free plugin shows where each of these lives; none of it is needed to send.
+Customer notifications by SMS (through your own Android phone with httpSMS), WhatsApp and Telegram; alerts for your team by email, Slack, Discord, Telegram, SMS or WhatsApp; segments, scheduling, A/B tests, unlimited automations with conditions, abandoned-cart and back-in-stock alerts, quiet hours and frequency caps, revenue attribution, unlimited history and reports, a daily health monitor, roles, white label and an AI assistant with your own key — all on the same unlimited-subscriber, flat-fee terms. The free plugin shows where each of these lives; none of it is needed to send. [See the full list](https://codesolz.net/our-products/wordpress-plugin/ultimate-push-notifications/?utm_source=wordpress.org&utm_medium=readme&utm_campaign=faq).
+
+= Does Pro need a third-party account? =
+
+Not for push — that stays self-hosted. SMS, WhatsApp and Telegram are optional and use your own accounts with those services (an httpSMS account with the app on an Android phone, a WhatsApp Business number on Meta's Cloud API, a Telegram bot); your keys stay on your site, encrypted.
 
 = Is subscriber data shared with anyone? =
 
@@ -250,6 +289,13 @@ No. All device tokens and user preferences are stored in your WordPress database
 9. Push Notification Example — desktop and mobile (rich notification with image)
 
 == Changelog ==
+
+= Version: 1.6.3 ( September 25, 2026 ) =
+* "Improvement:" Improved plugin stability and overall performance
+* "Improvement:" Improved compatibility with the latest WordPress and WooCommerce versions
+* "Fix:" Fixed minor issues and edge cases affecting plugin functionality
+* "Fix:" Fixed compatibility issues with certain WordPress configurations
+* "Improvement:" Various code improvements and cleanup
 
 = Version: 1.6.2 ( September 16, 2026 ) =
 * **New:** 13 more automation triggers (29 in all): post or product published / updated; WooCommerce price drop and back in stock; BuddyBoss / BuddyPress Follow new follower and "someone you follow published"; and a Membership group for Paid Memberships Pro, MemberPress, Restrict Content Pro, WooCommerce Memberships, Ultimate Member and LearnDash — each shown only while its plugin is active, with the member as the audience and the plan, level or course as merge tags.

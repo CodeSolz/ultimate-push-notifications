@@ -54,6 +54,7 @@ class WooCommerceTriggers {
 			'order_status'    => \__( 'Order status', 'ultimate-push-notifications' ),
 			'customer_name'   => \__( 'Customer name', 'ultimate-push-notifications' ),
 			'customer_email'  => \__( 'Customer email', 'ultimate-push-notifications' ),
+			'customer_phone'  => \__( 'Customer phone', 'ultimate-push-notifications' ),
 			'items_count'     => \__( 'Number of items', 'ultimate-push-notifications' ),
 			'item_names'      => \__( 'Item names', 'ultimate-push-notifications' ),
 			'payment_method'  => \__( 'Payment method', 'ultimate-push-notifications' ),
@@ -126,7 +127,8 @@ class WooCommerceTriggers {
 				'buyer'           => $customer > 0 ? array( $customer ) : array(),
 				'product_authors' => \array_values( \array_unique( $authors ) ),
 			),
-			'context' => array( 'user' => Helpers::user( $customer ) ),
+			// The order's id rides along (not a tag) so another channel can find who opted in for it.
+			'context' => array( 'user' => Helpers::user( $customer ), 'order' => (int) $order->get_id() ),
 			'url'     => (string) $order->get_edit_order_url(),
 		) );
 
@@ -135,6 +137,7 @@ class WooCommerceTriggers {
 		$event->extra( 'order_status', \function_exists( 'wc_get_order_status_name' ) ? \wc_get_order_status_name( $status ) : $status );
 		$event->extra( 'customer_name', \trim( $order->get_formatted_billing_full_name() ) );
 		$event->extra( 'customer_email', (string) $order->get_billing_email() );
+		$event->extra( 'customer_phone', \is_callable( array( $order, 'get_billing_phone' ) ) ? (string) $order->get_billing_phone() : '' );
 		$event->extra( 'items_count', (string) $order->get_item_count() );
 		$event->extra( 'item_names', \implode( ', ', $shown ) );
 		$event->extra( 'payment_method', (string) $order->get_payment_method_title() );

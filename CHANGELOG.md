@@ -1,3 +1,13 @@
+### Unreleased ###
+
+**New**
+- **Upgrade to Pro:** an entry at the end of the UPush Notifier menu and a first link on the Plugins screen ("Upgrade to Pro"), plus "Pro features" under the plugin's description — each opens the product page in a new tab, tagged with where it was clicked, and all of them go away when Pro is active. `pro\Upgrade`, filters `upn_pro_active`, `upn_upgrade_url` (now also given the source) and `upn_row_meta`.
+- **readme:** what Pro adds, in one section — SMS / WhatsApp / Telegram for customers, carriers for the team, segments, scheduling, A/B, store automations, attribution, reports and the rest — with links to the product page. The GitHub README describes the current (Web Push) plugin instead of the Firebase one.
+- **Seams for Pro's customer channels:** `upn_automation_unreached` (a rule applied but push had nobody — a guest's order) and a public `Engine::render()`; WooCommerce order events carry the order's id in their context and a `{customer_phone}` merge tag; entitlement key `channels`.
+
+**Fixed**
+- The Plugins-screen links used another plugin's text domain (so they could not be translated) and its `rtafar_row_meta` filter; they now use this plugin's. "Notifications Settings" (a member's own page) became "Compose" next to "Settings".
+
 ### Version: 1.6.2 ( September 16, 2026 ) ###
 
 **New**
